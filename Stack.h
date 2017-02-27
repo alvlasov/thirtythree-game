@@ -11,6 +11,7 @@
 class Stack
 {
 public:
+
     typedef float value_type;
 
     Stack(size_t capacity);
@@ -20,7 +21,7 @@ public:
     bool empty();
     bool push(value_type value);
     value_type top();
-    value_type pop();
+    bool pop();
     bool ok();
     bool dump();
 

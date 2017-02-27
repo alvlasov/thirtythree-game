@@ -69,23 +69,21 @@ Stack::value_type Stack::top()
         assert(!"Stack is empty!");
 }
 
-Stack::value_type Stack::pop()
+bool Stack::pop()
 {
     ASSERT_OK();
     if (size()!=0)
     {
-        value_type p = data_[--size_];
-        data_[size_] = POISON_VAR;
+        data_[--size_] = POISON_VAR;
         ASSERT_OK();
-        return p;
+        return true;
     }
-    else
-        assert(!"Stack is empty!");
+    return false;
 }
 
 bool Stack::ok()
 {
-    return (size() <= capacity()-1);
+    return (size() <= capacity());
 }
 
 bool Stack::dump()
