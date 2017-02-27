@@ -35,17 +35,17 @@ Stack::~Stack()
     capacity_ = 1;
 }
 
-size_t Stack::size()
+size_t Stack::size() const
 {
     return size_;
 }
 
-size_t Stack::capacity()
+size_t Stack::capacity() const
 {
     return capacity_;
 }
 
-bool Stack::empty()
+bool Stack::empty() const
 {
     return (size() == 0);
 }
@@ -60,7 +60,7 @@ bool Stack::push(value_type value)
     return true;
 }
 
-Stack::value_type Stack::top()
+Stack::value_type Stack::top() const
 {
     ASSERT_OK();
     if (size()!=0)
@@ -81,12 +81,12 @@ bool Stack::pop()
     return false;
 }
 
-bool Stack::ok()
+bool Stack::ok() const
 {
     return (size() <= capacity());
 }
 
-bool Stack::dump()
+bool Stack::dump() const
 {
     cout << "Stack (";
     if (ok())
