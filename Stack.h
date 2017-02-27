@@ -16,14 +16,14 @@ public:
 
     Stack(size_t capacity);
     ~Stack();
-    size_t size();
-    size_t capacity();
-    bool empty();
+    size_t size() const;
+    size_t capacity() const;
+    bool empty() const;
     bool push(value_type value);
-    value_type top();
+    value_type top() const;
     bool pop();
-    bool ok();
-    bool dump();
+    bool ok() const;
+    bool dump() const;
 
 private:
     static const int POISON_VAR = 666666;
