@@ -14,6 +14,7 @@ public:
 
     typedef float value_type;
 
+    Stack();
     Stack(size_t capacity);
     ~Stack();
     size_t size() const;

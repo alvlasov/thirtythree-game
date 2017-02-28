@@ -21,7 +21,14 @@ using std::endl;
 
 class Stack;
 
-Stack::Stack(size_t capacity = def_capacity_) :
+Stack::Stack() :
+    size_(0),
+    capacity_(def_capacity_)
+{
+    data_ = new value_type[def_capacity_];
+}
+
+Stack::Stack(size_t capacity) :
     size_(0),
     capacity_(capacity)
 {
@@ -53,7 +60,7 @@ bool Stack::empty() const
 bool Stack::push(value_type value)
 {
     ASSERT_OK();
-    if (size_>=capacity())
+    if (size()>=capacity())
         return false;
     data_[size_++] = value;
     ASSERT_OK();
