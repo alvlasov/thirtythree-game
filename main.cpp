@@ -1,5 +1,7 @@
 #include <iostream>
-#include <Stack.cpp>
+//i include this because without it it doesn't work
+#include "Stack.h"
+#include "Stack.cpp"
 
 #define TEST(what,cond)\
     if (cond())                 \
@@ -17,6 +19,8 @@
 
 bool PushSingleNumber()
 {
+    // u don't have such type of constructor
+    // u should create this or write parameters()
     Stack s;
     s.push(3802);
     EXCEPT_EQ(s.top(), 0xEDA);
@@ -27,6 +31,7 @@ bool PushSingleNumber()
 
 bool CheckDestroyedStack()
 {
+    //The same problem
     Stack *p;
     {
         Stack s;
@@ -40,6 +45,7 @@ bool CheckDestroyedStack()
 
 bool CannotPushMore()
 {
+    //The same
     Stack s;
     for (int i = 0; i < s.capacity(); i++)
         s.push(100 + i);
@@ -65,9 +71,12 @@ int main()
         s1.pop();
         s1.pop();
         s1.dump();
+        //  Not std::cout, std:: endl?
+        // because my compiler writes errors
         cout << s1.top() << endl;
         p1 = &s1;
     }
+    // may be without (*)? But i don't sure
     (*p1).dump();
 
     Stack s2(15);

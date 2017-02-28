@@ -7,7 +7,7 @@
 
 #include <cassert>
 #include <iostream>
-#include <Stack.h>
+#include "Stack.h"
 
 #define ASSERT_OK() \
     if (!ok())      \
@@ -53,7 +53,7 @@ bool Stack::empty() const
 bool Stack::push(value_type value)
 {
     ASSERT_OK();
-    if (size()>=capacity())
+    if (size_>=capacity())
         return false;
     data_[size_++] = value;
     ASSERT_OK();
