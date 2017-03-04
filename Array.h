@@ -1,33 +1,29 @@
 #ifndef ARRAY_H_INCLUDED
 #define ARRAY_H_INCLUDED
 
-// шаблоны пока делать не будем
+typedef int value_type;
+
 class Array
 {
 public:
-    typedef value_type int;
 
     Array();
-    Array(size_t size);
-    Array(const Array& that); // Саша
+    explicit Array(size_t size);
+    Array(Array& that);
     ~Array();
 
     size_t size() const { return size_; }
 
     bool empty() const;
     value_type& operator[](size_t n);
-    const Array& operator=(const Array &that);
-    const bool operator==(const Array &arr1, const Array &arr2); // Саша
-    const Array operator+(const Array &arr1, const Array &arr2);
-    const Array operator-(const Array &arr1, const Array &arr2);
-
-    bool empty() const;
+    Array& operator=(Array &that);
+    bool empty_() const;
     value_type first() const;
     value_type last() const;
-    value_type at(const size_t pos) const;  // Саша
-    size_t erase(const size_t pos); // Саша
-    size_t insert(const size_t pos, const value_type n); // Таня
-    void dump() const; // Саша
+    value_type at(const size_t pos) const;
+    size_t erase(const size_t pos);
+    size_t insert(const size_t pos, const value_type n);
+    void dump() const;
     bool resize(const size_t new_size);
 
 private:
@@ -36,5 +32,7 @@ private:
     size_t size_;
 };
 
-
+bool operator==(const Array &arr1, const Array &arr2);
+Array operator +(const Array &arr1, const Array &arr2);
+Array operator-(const Array &arr1, const Array &arr2);
 #endif // ARRAY_H_INCLUDED

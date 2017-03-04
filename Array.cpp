@@ -8,42 +8,47 @@ using std::cout;
 using std::endl;
 
 Array::Array():
-    data_(nullptr);
-    size_=0;
+    data_(NULL),
+    size_(0)
 {
     cout << __PRETTY_FUNCTION__ << endl;
 }
 
 
-Array::Array(size_t size) :
+Array::Array(size_t size):
     data_(new value_type [size]),
-    size_(size),
+    size_(size)
 {
     for (unsigned int i = 0; i < size_; i++ )
     {
         data_[i] = 0;
     }
+
+    cout << __PRETTY_FUNCTION__ << endl;
 }
 
-Array::Array(const Array& that)
+Array::Array(Array& that)
 {
     size_ = that.size();
     data_ = new value_type[size_];
-    for (int i = 0; i < size_; i++)
+
+    for (unsigned int i = 0; i < size_; i++)
     {
         data_[i] = that[i];
     }
+    cout << __PRETTY_FUNCTION__ << endl;
 }
 
 Array::~Array()
 {
     delete [] data_;
+
     data_ = NULL;
     size_ = 0;
 }
 
 
-const Array& Array::operator=(const Array &that)
+Array& Array::operator =(Array &that)
 {
     this -> resize(that.size());
 
@@ -52,43 +57,47 @@ const Array& Array::operator=(const Array &that)
         data_[i] = that.data_[i];
     }
 
+    cout << __PRETTY_FUNCTION__ << endl;
+
     return *this;
 }
 
-const bool Array::operator==(const Array &arr1, const Array &arr2)
+bool operator ==(Array &arr1, Array &arr2)
 {
     if (arr1.size() != arr2.size())
             return false;
         else
         {
-            for (int i = 0; i < arr1.size(); i++)
+            for (unsigned int i = 0; i < arr1.size(); i++)
             {
-                if (arr1[i] != arr2[i])
+                if (arr1.at(i) != arr2.at(i))
                     return false;
             }
         }
         return true;
 }
 
-bool Array::empty() const
+bool Array::empty_() const
 {
     if (size_ == 0)
     {
         return true;
     }
+
     return false;
 }
 
 value_type& Array::operator[](size_t n)
 {
-    assert(0 <= index && index < size_);
+    assert(0 <= n && n < size_);
 
-    return data_[index];
+    return data_[n];
 }
 
 
 
-const Array Array::operator+(const Array &arr1, const Array &arr2)Merge remote-tracking branch
+
+Array operator +(const Array &arr1, const Array &arr2)
 {
     if (arr1.size() != arr2.size())
     {
@@ -98,16 +107,17 @@ const Array Array::operator+(const Array &arr1, const Array &arr2)Merge remote-t
     size_t arr_size = arr1.size();
 
     Array new_array(arr_size);
+    //Array* ref_array  = new Array [arr_size];
 
     for (unsigned int i = 0; i < arr_size; i++ )
     {
-        new_array.data_[i] = arr1.data_[i] + arr2.data_[i];
+        new_array[i] = arr1.at(i) + arr2.at(i);
     }
 
     return new_array;
 }
 
-const Array Array::operator-(const Array &arr1, const Array &arr2)
+Array operator -(const Array &arr1, const Array &arr2)
 {
     if (arr1.size() != arr2.size())
     {
@@ -120,7 +130,7 @@ const Array Array::operator-(const Array &arr1, const Array &arr2)
 
     for (unsigned int i = 0; i < arr_size; i++ )
     {
-        new_array.data_[i] = arr1.data_[i] - arr2.data_[i];
+        new_array[i] = arr1.at(i)- arr2.at(i);
     }
 
     return new_array;
@@ -129,16 +139,17 @@ const Array Array::operator-(const Array &arr1, const Array &arr2)
 
 value_type Array::first() const
 {
-    if (empty())
+    if (empty_())
     {
         assert(0);
     }
+
     return data_[0];
 }
 
 value_type Array::last() const
 {
-    if (empty())
+    if (empty_())
     {
         assert(0);
     }
@@ -152,7 +163,6 @@ value_type Array::at(const size_t pos) const
     {
         assert(0);
     }
-  
     return data_[pos];
 }
 
@@ -177,7 +187,7 @@ size_t Array::insert(const size_t pos, const value_type n)
     {
           data_[i] = newdata_[i - pos - 1];
     }
-    
+
     return size_;
 }
 
@@ -187,15 +197,15 @@ size_t Array::erase(const size_t pos)
     {
         assert(0);
     }
-  
+
     value_type *datanew_ = new value_type[size_-1];
 
-    for (int i = 0; i < pos; i++)
+    for (unsigned int i = 0; i < pos; i++)
     {
         datanew_[i] = data_[i];
     }
-  
-    for (int i = pos+1; i < size_; i++)
+
+    for (unsigned int i = pos + 1; i < size_; i++)
     {
         datanew_[i-1] = data_[i];
     }
@@ -213,7 +223,7 @@ void Array::dump() const
     cout << "\tsize_\t\t= " << size_ << endl;
     cout << "\tdata_ [" << size_ << "]:" << endl;
     cout << "\t\t{" << endl;
-    for (int i = 0; i < size_; i++)
+    for (unsigned int i = 0; i < size_; i++)
     {
         cout << "\t\t" << "[" << i << "] = " << data_[i] << endl;
     }
