@@ -1,143 +1,64 @@
-#include <assert.h>
-#include "smartArray.h"
+#include <cassert>
 #include <cmath>
+#include "Array.h"
 
-CSmartArray::CSmartArray(const unsigned int _nSize) : nSize(_nSize), nReserve(nSize + 10)
+Array::Array()
 {
-    pData = new int[nReserve];
-}
-
-CSmartArray::CSmartArray(const CSmartArray &_copy): nSize(_copy.getSize()), nReserve(nSize + 10)
-{
-     pData = new int[nReserve];
-
-    for (unsigned int i = 0; i < nSize; i++ )
-    {
-        pData[i] = _copy.pData[i];
-    }
-}
-
-int& CSmartArray::operator[](const unsigned int _n)
-{
-    if (_n >= nSize)
-    {
-        assert(0);
-    }
-
-    return pData[_n];
-}
-
-void CSmartArray::clr()
-{
-    delete [] pData;
-    nSize = 0;
-}
-
-//destructor
-CSmartArray::~CSmartArray()
-{
-    clr();
-};
-
-void CSmartArray::resize(const unsigned int _n)
-{
-    int numRes = 10;
-
-    if (_n < nSize)
-    {
-        numRes = 10 - (nSize/_n);
-        nSize = _n;
-    }
-    else if (_n <= nReserve)
-    {
-        nSize = _n;
-    }
-
-    int *pNewData = new int [_n + numRes];
-
-    for (unsigned int i = 0; i < nSize; i++)
-    {
-        pNewData[i] = pData[i];
-    }
-
-    clr();
-
-    nSize = _n;
-    nReserve = nSize + numRes;
-
-    pData = pNewData;
-
 
 }
 
- unsigned int CSmartArray :: add(const unsigned int _idx, const int _n)
+Array::Array(const Array& that);
 {
-    if (nSize == nReserve)
-    {
-        this ->resize(nSize);
-    }
-
-    if (_idx >= nSize)
-    {
-        assert(0);
-    }
-
-    int *pNewData = new int [nSize - _idx - 1];
-
-    for (unsigned int i = _idx + 1 ; i < nSize; i++)
-    {
-        pNewData[i - _idx - 1] = pData[i];
-    }
-
-    pData[_idx + 1] = _n;
-
-    for (unsigned int i = _idx + 2; i < nSize + 1; i++)
-    {
-          pData[i] = pNewData[i - _idx - 2];
-    }
-
-    nSize = nSize + 1;
-    nReserve = nReserve - 1;
-
-    return nSize;
 
 }
 
-unsigned int CSmartArray :: remove(const unsigned int _idx)
+Array::~Array();
 {
-    if (_idx >= nSize)
-    {
-        assert(0);
-    }
 
-    int *pNewData = new int [nSize - _idx - 1];
+}
 
-    for (unsigned int i = _idx + 1 ; i < nSize; i++)
-    {
-        pNewData[i - _idx - 1] = pData[i];
-    }
+Array::value_type& Array::operator[](size_t n);
+{
 
-    for (unsigned int i = 0; i < nSize - _idx ; i++)
-    {
-        pData[i+ _idx] = pNewData[i];
-    }
+}
 
-    this -> resize(nSize - 1);
+const Array::Array& Array::operator=(const Array &that);
+{
 
-    return nSize;
+}
+
+const bool Array::operator==(const Array &arr1, const Array &arr2);
+{
+
 }
 
 
-
-CSmartArray& CSmartArray::operator=(const CSmartArray &_copy)
+Array::value_type Array::first() const;
 {
 
-    this->resize(_copy.getSize());
+}
 
-    for (unsigned int i = 0; i < nSize; i++ )
-    {
-        pData[i] = _copy.pData[i];
-    }
+Array::value_type Array::last() const;
+{
 
-    return *this;
+}
+
+Array::value_type Array::at(const size_t pos) const;
+{
+
+}
+
+size_t Array::insert(const size_t pos, const value_type n);
+{
+
+}
+
+size_t Array::erase(const size_t pos);
+{
+
+}
+
+bool Array::resize()
+{
+
 }
