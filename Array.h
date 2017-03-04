@@ -28,7 +28,7 @@ public:
     bool ok() const; // Алена
 
 private:
-    static const size_t capacity_step = 10;
+    static const size_t capacity_step_ = 10;
     value_type *data_;
 
     // ресайзим массив сразу на capacity_step элементов
