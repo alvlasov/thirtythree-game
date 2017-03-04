@@ -106,11 +106,7 @@ bool Array::resize()
 
 void Array::dump() const
 {
-    cout << "Array (";
-    if (ok())
-        cout << "OK)" << endl;
-    else
-        cout << "ERROR!)" << endl;
+    cout << "Array";
     cout << "\t{" << endl;
     cout << "\tsize_\t\t= " << size_ << endl;
     cout << "\tdata_ [" << size_ << "]:" << endl;
@@ -123,7 +119,3 @@ void Array::dump() const
     cout << "\t}" << endl;
 }
 
-bool Array::ok() const
-{
-
-}
