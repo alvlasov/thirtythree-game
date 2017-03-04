@@ -15,6 +15,7 @@ public:
 
     size_t size() const { return size_; }
 
+    bool empty() const;
     value_type& operator[](size_t n); // Алена
     const Array& operator=(const Array &that); // Таня +
     const bool operator==(const Array &arr1, const Array &arr2); // Саша
@@ -25,6 +26,7 @@ public:
     value_type first() const; // Алена
     value_type last() const; // Таня +
     value_type at(const size_t pos) const;  // Саша
+
     size_t erase(const size_t pos); // Алена
     size_t insert(const size_t pos, const value_type n); // Таня +
     bool dump() const; // Саша
@@ -32,10 +34,9 @@ public:
     bool resize(const size_t new_size); // Таня+
 
 
-private:
-    static const size_t capacity_step = 10;
-    value_type *data_;
 
+private:
+    value_type *data_;
 
     size_t size_;
 };

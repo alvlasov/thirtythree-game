@@ -1,11 +1,15 @@
 #include <cassert>
 #include <cmath>
 #include "Array.h"
+#include <iostream>
 
-Array::Array()
+Array::Array():
+    data_(nullptr);
+    size_=0;
 {
-
+    cout << __PRETTY_FUNCTION__ << endl;
 }
+
 
 Array::Array(size_t size) :
     data_(new value_type [size]),
@@ -24,13 +28,11 @@ Array::Array(const Array& that)
 
 Array::~Array()
 {
-
+    delete [] data_;
+    data_ = NULL;
+    size_ = 0;
 }
 
-Array::value_type& Array::operator[](size_t n)
-{
-
-}
 
 const Array& Array::operator=(const Array &that)
 {
@@ -46,8 +48,24 @@ const Array& Array::operator=(const Array &that)
 
 const bool Array::operator==(const Array &arr1, const Array &arr2)
 {
-
+  
 }
+
+bool Array::empty() const
+{
+    if (size_ == 0) {
+        return true;
+    }
+    return false;
+}
+
+value_type& Array::operator[](size_t n)
+{
+    assert(0 <= index && index < size_);
+    return data_[index];
+}
+
+
 
 const Array Array::operator+(const Array &arr1, const Array &arr2)
 {
@@ -83,16 +101,21 @@ const Array Array::operator-(const Array &arr1, const Array &arr2)
     {
         new_array.data_[i] = arr1.data_[i] - arr2.data_[i];
     }
-
+  
     return new_array;
 }
 
-Array::value_type Array::first() const
-{
 
+value_type Array::first() const
+{
+    if (empty())
+    {
+        assert(0);
+    }
+    return data_[0];
 }
 
-Array::value_type Array::last() const
+value_type Array::last() const
 {
     if (empty())
     {
@@ -102,7 +125,7 @@ Array::value_type Array::last() const
     return data_[size_-1];
 }
 
-Array::value_type Array::at(const size_t pos) const
+value_type Array::at(const size_t pos) const
 {
 
 }
@@ -172,7 +195,4 @@ bool Array::dump() const
 {
 
 }
-bool Array::ok() const
-{
 
-}
