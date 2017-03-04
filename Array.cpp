@@ -79,7 +79,24 @@ size_t Array::insert(const size_t pos, const value_type n);
 
 size_t Array::erase(const size_t pos);
 {
-
+    if (pos >= size_)
+    {
+        assert(0);
+    }
+    value_type *dataNew_;
+    dataNew_ = new value_type[size_-1];
+    for (int i = 0; i < pos; i++)
+    {
+        dataNew_[i] = data_[i];
+    }
+    for (int i = pos+1; i < size_; i++)
+    {
+        dataNew_[i-1] = data_[i];
+    }
+    delete[] data_;
+    data_ = dataNew_;
+    size_--;
+    return size_;
 }
 
 bool Array::resize()
