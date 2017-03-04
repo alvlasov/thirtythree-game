@@ -25,7 +25,6 @@ public:
     size_t erase(const size_t pos); // Саша
     size_t insert(const size_t pos, const value_type n); // Таня
     void dump() const; // Саша
-    bool ok() const; // Алена
 
 private:
     static const size_t capacity_step_ = 10;
@@ -35,7 +34,6 @@ private:
     bool resize(); // Таня
 
     size_t size_;
-    size_t capacity_;
 };
 
 
