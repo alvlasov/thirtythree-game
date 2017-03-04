@@ -92,6 +92,15 @@ Array::value_type Array::first() const;
 
 }
 
+Array::value_type Array::last() const;
+{
+    if (empty())
+    {
+        assert(0);
+    }
+
+    return data_[size_-1];
+}
 
 Array::value_type Array::at(const size_t pos) const;
 {

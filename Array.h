@@ -21,8 +21,9 @@ public:
     const Array operator+(const Array &arr1, const Array &arr2); // Таня
     const Array operator-(const Array &arr1, const Array &arr2); // Таня
 
+    bool empty() const;
     value_type first() const; // Алена
-    value_type last() const { return data_[size_ - 1]; } // Таня +
+    value_type last() const; // Таня +
     value_type at(const size_t pos) const;  // Саша
     size_t erase(const size_t pos); // Алена
     size_t insert(const size_t pos, const value_type n); // Таня +
