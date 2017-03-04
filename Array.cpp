@@ -14,8 +14,7 @@ Array::Array()
 Array::Array(const Array& that);
 {
     size_ = that.size();
-    capacity_ = size_ + capacity_step_;
-    data_ = new value_type[capacity_];
+    data_ = new value_type[size_];
     for (int i = 0; i < size_; i++)
     {
         data_[i] = that[i];
@@ -97,16 +96,11 @@ void Array::dump() const
         cout << "ERROR!)" << endl;
     cout << "\t{" << endl;
     cout << "\tsize_\t\t= " << size_ << endl;
-    cout << "\tcapacity_\t= " << capacity_ << endl;
-    cout << "\tdata_ [" << capacity_<< "]:"<< endl;
+    cout << "\tdata_ [" << size_ << "]:" << endl;
     cout << "\t\t{" << endl;
-    for (int i = 0; i < capacity_; i++)
+    for (int i = 0; i < size_; i++)
     {
-        if (i < size_)
-            cout << "\t*\t" << "[" << i << "] = " << data_[i];
-        else
-            cout << "\t\t" << "[" << i << "] = " << data_[i];
-        cout << endl;
+        cout << "\t\t" << "[" << i << "] = " << data_[i] << endl;
     }
     cout << "\t\t}" << endl;
     cout << "\t}" << endl;
