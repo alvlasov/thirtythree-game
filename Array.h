@@ -22,9 +22,9 @@ public:
     value_type first() const; // Алена
     value_type last() const; // Таня
     value_type at(const size_t pos) const;  // Саша
-    size_t erase(const size_t pos); // Алена
+    size_t erase(const size_t pos); // Саша
     size_t insert(const size_t pos, const value_type n); // Таня
-    bool dump() const; // Саша
+    void dump() const; // Саша
     bool ok() const; // Алена
 
 private:
