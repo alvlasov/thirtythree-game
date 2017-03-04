@@ -62,3 +62,12 @@ bool Array::resize()
 {
 
 }
+
+bool Array::dump() const
+{
+
+}
+bool Array::ok() const
+{
+
+}
