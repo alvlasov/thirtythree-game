@@ -1,6 +1,10 @@
 #include <cassert>
 #include <cmath>
+#include <iostream>
 #include "Array.h"
+
+using std::cout;
+using std::endl;
 
 Array::Array()
 {
@@ -9,7 +13,13 @@ Array::Array()
 
 Array::Array(const Array& that);
 {
-
+    size_ = that.size();
+    capacity_ = size_ + capacity_step_;
+    data_ = new value_type[capacity_];
+    for (int i = 0; i < size_; i++)
+    {
+        data_[i] = that[i];
+    }
 }
 
 Array::~Array();
@@ -29,7 +39,17 @@ const Array::Array& Array::operator=(const Array &that);
 
 const bool Array::operator==(const Array &arr1, const Array &arr2);
 {
-
+    if (arr1.size() != arr2.size())
+        return false;
+    else
+    {
+        for (int i = 0; i < arr1.size(); i++)
+        {
+            if (arr1[i] != arr2[i])
+                return false;
+        }
+    }
+    return true;
 }
 
 
@@ -45,7 +65,12 @@ Array::value_type Array::last() const;
 
 Array::value_type Array::at(const size_t pos) const;
 {
-
+    if (pos >= size_)
+        assert(0);
+    else
+    {
+        return data_[pos];
+    }
 }
 
 size_t Array::insert(const size_t pos, const value_type n);
@@ -63,10 +88,30 @@ bool Array::resize()
 
 }
 
-bool Array::dump() const
+void Array::dump() const
 {
-
+    cout << "Array (";
+    if (ok())
+        cout << "OK)" << endl;
+    else
+        cout << "ERROR!)" << endl;
+    cout << "\t{" << endl;
+    cout << "\tsize_\t\t= " << size_ << endl;
+    cout << "\tcapacity_\t= " << capacity_ << endl;
+    cout << "\tdata_ [" << capacity_<< "]:"<< endl;
+    cout << "\t\t{" << endl;
+    for (int i = 0; i < capacity_; i++)
+    {
+        if (i < size_)
+            cout << "\t*\t" << "[" << i << "] = " << data_[i];
+        else
+            cout << "\t\t" << "[" << i << "] = " << data_[i];
+        cout << endl;
+    }
+    cout << "\t\t}" << endl;
+    cout << "\t}" << endl;
 }
+
 bool Array::ok() const
 {
 
