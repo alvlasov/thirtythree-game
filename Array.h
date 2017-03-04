@@ -25,14 +25,10 @@ public:
     value_type first() const;
     value_type last() const;
     value_type at(const size_t pos) const;  // Саша
-
-    size_t erase(const size_t pos);
-    size_t insert(const size_t pos, const value_type n);
-    bool dump() const; // Саша
-    bool ok() const;
+    size_t erase(const size_t pos); // Саша
+    size_t insert(const size_t pos, const value_type n); // Таня
+    void dump() const; // Саша
     bool resize(const size_t new_size);
-
-
 
 private:
     value_type *data_;

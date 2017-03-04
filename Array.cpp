@@ -1,7 +1,11 @@
 #include <cassert>
 #include <cmath>
+#include <iostream>
 #include "Array.h"
 #include <iostream>
+
+using std::cout;
+using std::endl;
 
 Array::Array():
     data_(nullptr);
@@ -23,7 +27,12 @@ Array::Array(size_t size) :
 
 Array::Array(const Array& that)
 {
-
+    size_ = that.size();
+    data_ = new value_type[size_];
+    for (int i = 0; i < size_; i++)
+    {
+        data_[i] = that[i];
+    }
 }
 
 Array::~Array()
@@ -48,7 +57,17 @@ const Array& Array::operator=(const Array &that)
 
 const bool Array::operator==(const Array &arr1, const Array &arr2)
 {
-
+    if (arr1.size() != arr2.size())
+            return false;
+        else
+        {
+            for (int i = 0; i < arr1.size(); i++)
+            {
+                if (arr1[i] != arr2[i])
+                    return false;
+            }
+        }
+        return true;
 }
 
 bool Array::empty() const
@@ -129,17 +148,20 @@ value_type Array::last() const
 
 value_type Array::at(const size_t pos) const
 {
-
-}
-
-size_t Array::insert(const size_t pos, const value_type n)
-{
-
     if (pos >= size_)
     {
         assert(0);
     }
+  
+    return data_[pos];
+}
 
+size_t Array::insert(const size_t pos, const value_type n)
+{
+    if (pos >= size_)
+    {
+        assert(0);
+    }
     value_type *newdata_ = new value_type [size_ - pos];
 
     for (unsigned int i = pos ; i < size_; i++)
@@ -155,14 +177,48 @@ size_t Array::insert(const size_t pos, const value_type n)
     {
           data_[i] = newdata_[i - pos - 1];
     }
-
-
+    
     return size_;
 }
 
 size_t Array::erase(const size_t pos)
 {
+    if (pos >= size_)
+    {
+        assert(0);
+    }
+  
+    value_type *datanew_ = new value_type[size_-1];
 
+    for (int i = 0; i < pos; i++)
+    {
+        datanew_[i] = data_[i];
+    }
+  
+    for (int i = pos+1; i < size_; i++)
+    {
+        datanew_[i-1] = data_[i];
+    }
+    delete[] data_;
+    data_ = datanew_;
+    size_--;
+    return size_;
+}
+
+
+void Array::dump() const
+{
+    cout << "Array";
+    cout << "\t{" << endl;
+    cout << "\tsize_\t\t= " << size_ << endl;
+    cout << "\tdata_ [" << size_ << "]:" << endl;
+    cout << "\t\t{" << endl;
+    for (int i = 0; i < size_; i++)
+    {
+        cout << "\t\t" << "[" << i << "] = " << data_[i] << endl;
+    }
+    cout << "\t\t}" << endl;
+    cout << "\t}" << endl;
 }
 
 bool Array::resize(const size_t new_size)
@@ -190,11 +246,6 @@ bool Array::resize(const size_t new_size)
 
         return true;
     }
-
-}
-
-bool Array::dump() const
-{
 
 }
 
