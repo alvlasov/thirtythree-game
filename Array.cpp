@@ -2,16 +2,30 @@
 #include <cmath>
 #include <iostream>
 #include "Array.h"
+#include <iostream>
 
 using std::cout;
 using std::endl;
 
-Array::Array()
+Array::Array():
+    data_(nullptr);
+    size_=0;
 {
-
+    cout << __PRETTY_FUNCTION__ << endl;
 }
 
-Array::Array(const Array& that);
+
+Array::Array(size_t size) :
+    data_(new value_type [size]),
+    size_(size),
+{
+    for (unsigned int i = 0; i < size_; i++ )
+    {
+        data_[i] = 0;
+    }
+}
+
+Array::Array(const Array& that)
 {
     size_ = that.size();
     data_ = new value_type[size_];
@@ -21,88 +35,176 @@ Array::Array(const Array& that);
     }
 }
 
-Array::~Array();
+Array::~Array()
 {
-
+    delete [] data_;
+    data_ = NULL;
+    size_ = 0;
 }
 
-Array::value_type& Array::operator[](size_t n);
-{
 
+const Array& Array::operator=(const Array &that)
+{
+    this -> resize(that.size());
+
+    for (unsigned int i = 0; i < size_; i++ )
+    {
+        data_[i] = that.data_[i];
+    }
+
+    return *this;
 }
 
-const Array::Array& Array::operator=(const Array &that);
-{
-
-}
-
-const bool Array::operator==(const Array &arr1, const Array &arr2);
+const bool Array::operator==(const Array &arr1, const Array &arr2)
 {
     if (arr1.size() != arr2.size())
-        return false;
-    else
-    {
-        for (int i = 0; i < arr1.size(); i++)
+            return false;
+        else
         {
-            if (arr1[i] != arr2[i])
-                return false;
+            for (int i = 0; i < arr1.size(); i++)
+            {
+                if (arr1[i] != arr2[i])
+                    return false;
+            }
         }
-    }
-    return true;
+        return true;
 }
 
-
-Array::value_type Array::first() const;
+bool Array::empty() const
 {
-
-}
-
-Array::value_type Array::last() const;
-{
-
-}
-
-Array::value_type Array::at(const size_t pos) const;
-{
-    if (pos >= size_)
-        assert(0);
-    else
+    if (size_ == 0)
     {
-        return data_[pos];
+        return true;
     }
+    return false;
 }
 
-size_t Array::insert(const size_t pos, const value_type n);
+value_type& Array::operator[](size_t n)
 {
+    assert(0 <= index && index < size_);
 
+    return data_[index];
 }
 
-size_t Array::erase(const size_t pos);
+
+
+const Array Array::operator+(const Array &arr1, const Array &arr2)Merge remote-tracking branch
 {
-    if (pos >= size_)
+    if (arr1.size() != arr2.size())
     {
         assert(0);
     }
-    value_type *dataNew_;
-    dataNew_ = new value_type[size_-1];
+
+    size_t arr_size = arr1.size();
+
+    Array new_array(arr_size);
+
+    for (unsigned int i = 0; i < arr_size; i++ )
+    {
+        new_array.data_[i] = arr1.data_[i] + arr2.data_[i];
+    }
+
+    return new_array;
+}
+
+const Array Array::operator-(const Array &arr1, const Array &arr2)
+{
+    if (arr1.size() != arr2.size())
+    {
+        assert(0);
+    }
+
+    size_t arr_size = arr1.size();
+
+    Array new_array(arr_size);
+
+    for (unsigned int i = 0; i < arr_size; i++ )
+    {
+        new_array.data_[i] = arr1.data_[i] - arr2.data_[i];
+    }
+
+    return new_array;
+}
+
+
+value_type Array::first() const
+{
+    if (empty())
+    {
+        assert(0);
+    }
+    return data_[0];
+}
+
+value_type Array::last() const
+{
+    if (empty())
+    {
+        assert(0);
+    }
+
+    return data_[size_-1];
+}
+
+value_type Array::at(const size_t pos) const
+{
+    if (pos >= size_)
+    {
+        assert(0);
+    }
+  
+    return data_[pos];
+}
+
+size_t Array::insert(const size_t pos, const value_type n)
+{
+    if (pos >= size_)
+    {
+        assert(0);
+    }
+    value_type *newdata_ = new value_type [size_ - pos];
+
+    for (unsigned int i = pos ; i < size_; i++)
+    {
+        newdata_[i - pos ] = data_[i];
+    }
+
+    data_[pos] = n;
+
+    this ->resize(size_+1);
+
+    for (unsigned int i = pos + 1; i < size_; i++)
+    {
+          data_[i] = newdata_[i - pos - 1];
+    }
+    
+    return size_;
+}
+
+size_t Array::erase(const size_t pos)
+{
+    if (pos >= size_)
+    {
+        assert(0);
+    }
+  
+    value_type *datanew_ = new value_type[size_-1];
+
     for (int i = 0; i < pos; i++)
     {
-        dataNew_[i] = data_[i];
+        datanew_[i] = data_[i];
     }
+  
     for (int i = pos+1; i < size_; i++)
     {
-        dataNew_[i-1] = data_[i];
+        datanew_[i-1] = data_[i];
     }
     delete[] data_;
-    data_ = dataNew_;
+    data_ = datanew_;
     size_--;
     return size_;
 }
 
-bool Array::resize()
-{
-
-}
 
 void Array::dump() const
 {
@@ -117,5 +219,33 @@ void Array::dump() const
     }
     cout << "\t\t}" << endl;
     cout << "\t}" << endl;
+}
+
+bool Array::resize(const size_t new_size)
+{
+    if (new_size < size_)
+    {
+        return false;
+    }
+    else
+    {
+        value_type *newdata_ = new value_type [new_size];
+
+        for (unsigned int i = 0; i < size_; i++)
+        {
+            newdata_[i] = data_[i];
+        }
+
+        for (unsigned int i = size_; i < new_size; i++)
+        {
+            newdata_[i] = 0;
+        }
+
+        size_ = new_size;
+        data_ = newdata_;
+
+        return true;
+    }
+
 }
 
