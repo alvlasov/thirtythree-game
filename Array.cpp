@@ -48,12 +48,13 @@ const Array& Array::operator=(const Array &that)
 
 const bool Array::operator==(const Array &arr1, const Array &arr2)
 {
-  
+
 }
 
 bool Array::empty() const
 {
-    if (size_ == 0) {
+    if (size_ == 0)
+    {
         return true;
     }
     return false;
@@ -62,12 +63,13 @@ bool Array::empty() const
 value_type& Array::operator[](size_t n)
 {
     assert(0 <= index && index < size_);
+
     return data_[index];
 }
 
 
 
-const Array Array::operator+(const Array &arr1, const Array &arr2)
+const Array Array::operator+(const Array &arr1, const Array &arr2)Merge remote-tracking branch
 {
     if (arr1.size() != arr2.size())
     {
@@ -101,7 +103,7 @@ const Array Array::operator-(const Array &arr1, const Array &arr2)
     {
         new_array.data_[i] = arr1.data_[i] - arr2.data_[i];
     }
-  
+
     return new_array;
 }
 

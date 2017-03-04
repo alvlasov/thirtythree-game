@@ -7,31 +7,30 @@ class Array
 public:
     typedef value_type int;
 
-    // конструктор по умолчанию выделяет память на capacity_step элементов
-    Array(); // Алена
-    Array(size_t size); // Таня +
+    Array();
+    Array(size_t size);
     Array(const Array& that); // Саша
-    ~Array(); // Алена
+    ~Array();
 
     size_t size() const { return size_; }
 
     bool empty() const;
-    value_type& operator[](size_t n); // Алена
-    const Array& operator=(const Array &that); // Таня +
+    value_type& operator[](size_t n);
+    const Array& operator=(const Array &that);
     const bool operator==(const Array &arr1, const Array &arr2); // Саша
-    const Array operator+(const Array &arr1, const Array &arr2); // Таня
-    const Array operator-(const Array &arr1, const Array &arr2); // Таня
+    const Array operator+(const Array &arr1, const Array &arr2);
+    const Array operator-(const Array &arr1, const Array &arr2);
 
     bool empty() const;
-    value_type first() const; // Алена
-    value_type last() const; // Таня +
+    value_type first() const;
+    value_type last() const;
     value_type at(const size_t pos) const;  // Саша
 
-    size_t erase(const size_t pos); // Алена
-    size_t insert(const size_t pos, const value_type n); // Таня +
+    size_t erase(const size_t pos);
+    size_t insert(const size_t pos, const value_type n);
     bool dump() const; // Саша
-    bool ok() const; // Алена
-    bool resize(const size_t new_size); // Таня+
+    bool ok() const;
+    bool resize(const size_t new_size);
 
 
 
