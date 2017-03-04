@@ -17,22 +17,22 @@ Array::Array(size_t size) :
     }
 }
 
-Array::Array(const Array& that);
+Array::Array(const Array& that)
 {
 
 }
 
-Array::~Array();
+Array::~Array()
 {
 
 }
 
-Array::value_type& Array::operator[](size_t n);
+Array::value_type& Array::operator[](size_t n)
 {
 
 }
 
-const Array& Array::operator=(const Array &that);
+const Array& Array::operator=(const Array &that)
 {
     this -> resize(that.size());
 
@@ -44,7 +44,7 @@ const Array& Array::operator=(const Array &that);
     return *this;
 }
 
-const bool Array::operator==(const Array &arr1, const Array &arr2);
+const bool Array::operator==(const Array &arr1, const Array &arr2)
 {
 
 }
@@ -87,12 +87,12 @@ const Array Array::operator-(const Array &arr1, const Array &arr2)
     return new_array;
 }
 
-Array::value_type Array::first() const;
+Array::value_type Array::first() const
 {
 
 }
 
-Array::value_type Array::last() const;
+Array::value_type Array::last() const
 {
     if (empty())
     {
@@ -102,12 +102,12 @@ Array::value_type Array::last() const;
     return data_[size_-1];
 }
 
-Array::value_type Array::at(const size_t pos) const;
+Array::value_type Array::at(const size_t pos) const
 {
 
 }
 
-size_t Array::insert(const size_t pos, const value_type n);
+size_t Array::insert(const size_t pos, const value_type n)
 {
 
     if (pos >= size_)
@@ -135,7 +135,7 @@ size_t Array::insert(const size_t pos, const value_type n);
     return size_;
 }
 
-size_t Array::erase(const size_t pos);
+size_t Array::erase(const size_t pos)
 {
 
 }
