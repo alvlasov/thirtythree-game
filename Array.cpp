@@ -102,7 +102,6 @@ Array operator +(const Array &arr1, const Array &arr2)
     size_t arr_size = arr1.size();
 
     Array new_array(arr_size);
-    //Array* ref_array  = new Array [arr_size];
 
     for (unsigned int i = 0; i < arr_size; i++ )
     {
