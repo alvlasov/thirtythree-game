@@ -29,7 +29,7 @@ Array::Array(size_t size):
 Array::Array(Array& that)
 {
     size_ = that.size();
-    data_ = new value_type[size_];
+    data_ = new value_type [size_];
 
     for (unsigned int i = 0; i < size_; i++)
     {
