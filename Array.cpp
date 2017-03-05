@@ -14,7 +14,6 @@ Array::Array():
     cout << __PRETTY_FUNCTION__ << endl;
 }
 
-
 Array::Array(size_t size):
     data_(new value_type [size]),
     size_(size)
@@ -46,7 +45,6 @@ Array::~Array()
     data_ = NULL;
     size_ = 0;
 }
-
 
 Array& Array::operator =(Array &that)
 {
@@ -87,15 +85,12 @@ bool Array::empty_() const
     return false;
 }
 
-value_type& Array::operator[](size_t n)
+value_type& Array::operator [](size_t n)
 {
     assert(0 <= n && n < size_);
 
     return data_[n];
 }
-
-
-
 
 Array operator +(const Array &arr1, const Array &arr2)
 {
@@ -135,7 +130,6 @@ Array operator -(const Array &arr1, const Array &arr2)
 
     return new_array;
 }
-
 
 value_type Array::first() const
 {
@@ -214,7 +208,6 @@ size_t Array::erase(const size_t pos)
     size_--;
     return size_;
 }
-
 
 void Array::dump() const
 {

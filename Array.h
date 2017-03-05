@@ -15,8 +15,8 @@ public:
     size_t size() const { return size_; }
 
     bool empty() const;
-    value_type& operator[](size_t n);
-    Array& operator=(Array &that);
+    value_type& operator [](size_t n);
+    Array& operator =(Array &that);
     bool empty_() const;
     value_type first() const;
     value_type last() const;
@@ -32,7 +32,7 @@ private:
     size_t size_;
 };
 
-bool operator==(const Array &arr1, const Array &arr2);
+bool operator ==(const Array &arr1, const Array &arr2);
 Array operator +(const Array &arr1, const Array &arr2);
 Array operator-(const Array &arr1, const Array &arr2);
 #endif // ARRAY_H_INCLUDED
