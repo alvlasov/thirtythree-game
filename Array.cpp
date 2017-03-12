@@ -1,11 +1,10 @@
-//--------------------------------------------------
-//! @file Array.cpp
-//! Implements an array class
-//!
-//! @author Vlasov Alexander, Tatyana Mamontova, Alyona Beskrovnaya, Feb. 2017
-//--------------------------------------------------
+/*!
+    @file Array.cpp
+    @brief Реализация класса Array
+    @author Власов Александр, Татьяна Мамонтова, Алена Бескровная
+    @date Март 2017
+*/
 
-#include <cassert>
 #include <cmath>
 #include <iostream>
 #include "Array.h"
@@ -66,19 +65,19 @@ Array& Array::operator =(Array &that)
     return *this;
 }
 
-bool operator ==(Array &arr1, Array &arr2)
+bool operator ==(Array& arr1, Array& arr2)
 {
     if (arr1.size() != arr2.size())
             return false;
-        else
+    else
+    {
+        for (unsigned int i = 0; i < arr1.size(); i++)
         {
-            for (unsigned int i = 0; i < arr1.size(); i++)
-            {
-                if (arr1.at(i) != arr2.at(i))
-                    return false;
-            }
+            if (arr1.at(i) != arr2.at(i))
+                return false;
         }
-        return true;
+    }
+    return true;
 }
 
 bool Array::empty() const
@@ -93,16 +92,19 @@ bool Array::empty() const
 
 value_type& Array::operator [](size_t n)
 {
-    assert(0 <= n && n < size_);
+    if (!(0 <= n && n < size_))
+    {
+        throw 0;
+    }
 
     return data_[n];
 }
 
-Array operator +(const Array &arr1, const Array &arr2)
+const Array operator +(const Array &arr1, const Array &arr2)
 {
     if (arr1.size() != arr2.size())
     {
-        assert(0);
+        throw 0;
     }
 
     size_t arr_size = arr1.size();
@@ -117,11 +119,11 @@ Array operator +(const Array &arr1, const Array &arr2)
     return new_array;
 }
 
-Array operator -(const Array &arr1, const Array &arr2)
+const Array operator -(const Array &arr1, const Array &arr2)
 {
     if (arr1.size() != arr2.size())
     {
-        assert(0);
+        throw 0;
     }
 
     size_t arr_size = arr1.size();
@@ -140,7 +142,7 @@ value_type Array::first() const
 {
     if (empty())
     {
-        assert(0);
+        throw 0;
     }
 
     return data_[0];
@@ -150,7 +152,7 @@ value_type Array::last() const
 {
     if (empty())
     {
-        assert(0);
+        throw 0;
     }
 
     return data_[size_-1];
@@ -160,7 +162,7 @@ value_type Array::at(const size_t pos) const
 {
     if (pos >= size_)
     {
-        assert(0);
+        throw 0;
     }
     return data_[pos];
 }
@@ -169,18 +171,18 @@ size_t Array::insert(const size_t pos, const value_type n)
 {
     if (pos >= size_)
     {
-        assert(0);
+        throw 0;
     }
     value_type *newdata_ = new value_type [size_ - pos];
 
     for (unsigned int i = pos ; i < size_; i++)
     {
-        newdata_[i - pos ] = data_[i];
+        newdata_[i - pos] = data_[i];
     }
 
     data_[pos] = n;
 
-    this ->resize(size_+1);
+    this->resize(size_ + 1);
 
     for (unsigned int i = pos + 1; i < size_; i++)
     {
@@ -194,7 +196,7 @@ size_t Array::erase(const size_t pos)
 {
     if (pos >= size_)
     {
-        assert(0);
+        throw 0;
     }
 
     value_type *datanew_ = new value_type[size_-1];

@@ -1,9 +1,9 @@
-//--------------------------------------------------
-//! @file Stack.cpp
-//! Implements a stack class
-//!
-//! @author Vlasov Alexander, Tatyana Mamontova, Alyona Beskrovnaya, Feb. 2017
-//--------------------------------------------------
+/*!
+    @file Stack.cpp
+    @brief Реализация класса Stack
+    @author Власов Александр, Татьяна Мамонтова, Алена Бескровная
+    @date Март 2017
+*/
 
 #include <cassert>
 #include <iostream>
