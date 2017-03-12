@@ -1,9 +1,9 @@
-//--------------------------------------------------
-//! @file Stack.cpp
-//! Implements a stack class
-//!
-//! @author Vlasov Alexander, Feb. 2017
-//--------------------------------------------------
+/*!
+    @file Stack.cpp
+    @brief Реализация класса Stack
+    @author Власов Александр, Татьяна Мамонтова, Алена Бескровная
+    @date Март 2017
+*/
 
 #include <cassert>
 #include <iostream>
@@ -93,7 +93,7 @@ bool Stack::ok() const
     return (size() <= capacity());
 }
 
-bool Stack::dump() const
+void Stack::dump() const
 {
     cout << "Stack (";
     if (ok())
@@ -105,9 +105,9 @@ bool Stack::dump() const
     cout << "\tcapacity_\t= " << capacity() << endl;
     cout << "\tdata_ [" << capacity() << "]:"<< endl;
     cout << "\t\t{" << endl;
-    for (int i=0; i<capacity(); i++)
+    for (size_t i = 0; i < capacity(); i++)
     {
-        if (i<size())
+        if (i < size())
             cout << "\t*\t" << "[" << i << "] = " << data_[i];
         else
             cout << "\t\t" << "[" << i << "] = " << data_[i];

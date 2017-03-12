@@ -1,9 +1,9 @@
-//--------------------------------------------------
-//! @file Stack.h
-//! Implements a stack class
-//!
-//! @author Vlasov Alexander, Feb. 2017
-//--------------------------------------------------
+/*!
+    @file Stack.h
+    @brief Реализация класса Stack
+    @author Власов Александр, Татьяна Мамонтова, Алена Бескровная
+    @date Март 2017
+*/
 
 #ifndef STACKH
 #define STACKH
@@ -24,7 +24,7 @@ public:
     value_type top() const;
     bool pop();
     bool ok() const;
-    bool dump() const;
+    void dump() const;
 
 private:
     static const int POISON_VAR = 666666;
