@@ -90,7 +90,7 @@ bool Array::empty() const
     return false;
 }
 
-value_type& Array::operator [](size_t n)
+Array::value_type& Array::operator [](size_t n)
 {
     if (!(0 <= n && n < size_))
     {
@@ -138,7 +138,7 @@ const Array operator -(const Array &arr1, const Array &arr2)
     return new_array;
 }
 
-value_type Array::first() const
+Array::value_type Array::first() const
 {
     if (empty())
     {
@@ -148,7 +148,7 @@ value_type Array::first() const
     return data_[0];
 }
 
-value_type Array::last() const
+Array::value_type Array::last() const
 {
     if (empty())
     {
@@ -158,7 +158,7 @@ value_type Array::last() const
     return data_[size_-1];
 }
 
-value_type Array::at(const size_t pos) const
+Array::value_type Array::at(const size_t pos) const
 {
     if (pos >= size_)
     {
