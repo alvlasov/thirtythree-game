@@ -58,7 +58,7 @@ bool Stack::push(value_type value)
     return true;
 }
 
-Stack::value_type Stack::top() //const
+Stack::value_type Stack::top() const
 {
     ASSERT_OK();
     if (size_ != 0)
@@ -84,7 +84,7 @@ bool Stack::ok() const
     return (size_ <= capacity_);
 }
 
-void Stack::dump() //const
+void Stack::dump() const
 {
     cout << "Stack (";
     if (ok())

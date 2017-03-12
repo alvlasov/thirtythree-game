@@ -23,10 +23,10 @@ public:
     size_t capacity() const { return capacity_; }
     bool empty() const;
     bool push(value_type value);
-    value_type top(); //const;
+    value_type top() const;
     bool pop();
     bool ok() const;
-    void dump(); //const;
+    void dump() const;
 
 private:
     static const int POISON_VAR = 660660;
