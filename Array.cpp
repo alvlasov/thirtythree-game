@@ -45,6 +45,7 @@ Array::Array(Array& that)
 
 Array::~Array()
 {
+    cout << __PRETTY_FUNCTION__ << endl;
     delete [] data_;
 
     data_ = NULL;

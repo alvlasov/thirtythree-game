@@ -1,10 +1,13 @@
 #include "UnitTest++.h"
+#define MESSAGE(msg) \
+    std::cout << "Testing " << msg << "..." << std::endl; \
 
 SUITE(Stack)
 {
 
     TEST(PushSingleNumber)
     {
+        MESSAGE("Stack_PushSingleNumber");
         Stack s;
         s.push(3802);
         CHECK_EQUAL(s.top(), 0xEDA);
@@ -14,6 +17,7 @@ SUITE(Stack)
 
     TEST(CheckDestroyedStack)
     {
+        MESSAGE("Stack_CheckDestroyedStack");
         Stack *p;
         {
             Stack s;
@@ -26,6 +30,7 @@ SUITE(Stack)
 
     TEST(CannotPushMore)
     {
+        MESSAGE("Stack_CannotPushMore");
         Stack s;
         for (size_t i = 0; i < s.capacity(); i++)
             s.push(100 + i);
@@ -39,7 +44,7 @@ SUITE(Array)
 
     TEST(ConstructorsCheck)
     {
-
+        MESSAGE("Array_ConstructorsCheck");
         Array a(10);
         CHECK_EQUAL(a.size(), 10);
         CHECK_EQUAL(a.empty(), false);
@@ -60,6 +65,7 @@ SUITE(Array)
 
     TEST(EmptyArrayOperations)
     {
+        MESSAGE("Array_EmptyArrayOperations");
         Array a;
         CHECK_EQUAL(a.size(), 0);
         CHECK_EQUAL(a.empty(), true);
@@ -75,6 +81,7 @@ SUITE(Array)
     }
     TEST(FirstLastAtCheck)
     {
+        MESSAGE("Array_FirstLastAtCheck");
         Array a(10);
         for (size_t i = 0; i < a.size(); i++)
         {
@@ -91,6 +98,7 @@ SUITE(Array)
     }
     TEST(EraseCheck)
     {
+        MESSAGE("Array_EraseCheck");
         Array a(10);
         for (size_t i = 0; i < a.size(); i++)
         {
@@ -107,6 +115,7 @@ SUITE(Array)
     }
     TEST(InsertCheck)
     {
+        MESSAGE("Array_InsertCheck");
         Array a(10);
         for (size_t i = 0; i < a.size(); i++)
         {
@@ -126,6 +135,7 @@ SUITE(Array)
     }
     TEST(ResizeCheck)
     {
+        MESSAGE("Array_ResizeCheck");
         Array a(10);
         for (size_t i = 0; i < a.size(); i++)
         {
