@@ -36,6 +36,28 @@ SUITE(Stack)
 
 SUITE(Array)
 {
+
+    TEST(ConstructorsCheck)
+    {
+
+        Array a(10);
+        CHECK_EQUAL(a.size(), 10);
+        CHECK_EQUAL(a.empty(), false);
+        for (size_t i = 0; i < a.size(); i++)
+        {
+            a[i] = 10 * (i+1);
+        }
+        Array c = a;
+        CHECK_EQUAL(a.size(), c.size());
+        for (size_t i = 0; i < c.size(); i++)
+        {
+            CHECK_EQUAL(a[i], c[i]);
+        }
+        Array b;
+        CHECK_EQUAL(b.size(), 0);
+        CHECK_EQUAL(b.empty(), true);
+    }
+
     TEST(EmptyArrayOperations)
     {
         Array a;
@@ -51,20 +73,85 @@ SUITE(Array)
         CHECK_EQUAL(a.resize(10), true);
         CHECK_EQUAL(a.size(), 10);
     }
-    TEST(Constructors)
+    TEST(FirstLastAtCheck)
     {
         Array a(10);
-        CHECK_EQUAL(a.size(), 10);
-        CHECK_EQUAL(a.empty(), false);
         for (size_t i = 0; i < a.size(); i++)
         {
             a[i] = 10 * (i+1);
         }
-        Array c = a;
-        CHECK_EQUAL(a.size(), c.size());
-        for (size_t i = 0; i < c.size(); i++)
+        CHECK_EQUAL(a[0], a.first());
+        CHECK_EQUAL(a[a.size() - 1], a.last());
+        for (size_t i = 0; i < a.size(); i++)
         {
-            CHECK_EQUAL(a[i], c[i]);
+            CHECK_EQUAL(a[i], a.at(i));
         }
+        CHECK_THROW(a.at(a.size() + 1), int);
+        CHECK_THROW(a.at(-1), int);
+    }
+    TEST(EraseCheck)
+    {
+        Array a(10);
+        for (size_t i = 0; i < a.size(); i++)
+        {
+            a[i] = 10 * (i+1);
+        }
+        CHECK_EQUAL(a.erase(0), 9);
+        CHECK_EQUAL(a.size(), 9);
+        for (size_t i = 0; i < a.size(); i++)
+        {
+            CHECK_EQUAL(a[i], 10 * (i+2));
+        }
+        CHECK_THROW(a.erase(-1), int);
+        CHECK_THROW(a.erase(a.size() + 100), int);
+    }
+    TEST(InsertCheck)
+    {
+        Array a(10);
+        for (size_t i = 0; i < a.size(); i++)
+        {
+            a[i] = 10 * (i+1);
+        }
+        CHECK_EQUAL(a.insert(0, 0), 11);
+        CHECK_EQUAL(a.size(), 11);
+        for (size_t i = 0; i < a.size(); i++)
+        {
+            CHECK_EQUAL(a[i], 10 * i);
+        }
+        CHECK_THROW(a.insert(-1, 0), int);
+        CHECK_THROW(a.insert(a.size() + 100, 0), int);
+
+        CHECK_EQUAL(a.insert(5, 111), 12);
+        CHECK_EQUAL(a[5], 111);
+    }
+    TEST(ResizeCheck)
+    {
+        Array a(10);
+        for (size_t i = 0; i < a.size(); i++)
+        {
+            a[i] = 10 * (i+1);
+        }
+        CHECK_EQUAL(a.resize(9), false);
+        CHECK_EQUAL(a.resize(15), true);
+        for (size_t i = 0; i < a.size(); i++)
+        {
+            if (i < 10)
+                CHECK_EQUAL(a[i], 10 * (i+1));
+            else
+                CHECK_EQUAL(a[i], 0);
+        }
+
+    }
+    TEST(OperatorEqualCheck)
+    {
+        // TODO
+    }
+    TEST(OperatorPlusCheck)
+    {
+        // TODO
+    }
+    TEST(OperatorMinusCheck)
+    {
+        // TODO
     }
 }
