@@ -1,20 +1,20 @@
 # depslib dependency file v1.0
-1489328544 source:c:\users\александр\yandexdisk\mephi\8 семестр\atomcpp\cpp-course\array.cpp
+1489335162 source:c:\users\александр\yandexdisk\mephi\8 семестр\atomcpp\cpp-course\array.cpp
 	<cassert>
 	<cmath>
 	<iostream>
 	"Array.h"
 
-1489328504 c:\users\александр\yandexdisk\mephi\8 семестр\atomcpp\cpp-course\array.h
+1489335229 c:\users\александр\yandexdisk\mephi\8 семестр\atomcpp\cpp-course\array.h
 
-1489328058 source:c:\users\александр\yandexdisk\mephi\8 семестр\atomcpp\cpp-course\stack.cpp
+1489330312 source:c:\users\александр\yandexdisk\mephi\8 семестр\atomcpp\cpp-course\stack.cpp
 	<cassert>
 	<iostream>
 	"Stack.h"
 
-1489328445 c:\users\александр\yandexdisk\mephi\8 семестр\atomcpp\cpp-course\stack.h
+1489330304 c:\users\александр\yandexdisk\mephi\8 семестр\atomcpp\cpp-course\stack.h
 
-1489328567 source:c:\users\александр\yandexdisk\mephi\8 семестр\atomcpp\cpp-course\main.cpp
+1489334970 source:c:\users\александр\yandexdisk\mephi\8 семестр\atomcpp\cpp-course\main.cpp
 	<iostream>
 	"Stack.h"
 	"Array.h"
@@ -161,6 +161,6 @@
 1489328350 c:\users\александр\yandexdisk\mephi\8 семестр\atomcpp\cpp-course\tests.h
 	"UnitTest++.h"
 
-1489328350 c:\users\александр\yandexdisk\mephi\8 семестр\atomcpp\cpp-course\unittests.h
+1489334970 c:\users\александр\yandexdisk\mephi\8 семестр\atomcpp\cpp-course\unittests.h
 	"UnitTest++.h"
 

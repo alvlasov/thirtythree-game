@@ -1,9 +1,9 @@
-//--------------------------------------------------
-//! @file Stack.h
-//! Implements a stack class
-//!
-//! @author Vlasov Alexander, Tatyana Mamontova, Alyona Beskrovnaya, Feb. 2017
-//--------------------------------------------------
+/*!
+    @file Stack.h
+    @brief Реализация класса Stack
+    @author Власов Александр, Татьяна Мамонтова, Алена Бескровная
+    @date Март 2017
+*/
 
 #ifndef STACKH
 #define STACKH
