@@ -1,8 +1,14 @@
+//--------------------------------------------------
+//! @file Array.cpp
+//! Implements an array class
+//!
+//! @author Vlasov Alexander, Tatyana Mamontova, Alyona Beskrovnaya, Feb. 2017
+//--------------------------------------------------
+
 #include <cassert>
 #include <cmath>
 #include <iostream>
 #include "Array.h"
-#include <iostream>
 
 using std::cout;
 using std::endl;
@@ -75,7 +81,7 @@ bool operator ==(Array &arr1, Array &arr2)
         return true;
 }
 
-bool Array::empty_() const
+bool Array::empty() const
 {
     if (size_ == 0)
     {
@@ -132,7 +138,7 @@ Array operator -(const Array &arr1, const Array &arr2)
 
 value_type Array::first() const
 {
-    if (empty_())
+    if (empty())
     {
         assert(0);
     }
@@ -142,7 +148,7 @@ value_type Array::first() const
 
 value_type Array::last() const
 {
-    if (empty_())
+    if (empty())
     {
         assert(0);
     }

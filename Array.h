@@ -1,3 +1,10 @@
+//--------------------------------------------------
+//! @file Array.h
+//! Implements an array class
+//!
+//! @author Vlasov Alexander, Tatyana Mamontova, Alyona Beskrovnaya, Feb. 2017
+//--------------------------------------------------
+
 #ifndef ARRAY_H_INCLUDED
 #define ARRAY_H_INCLUDED
 
@@ -14,10 +21,9 @@ public:
 
     size_t size() const { return size_; }
 
-    bool empty() const;
     value_type& operator [](size_t n);
     Array& operator =(Array &that);
-    bool empty_() const;
+    bool empty() const;
     value_type first() const;
     value_type last() const;
     value_type at(const size_t pos) const;
@@ -27,9 +33,10 @@ public:
     bool resize(const size_t new_size);
 
 private:
-    value_type *data_;
 
+    value_type *data_;
     size_t size_;
+
 };
 
 bool operator ==(const Array &arr1, const Array &arr2);
