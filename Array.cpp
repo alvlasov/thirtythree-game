@@ -45,6 +45,7 @@ Array::Array(Array& that)
 
 Array::~Array()
 {
+    cout << __PRETTY_FUNCTION__ << endl;
     delete [] data_;
 
     data_ = NULL;
@@ -65,7 +66,7 @@ Array& Array::operator =(Array &that)
     return *this;
 }
 
-bool operator ==(Array& arr1, Array& arr2)
+bool operator ==(const Array& arr1, const Array& arr2)
 {
     if (arr1.size() != arr2.size())
             return false;
@@ -100,7 +101,17 @@ Array::value_type& Array::operator [](size_t n)
     return data_[n];
 }
 
-const Array operator +(const Array &arr1, const Array &arr2)
+const Array::value_type& Array::operator [](size_t n) const
+{
+    if (!(0 <= n && n < size_))
+    {
+        throw 0;
+    }
+
+    return data_[n];
+}
+
+Array& operator +(const Array &arr1, const Array &arr2)
 {
     if (arr1.size() != arr2.size())
     {
@@ -119,7 +130,7 @@ const Array operator +(const Array &arr1, const Array &arr2)
     return new_array;
 }
 
-const Array operator -(const Array &arr1, const Array &arr2)
+Array& operator -(const Array &arr1, const Array &arr2)
 {
     if (arr1.size() != arr2.size())
     {

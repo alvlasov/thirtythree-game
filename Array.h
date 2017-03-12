@@ -37,6 +37,11 @@ public:
     //! @return Значение в ячейке массива с индексом n
     value_type& operator [](size_t n);
 
+    //! Обращение к элементам массива через [] для константных объектов
+    //! @param n Индекс элемента
+    //! @return Значение в ячейке массива с индексом n
+    const value_type& operator [](size_t n) const;
+
     //! Оператор присваивания
     //! @param that Другой массив
     //! @return Ссылка на this
@@ -88,7 +93,6 @@ private:
 
 };
 
-
 //! Оператор сравнения
 //! @param arr1,arr2 Два массива
 //! @return Равны ли массивы
@@ -97,11 +101,11 @@ bool operator ==(const Array& arr1, const Array& arr2);
 //! Оператор поэлементного сложения двух массивов одинакового размера
 //! @param arr1,arr2 Два массива
 //! @return Новый массив
-const Array operator +(const Array& arr1, const Array& arr2);
+Array& operator +(const Array& arr1, const Array& arr2);
 
 //! Оператор поэлементного вычитания двух массивов одинакового размера
 //! @param arr1,arr2 Два массива
 //! @return Новый массив
-const Array operator -(const Array& arr1, const Array& arr2);
+Array& operator -(const Array& arr1, const Array& arr2);
 
 #endif // ARRAY_H_INCLUDED

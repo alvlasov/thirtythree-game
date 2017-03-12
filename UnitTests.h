@@ -1,10 +1,13 @@
 #include "UnitTest++.h"
+#define MESSAGE(msg) \
+    std::cout << std::endl << "Testing " << msg << "..." << std::endl; \
 
 SUITE(Stack)
 {
 
     TEST(PushSingleNumber)
     {
+        MESSAGE("Stack_PushSingleNumber");
         Stack s;
         s.push(3802);
         CHECK_EQUAL(s.top(), 0xEDA);
@@ -14,6 +17,7 @@ SUITE(Stack)
 
     TEST(CheckDestroyedStack)
     {
+        MESSAGE("Stack_CheckDestroyedStack");
         Stack *p;
         {
             Stack s;
@@ -26,6 +30,7 @@ SUITE(Stack)
 
     TEST(CannotPushMore)
     {
+        MESSAGE("Stack_CannotPushMore");
         Stack s;
         for (size_t i = 0; i < s.capacity(); i++)
             s.push(100 + i);
@@ -39,7 +44,7 @@ SUITE(Array)
 
     TEST(ConstructorsCheck)
     {
-
+        MESSAGE("Array_ConstructorsCheck");
         Array a(10);
         CHECK_EQUAL(a.size(), 10);
         CHECK_EQUAL(a.empty(), false);
@@ -60,6 +65,7 @@ SUITE(Array)
 
     TEST(EmptyArrayOperations)
     {
+        MESSAGE("Array_EmptyArrayOperations");
         Array a;
         CHECK_EQUAL(a.size(), 0);
         CHECK_EQUAL(a.empty(), true);
@@ -73,8 +79,10 @@ SUITE(Array)
         CHECK_EQUAL(a.resize(10), true);
         CHECK_EQUAL(a.size(), 10);
     }
+
     TEST(FirstLastAtCheck)
     {
+        MESSAGE("Array_FirstLastAtCheck");
         Array a(10);
         for (size_t i = 0; i < a.size(); i++)
         {
@@ -89,8 +97,10 @@ SUITE(Array)
         CHECK_THROW(a.at(a.size() + 1), int);
         CHECK_THROW(a.at(-1), int);
     }
+
     TEST(EraseCheck)
     {
+        MESSAGE("Array_EraseCheck");
         Array a(10);
         for (size_t i = 0; i < a.size(); i++)
         {
@@ -105,8 +115,10 @@ SUITE(Array)
         CHECK_THROW(a.erase(-1), int);
         CHECK_THROW(a.erase(a.size() + 100), int);
     }
+
     TEST(InsertCheck)
     {
+        MESSAGE("Array_InsertCheck");
         Array a(10);
         for (size_t i = 0; i < a.size(); i++)
         {
@@ -124,8 +136,10 @@ SUITE(Array)
         CHECK_EQUAL(a.insert(5, 111), 12);
         CHECK_EQUAL(a[5], 111);
     }
+
     TEST(ResizeCheck)
     {
+        MESSAGE("Array_ResizeCheck");
         Array a(10);
         for (size_t i = 0; i < a.size(); i++)
         {
@@ -140,18 +154,60 @@ SUITE(Array)
             else
                 CHECK_EQUAL(a[i], 0);
         }
-
     }
+
     TEST(OperatorEqualCheck)
     {
-        // TODO
+        MESSAGE("Array_OperatorEqualCheck");
+        Array a(10);
+        for (size_t i = 0; i < a.size(); i++)
+        {
+            a[i] = 10 * (i+1);
+        }
+        Array b = a;
+        CHECK_EQUAL(a == b, true);
+        b[1] = 99;
+        CHECK_EQUAL(a == b, false);
+        Array c(a);
+        c.erase(3);
+        CHECK_EQUAL(a == c, false);
     }
+
     TEST(OperatorPlusCheck)
     {
-        // TODO
+        MESSAGE("Array_OperatorPlusCheck");
+        Array a(10), b(10);
+        for (size_t i = 0; i < a.size(); i++)
+        {
+            a[i] = 10 * (i+1);
+            b[i] = 11 * (i+1);
+        }
+        Array c = a + b;
+        for (size_t i = 0; i < c.size(); i++)
+        {
+            CHECK_EQUAL(a[i] + b[i], c[i]);
+            CHECK_EQUAL(a[i] + b[i], (a+b)[i]);
+        }
+        b.insert(1, 99);
+        CHECK_THROW(a + b, int);
     }
+
     TEST(OperatorMinusCheck)
     {
-        // TODO
+        MESSAGE("Array_OperatorMinusCheck");
+        Array a(10), b(10);
+        for (size_t i = 0; i < a.size(); i++)
+        {
+            a[i] = 10 * (i+1);
+            b[i] = 11 * (i+1);
+        }
+        Array c = a + b;
+        for (size_t i = 0; i < c.size(); i++)
+        {
+            CHECK_EQUAL(a[i] - b[i], c[i]);
+            CHECK_EQUAL(a[i] - b[i], (a+b)[i]);
+        }
+        b.insert(1, 99);
+        CHECK_THROW(a - b, int);
     }
 }

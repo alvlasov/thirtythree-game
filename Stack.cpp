@@ -13,7 +13,7 @@
     if (!ok())      \
     {               \
         dump();     \
-        assert(0);  \
+        throw 1;  \
     }               \
 
 using std::cout;
@@ -22,64 +22,55 @@ using std::endl;
 class Stack;
 
 Stack::Stack() :
+    data_(def_capacity_),
     size_(0),
     capacity_(def_capacity_)
 {
-    data_ = new value_type[def_capacity_];
+    cout << __PRETTY_FUNCTION__ << endl;
 }
 
 Stack::Stack(size_t capacity) :
+    data_(capacity),
     size_(0),
     capacity_(capacity)
 {
-    data_ = new value_type[capacity];
+    cout << __PRETTY_FUNCTION__ << endl;
 }
 
 Stack::~Stack()
 {
-    delete[] data_;
+    cout << __PRETTY_FUNCTION__ << endl;
     size_ = POISON_VAR;
-    capacity_ = 1;
-}
-
-size_t Stack::size() const
-{
-    return size_;
-}
-
-size_t Stack::capacity() const
-{
-    return capacity_;
+    capacity_ = 0;
 }
 
 bool Stack::empty() const
 {
-    return (size() == 0);
+    return (size_ == 0);
 }
 
 bool Stack::push(value_type value)
 {
     ASSERT_OK();
-    if (size()>=capacity())
+    if (size_ >= capacity_)
         return false;
     data_[size_++] = value;
-    ASSERT_OK();
     return true;
 }
 
 Stack::value_type Stack::top() const
 {
     ASSERT_OK();
-    if (size()!=0)
-        return data_[size_-1];
+    if (size_ != 0)
+        return data_[size_ - 1];
     else
-        assert(!"Stack is empty!");
+        throw 2;
 }
 
 bool Stack::pop()
 {
     ASSERT_OK();
-    if (size()!=0)
+    if (size_ != 0)
     {
         data_[--size_] = POISON_VAR;
         ASSERT_OK();
@@ -90,7 +81,7 @@ bool Stack::pop()
 
 bool Stack::ok() const
 {
-    return (size() <= capacity());
+    return (size_ <= capacity_);
 }
 
 void Stack::dump() const

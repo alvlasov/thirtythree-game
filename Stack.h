@@ -8,6 +8,8 @@
 #ifndef STACKH
 #define STACKH
 
+#include "Array.h"
+
 class Stack
 {
 public:
@@ -17,8 +19,8 @@ public:
     Stack();
     Stack(size_t capacity);
     ~Stack();
-    size_t size() const;
-    size_t capacity() const;
+    size_t size() const { return size_; }
+    size_t capacity() const { return capacity_; }
     bool empty() const;
     bool push(value_type value);
     value_type top() const;
@@ -27,9 +29,9 @@ public:
     void dump() const;
 
 private:
-    static const int POISON_VAR = 666666;
+    static const int POISON_VAR = 660660;
     static const size_t def_capacity_ = 10;
-    value_type *data_;
+    Array data_;
     size_t size_;
     size_t capacity_;
 };
