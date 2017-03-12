@@ -1,7 +1,5 @@
 *.exe
 *.o
-TechnoatomProj.depend
-TechnoatomProj.layout
 
 #################
 ## Eclipse
@@ -219,3 +217,7 @@ pip-log.txt
 
 #Mr Developer
 .mr.developer.cfg
+
+#Codeblocks temporary files
+*.depend
+*.layout
