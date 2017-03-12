@@ -8,11 +8,11 @@
 #ifndef ARRAY_H_INCLUDED
 #define ARRAY_H_INCLUDED
 
-typedef int value_type;
-
 class Array
 {
 public:
+
+    typedef float value_type;
 
     //! Инициализирует массив нулевого размера
     Array();
