@@ -222,5 +222,5 @@ pip-log.txt
 *.depend
 *.layout
 
-!/unittest-cpp/Deliv/*
-!unittest-cpp/Deliv/*
+!/unittest-cpp/Deliv/**
+!unittest-cpp/Deliv/**
