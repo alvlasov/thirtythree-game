@@ -1,7 +1,7 @@
 *.exe
 *.o
-*.depend
-*.layout
+TechnoatomProj.depend
+TechnoatomProj.layout
 
 #################
 ## Eclipse

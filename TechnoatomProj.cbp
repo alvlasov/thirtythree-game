@@ -44,6 +44,7 @@
 		<Unit filename="Array.h" />
 		<Unit filename="Stack.cpp" />
 		<Unit filename="Stack.h" />
+		<Unit filename="UnitTests.h" />
 		<Unit filename="main.cpp" />
 		<Extensions>
 			<code_completion />
