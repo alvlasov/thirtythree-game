@@ -19,9 +19,8 @@
 using std::cout;
 using std::endl;
 
-class Stack;
-
-Stack::Stack() :
+template <typename T>
+Stack<T>::Stack() :
     data_(def_capacity_),
     size_(0),
     capacity_(def_capacity_)
@@ -29,7 +28,8 @@ Stack::Stack() :
     cout << __PRETTY_FUNCTION__ << endl;
 }
 
-Stack::Stack(size_t capacity) :
+template <typename T>
+Stack<T>::Stack(size_t capacity) :
     data_(capacity),
     size_(0),
     capacity_(capacity)
@@ -37,19 +37,22 @@ Stack::Stack(size_t capacity) :
     cout << __PRETTY_FUNCTION__ << endl;
 }
 
-Stack::~Stack()
+template <typename T>
+Stack<T>::~Stack()
 {
     cout << __PRETTY_FUNCTION__ << endl;
     size_ = POISON_VAR;
     capacity_ = 0;
 }
 
-bool Stack::empty() const
+template <typename T>
+bool Stack<T>::empty() const
 {
     return (size_ == 0);
 }
 
-bool Stack::push(value_type value)
+template <typename T>
+bool Stack<T>::push(T value)
 {
     ASSERT_OK();
     if (size_ >= capacity_)
@@ -58,7 +61,8 @@ bool Stack::push(value_type value)
     return true;
 }
 
-Stack::value_type Stack::top() const
+template <typename T>
+T Stack<T>::top() const
 {
     ASSERT_OK();
     if (size_ != 0)
@@ -67,7 +71,8 @@ Stack::value_type Stack::top() const
         throw 2;
 }
 
-bool Stack::pop()
+template <typename T>
+bool Stack<T>::pop()
 {
     ASSERT_OK();
     if (size_ != 0)
@@ -79,12 +84,14 @@ bool Stack::pop()
     return false;
 }
 
-bool Stack::ok() const
+template <typename T>
+bool Stack<T>::ok() const
 {
     return (size_ <= capacity_);
 }
 
-void Stack::dump() const
+template <typename T>
+void Stack<T>::dump() const
 {
     cout << "Stack (";
     if (ok())
