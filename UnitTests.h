@@ -8,7 +8,7 @@ SUITE(Stack)
     TEST(PushSingleNumber)
     {
         MESSAGE("Stack_PushSingleNumber");
-        Stack <float> s;
+        Stack s;
         s.push(3802);
         CHECK_EQUAL(s.top(), 0xEDA);
         s.pop();
@@ -18,9 +18,9 @@ SUITE(Stack)
     TEST(CheckDestroyedStack)
     {
         MESSAGE("Stack_CheckDestroyedStack");
-        Stack <float> *p;
+        Stack *p;
         {
-            Stack <float> s;
+            Stack s;
             for (size_t i = 0; i < s.capacity(); i++)
                 s.push(100 + i);
             p = &s;
@@ -31,7 +31,7 @@ SUITE(Stack)
     TEST(CannotPushMore)
     {
         MESSAGE("Stack_CannotPushMore");
-        Stack <float> s;
+        Stack s;
         for (size_t i = 0; i < s.capacity(); i++)
             s.push(100 + i);
         CHECK_EQUAL(s.push(0xF00D), false);
