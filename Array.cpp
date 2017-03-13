@@ -72,6 +72,7 @@ Array<T>& Array<T>::operator =(Array &that)
     return *this;
 }
 
+
 template <typename T>
 bool operator ==(const Array<T>& arr1, const Array<T>& arr2)
 {
@@ -101,6 +102,17 @@ bool Array<T>::empty() const
 
 template <typename T>
 const T& Array<T>::operator [](size_t n) const
+{
+    if (!(0 <= n && n < size_))
+    {
+        throw 0;
+    }
+
+    return data_[n];
+}
+
+template <typename T>
+T& Array<T>::operator [](size_t n)
 {
     if (!(0 <= n && n < size_))
     {
