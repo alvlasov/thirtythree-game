@@ -10,11 +10,10 @@
 
 #include "Array.h"
 
+template <typename T>
 class Stack
 {
 public:
-
-    typedef float value_type;
 
     Stack();
     Stack(size_t capacity);
@@ -22,8 +21,8 @@ public:
     size_t size() const { return size_; }
     size_t capacity() const { return capacity_; }
     bool empty() const;
-    bool push(value_type value);
-    value_type top() const;
+    bool push(T value);
+    T top() const;
     bool pop();
     bool ok() const;
     void dump() const;
@@ -31,8 +30,9 @@ public:
 private:
     static const int POISON_VAR = 660660;
     static const size_t def_capacity_ = 10;
-    Array data_;
+    Array <T> data_;
     size_t size_;
     size_t capacity_;
 };
+
 #endif
