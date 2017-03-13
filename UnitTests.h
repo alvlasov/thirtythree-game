@@ -45,20 +45,20 @@ SUITE(Array)
     TEST(ConstructorsCheck)
     {
         MESSAGE("Array_ConstructorsCheck");
-        Array a(10);
+        Array <float> a(10);
         CHECK_EQUAL(a.size(), 10);
         CHECK_EQUAL(a.empty(), false);
         for (size_t i = 0; i < a.size(); i++)
         {
             a[i] = 10 * (i+1);
         }
-        Array c = a;
+        Array <float> c = a;
         CHECK_EQUAL(a.size(), c.size());
         for (size_t i = 0; i < c.size(); i++)
         {
             CHECK_EQUAL(a[i], c[i]);
         }
-        Array b;
+        Array <float> b;
         CHECK_EQUAL(b.size(), 0);
         CHECK_EQUAL(b.empty(), true);
     }
@@ -66,7 +66,7 @@ SUITE(Array)
     TEST(EmptyArrayOperations)
     {
         MESSAGE("Array_EmptyArrayOperations");
-        Array a;
+        Array <float> a;
         CHECK_EQUAL(a.size(), 0);
         CHECK_EQUAL(a.empty(), true);
         CHECK_THROW(a.first(), int);
@@ -83,7 +83,7 @@ SUITE(Array)
     TEST(FirstLastAtCheck)
     {
         MESSAGE("Array_FirstLastAtCheck");
-        Array a(10);
+        Array <float> a(10);
         for (size_t i = 0; i < a.size(); i++)
         {
             a[i] = 10 * (i+1);
@@ -101,7 +101,7 @@ SUITE(Array)
     TEST(EraseCheck)
     {
         MESSAGE("Array_EraseCheck");
-        Array a(10);
+        Array <float> a(10);
         for (size_t i = 0; i < a.size(); i++)
         {
             a[i] = 10 * (i+1);
@@ -119,7 +119,7 @@ SUITE(Array)
     TEST(InsertCheck)
     {
         MESSAGE("Array_InsertCheck");
-        Array a(10);
+        Array <float> a(10);
         for (size_t i = 0; i < a.size(); i++)
         {
             a[i] = 10 * (i+1);
@@ -140,7 +140,7 @@ SUITE(Array)
     TEST(ResizeCheck)
     {
         MESSAGE("Array_ResizeCheck");
-        Array a(10);
+        Array <float> a(10);
         for (size_t i = 0; i < a.size(); i++)
         {
             a[i] = 10 * (i+1);
@@ -159,16 +159,16 @@ SUITE(Array)
     TEST(OperatorEqualCheck)
     {
         MESSAGE("Array_OperatorEqualCheck");
-        Array a(10);
+        Array <float> a(10);
         for (size_t i = 0; i < a.size(); i++)
         {
             a[i] = 10 * (i+1);
         }
-        Array b = a;
+        Array <float> b = a;
         CHECK_EQUAL(a == b, true);
         b[1] = 99;
         CHECK_EQUAL(a == b, false);
-        Array c(a);
+        Array <float> c(a);
         c.erase(3);
         CHECK_EQUAL(a == c, false);
     }
@@ -176,13 +176,13 @@ SUITE(Array)
     TEST(OperatorPlusCheck)
     {
         MESSAGE("Array_OperatorPlusCheck");
-        Array a(10), b(10);
+        Array <float> a(10), b(10);
         for (size_t i = 0; i < a.size(); i++)
         {
             a[i] = 10 * (i+1);
             b[i] = 11 * (i+1);
         }
-        Array c = a + b;
+        Array <float> c = a + b;
         for (size_t i = 0; i < c.size(); i++)
         {
             CHECK_EQUAL(a[i] + b[i], c[i]);
@@ -195,13 +195,13 @@ SUITE(Array)
     TEST(OperatorMinusCheck)
     {
         MESSAGE("Array_OperatorMinusCheck");
-        Array a(10), b(10);
+        Array <float> a(10), b(10);
         for (size_t i = 0; i < a.size(); i++)
         {
             a[i] = 10 * (i+1);
             b[i] = 11 * (i+1);
         }
-        Array c = a + b;
+        Array <float> c = a + b;
         for (size_t i = 0; i < c.size(); i++)
         {
             CHECK_EQUAL(a[i] - b[i], c[i]);

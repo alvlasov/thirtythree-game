@@ -17,76 +17,74 @@ public:
     //! Переопределение итератора для массива
     class Array_iterator
     {
+    public:
 
-public:
-
-    //! Пустой итератор
-    //! Присваивает указателю значение NULL
-    Array_iterator():
-        p_index(nullptr)
+        //! Пустой итератор
+        //! Присваивает указателю значение NULL
+        Array_iterator():
+            p_index(nullptr)
         {
 
         }
 
-    //! Конструктор итератора с передачей параметра
-    //! Передает значение указателя
-    Array_iterator(T *p_newindex):
-        p_index(p_newindex)
-    {
+        //! Конструктор итератора с передачей параметра
+        //! Передает значение указателя
+        Array_iterator(T *p_newindex):
+            p_index(p_newindex)
+        {
 
-    }
+        }
 
-    //! Переопределение оператора *()
-    //! @return объект, на который указывает
-    T& operator *() const
-    {
-        return *p_index;
-    }
+        //! Переопределение оператора *()
+        //! @return объект, на который указывает
+        T& operator *() const
+        {
+            return *p_index;
+        }
 
-    //! Переопределение оператора ++ префикс
-    //! @return следующий итератор
-    Array_iterator& operator ++()
-    {
-        ++p_index;
-        return *this;
-    }
+        //! Переопределение оператора ++ префикс
+        //! @return следующий итератор
+        Array_iterator& operator ++()
+        {
+            ++p_index;
+            return *this;
+        }
 
-    //! Переопределение оператора ->
-    //! @return указатель на элемент массива
-    T* operator ->() const
-    {
-        return p_index;
-    }
+        //! Переопределение оператора ->
+        //! @return указатель на элемент массива
+        T* operator ->() const
+        {
+            return p_index;
+        }
 
-    //! Переопределение операции сравнения двух итераторов
-    //! @param that - итератор, с которым сравниваем
-    //! @return TRUE/FALSE
-    bool operator == (const Array_iterator& that) const
-    {
-        return (p_index == that.p_index);
-    }
+        //! Переопределение операции сравнения двух итераторов
+        //! @param that - итератор, с которым сравниваем
+        //! @return TRUE/FALSE
+        bool operator == (const Array_iterator& that) const
+        {
+            return (p_index == that.p_index);
+        }
 
-    //! Переопределение операции неравенства
-    //! @param that - итератор, с которым сравниваем
-    //! @return TRUE/FALSE
-    bool operator != (const Array_iterator& that) const
-    {
-        return (p_index != that.p_index);
-    }
+        //! Переопределение операции неравенства
+        //! @param that - итератор, с которым сравниваем
+        //! @return TRUE/FALSE
+        bool operator != (const Array_iterator& that) const
+        {
+            return (p_index != that.p_index);
+        }
 
-    //! Переопределение операции пост-инкремента
-    //! Возвращает итератор
-    Array_iterator operator ++(int)
-    {
-        return Array_iterator(p_index++);
-    }
+        //! Переопределение операции пост-инкремента
+        //! Возвращает итератор
+        Array_iterator operator ++(int)
+        {
+            return Array_iterator(p_index++);
+        }
 
-private:
+    private:
 
-    //! Указатель на элемент массива
-    T *p_index;
+        //! Указатель на элемент массива
+        T *p_index;
     };
-
 
     //! Инициализирует массив нулевого размера
     Array();
