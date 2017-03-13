@@ -8,11 +8,85 @@
 #ifndef ARRAY_H_INCLUDED
 #define ARRAY_H_INCLUDED
 
+template <typename T>
+
 class Array
 {
 public:
 
-    typedef float value_type;
+    //! Переопределение итератора для массива
+    class Array_iterator
+    {
+
+public:
+
+    //! Пустой итератор
+    //! Присваивает указателю значение NULL
+    Array_iterator():
+        p_index(nullptr)
+        {
+
+        }
+
+    //! Конструктор итератора с передачей параметра
+    //! Передает значение указателя
+    Array_iterator(T *p_newindex):
+        p_index(p_newindex)
+    {
+
+    }
+
+    //! Переопределение оператора *()
+    //! @return объект, на который указывает
+    T& operator *() const
+    {
+        return *p_index;
+    }
+
+    //! Переопределение оператора ++ префикс
+    //! @return следующий итератор
+    Array_iterator& operator ++()
+    {
+        ++p_index;
+        return *this;
+    }
+
+    //! Переопределение оператора ->
+    //! @return указатель на элемент массива
+    T* operator ->() const
+    {
+        return p_index;
+    }
+
+    //! Переопределение операции сравнения двух итераторов
+    //! @param that - итератор, с которым сравниваем
+    //! @return TRUE/FALSE
+    bool operator == (const Array_iterator& that) const
+    {
+        return (p_index == that.p_index);
+    }
+
+    //! Переопределение операции неравенства
+    //! @param that - итератор, с которым сравниваем
+    //! @return TRUE/FALSE
+    bool operator != (const Array_iterator& that) const
+    {
+        return (p_index != that.p_index);
+    }
+
+    //! Переопределение операции пост-инкремента
+    //! Возвращает итератор
+    Array_iterator operator ++(int)
+    {
+        return Array_iterator(p_index++);
+    }
+
+private:
+
+    //! Указатель на элемент массива
+    T *p_index;
+    };
+
 
     //! Инициализирует массив нулевого размера
     Array();
@@ -35,12 +109,12 @@ public:
     //! Обращение к элементам массива через []
     //! @param n Индекс элемента
     //! @return Значение в ячейке массива с индексом n
-    value_type& operator [](size_t n);
+    T& operator [](size_t n);
 
     //! Обращение к элементам массива через [] для константных объектов
     //! @param n Индекс элемента
     //! @return Значение в ячейке массива с индексом n
-    const value_type& operator [](size_t n) const;
+    const T& operator [](size_t n) const;
 
     //! Оператор присваивания
     //! @param that Другой массив
@@ -53,16 +127,16 @@ public:
 
     //! Возвращает первый элемент массива
     //! @return Первый элемент массива
-    value_type first() const;
+    T first() const;
 
     //! Возвращает последный элемент массива
     //! @return Последний элемент массива
-    value_type last() const;
+    T last() const;
 
     //! Возвращает элемент массива с индексом pos
     //! @param pos Индекс элемента
     //! @return Элемент массива с индексом pos
-    value_type at(const size_t pos) const;
+    T at(const size_t pos) const;
 
     //! Удаляет элемент с индексом pos
     //! @param pos Индекс элемента
@@ -73,7 +147,7 @@ public:
     //! @param pos Индекс элемента
     //! @param n Вставляемый элемент
     //! @return Новый размер массива
-    size_t insert(const size_t pos, const value_type n);
+    size_t insert(const size_t pos, const T n);
 
     //! Выводит на экран дамп массива
     void dump() const;
@@ -83,10 +157,24 @@ public:
     //! @return Статус операции
     bool resize(const size_t new_size);
 
+    //! Возвращает итератор на начало массива
+    Array_iterator begin()
+    {
+        Array_iterator begin_iterator(&data_[0]);
+        return begin_iterator;
+    }
+
+    //! Конечный итератор
+    Array_iterator end()
+    {
+        Array_iterator begin_iterator(&data_[size_-1]);
+        return begin_iterator;
+    }
+
 private:
 
     //! Указатель на область памяти, в которой хранятся данные
-    value_type *data_;
+    T *data_;
 
     //! Размер массива
     size_t size_;
@@ -96,16 +184,19 @@ private:
 //! Оператор сравнения
 //! @param arr1,arr2 Два массива
 //! @return Равны ли массивы
-bool operator ==(const Array& arr1, const Array& arr2);
+template <typename T>
+bool operator ==(const Array<T>& arr1, const Array<T>& arr2);
 
 //! Оператор поэлементного сложения двух массивов одинакового размера
 //! @param arr1,arr2 Два массива
 //! @return Новый массив
-Array& operator +(const Array& arr1, const Array& arr2);
+template <typename T>
+Array<T>& operator +(const Array<T>& arr1, const Array<T>& arr2);
 
 //! Оператор поэлементного вычитания двух массивов одинакового размера
 //! @param arr1,arr2 Два массива
 //! @return Новый массив
-Array& operator -(const Array& arr1, const Array& arr2);
+template <typename T>
+Array<T>& operator -(const Array<T>& arr1, const Array<T>& arr2);
 
 #endif // ARRAY_H_INCLUDED

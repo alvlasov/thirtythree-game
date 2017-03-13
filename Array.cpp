@@ -12,15 +12,17 @@
 using std::cout;
 using std::endl;
 
-Array::Array():
+template <typename T>
+Array<T>::Array():
     data_(NULL),
     size_(0)
 {
     cout << __PRETTY_FUNCTION__ << endl;
 }
 
-Array::Array(size_t size):
-    data_(new value_type [size]),
+template <typename T>
+Array<T>::Array(size_t size):
+    data_(new T [size]),
     size_(size)
 {
     for (unsigned int i = 0; i < size_; i++ )
@@ -31,10 +33,11 @@ Array::Array(size_t size):
     cout << __PRETTY_FUNCTION__ << endl;
 }
 
-Array::Array(Array& that)
+template <typename T>
+Array<T>::Array(Array& that)
 {
     size_ = that.size();
-    data_ = new value_type [size_];
+    data_ = new T [size_];
 
     for (unsigned int i = 0; i < size_; i++)
     {
@@ -43,16 +46,19 @@ Array::Array(Array& that)
     cout << __PRETTY_FUNCTION__ << endl;
 }
 
-Array::~Array()
+template <typename T>
+Array<T>::~Array()
 {
     cout << __PRETTY_FUNCTION__ << endl;
+
     delete [] data_;
 
     data_ = NULL;
     size_ = 0;
 }
 
-Array& Array::operator =(Array &that)
+template <typename T>
+Array<T>& Array<T>::operator =(Array &that)
 {
     this -> resize(that.size());
 
@@ -66,7 +72,8 @@ Array& Array::operator =(Array &that)
     return *this;
 }
 
-bool operator ==(const Array& arr1, const Array& arr2)
+template <typename T>
+bool operator ==(const Array<T>& arr1, const Array<T>& arr2)
 {
     if (arr1.size() != arr2.size())
             return false;
@@ -81,7 +88,8 @@ bool operator ==(const Array& arr1, const Array& arr2)
     return true;
 }
 
-bool Array::empty() const
+template <typename T>
+bool Array<T>::empty() const
 {
     if (size_ == 0)
     {
@@ -91,7 +99,8 @@ bool Array::empty() const
     return false;
 }
 
-Array::value_type& Array::operator [](size_t n)
+template <typename T>
+const T& Array<T>::operator [](size_t n) const
 {
     if (!(0 <= n && n < size_))
     {
@@ -101,17 +110,8 @@ Array::value_type& Array::operator [](size_t n)
     return data_[n];
 }
 
-const Array::value_type& Array::operator [](size_t n) const
-{
-    if (!(0 <= n && n < size_))
-    {
-        throw 0;
-    }
-
-    return data_[n];
-}
-
-Array& operator +(const Array &arr1, const Array &arr2)
+template <typename T>
+Array<T>& operator +(const Array<T> &arr1, const Array<T> &arr2)
 {
     if (arr1.size() != arr2.size())
     {
@@ -120,7 +120,7 @@ Array& operator +(const Array &arr1, const Array &arr2)
 
     size_t arr_size = arr1.size();
 
-    Array new_array(arr_size);
+    Array <T> new_array(arr_size);
 
     for (unsigned int i = 0; i < arr_size; i++ )
     {
@@ -130,7 +130,8 @@ Array& operator +(const Array &arr1, const Array &arr2)
     return new_array;
 }
 
-Array& operator -(const Array &arr1, const Array &arr2)
+template <typename T>
+Array<T>& operator -(const Array<T> &arr1, const Array<T> &arr2)
 {
     if (arr1.size() != arr2.size())
     {
@@ -139,7 +140,7 @@ Array& operator -(const Array &arr1, const Array &arr2)
 
     size_t arr_size = arr1.size();
 
-    Array new_array(arr_size);
+    Array <T> new_array(arr_size);
 
     for (unsigned int i = 0; i < arr_size; i++ )
     {
@@ -149,7 +150,8 @@ Array& operator -(const Array &arr1, const Array &arr2)
     return new_array;
 }
 
-Array::value_type Array::first() const
+template <typename T>
+T Array<T>::first() const
 {
     if (empty())
     {
@@ -159,7 +161,8 @@ Array::value_type Array::first() const
     return data_[0];
 }
 
-Array::value_type Array::last() const
+template <typename T>
+T Array<T>::last() const
 {
     if (empty())
     {
@@ -169,7 +172,8 @@ Array::value_type Array::last() const
     return data_[size_-1];
 }
 
-Array::value_type Array::at(const size_t pos) const
+template <typename T>
+T Array<T>::at(const size_t pos) const
 {
     if (pos >= size_)
     {
@@ -178,13 +182,14 @@ Array::value_type Array::at(const size_t pos) const
     return data_[pos];
 }
 
-size_t Array::insert(const size_t pos, const value_type n)
+template <typename T>
+size_t Array<T>::insert(const size_t pos, const T n)
 {
     if (pos >= size_)
     {
         throw 0;
     }
-    value_type *newdata_ = new value_type [size_ - pos];
+    T *newdata_ = new T [size_ - pos];
 
     for (unsigned int i = pos ; i < size_; i++)
     {
@@ -203,14 +208,15 @@ size_t Array::insert(const size_t pos, const value_type n)
     return size_;
 }
 
-size_t Array::erase(const size_t pos)
+template <typename T>
+size_t Array<T>::erase(const size_t pos)
 {
     if (pos >= size_)
     {
         throw 0;
     }
 
-    value_type *datanew_ = new value_type[size_-1];
+    T *datanew_ = new T [size_-1];
 
     for (unsigned int i = 0; i < pos; i++)
     {
@@ -227,7 +233,8 @@ size_t Array::erase(const size_t pos)
     return size_;
 }
 
-void Array::dump() const
+template <typename T>
+void Array<T>::dump() const
 {
     cout << "Array";
     cout << "\t{" << endl;
@@ -242,7 +249,8 @@ void Array::dump() const
     cout << "\t}" << endl;
 }
 
-bool Array::resize(const size_t new_size)
+template <typename T>
+bool Array<T>::resize(const size_t new_size)
 {
     if (new_size < size_)
     {
@@ -250,7 +258,7 @@ bool Array::resize(const size_t new_size)
     }
     else
     {
-        value_type *newdata_ = new value_type [new_size];
+        T *newdata_ = new T [new_size];
 
         for (unsigned int i = 0; i < size_; i++)
         {
