@@ -217,3 +217,10 @@ pip-log.txt
 
 #Mr Developer
 .mr.developer.cfg
+
+#Codeblocks temporary files
+*.depend
+*.layout
+
+!/unittest-cpp/Deliv/**
+!unittest-cpp/Deliv/**

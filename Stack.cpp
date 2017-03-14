@@ -1,9 +1,9 @@
-//--------------------------------------------------
-//! @file Stack.cpp
-//! Implements a stack class
-//!
-//! @author Vlasov Alexander, Feb. 2017
-//--------------------------------------------------
+/*!
+    @file Stack.cpp
+    @brief Реализация класса Stack
+    @author Власов Александр, Татьяна Мамонтова, Алена Бескровная
+    @date Март 2017
+*/
 
 #include <cassert>
 #include <iostream>
@@ -13,73 +13,69 @@
     if (!ok())      \
     {               \
         dump();     \
-        assert(0);  \
+        throw 1;  \
     }               \
 
 using std::cout;
 using std::endl;
 
-class Stack;
-
-Stack::Stack() :
+template <typename T>
+Stack<T>::Stack() :
+    data_(def_capacity_),
     size_(0),
     capacity_(def_capacity_)
 {
-    data_ = new value_type[def_capacity_];
+    cout << __PRETTY_FUNCTION__ << endl;
 }
 
-Stack::Stack(size_t capacity) :
+template <typename T>
+Stack<T>::Stack(size_t capacity) :
+    data_(capacity),
     size_(0),
     capacity_(capacity)
 {
-    data_ = new value_type[capacity];
+    cout << __PRETTY_FUNCTION__ << endl;
 }
 
-Stack::~Stack()
+template <typename T>
+Stack<T>::~Stack()
 {
-    delete[] data_;
+    cout << __PRETTY_FUNCTION__ << endl;
     size_ = POISON_VAR;
-    capacity_ = 1;
+    capacity_ = 0;
 }
 
-size_t Stack::size() const
+template <typename T>
+bool Stack<T>::empty() const
 {
-    return size_;
+    return (size_ == 0);
 }
 
-size_t Stack::capacity() const
-{
-    return capacity_;
-}
-
-bool Stack::empty() const
-{
-    return (size() == 0);
-}
-
-bool Stack::push(value_type value)
+template <typename T>
+bool Stack<T>::push(T value)
 {
     ASSERT_OK();
-    if (size()>=capacity())
+    if (size_ >= capacity_)
         return false;
     data_[size_++] = value;
-    ASSERT_OK();
     return true;
 }
 
-Stack::value_type Stack::top() const
+template <typename T>
+T Stack<T>::top() const
 {
     ASSERT_OK();
-    if (size()!=0)
-        return data_[size_-1];
+    if (size_ != 0)
+        return data_[size_ - 1];
     else
-        assert(!"Stack is empty!");
+        throw 2;
 }
 
-bool Stack::pop()
+template <typename T>
+bool Stack<T>::pop()
 {
     ASSERT_OK();
-    if (size()!=0)
+    if (size_ != 0)
     {
         data_[--size_] = POISON_VAR;
         ASSERT_OK();
@@ -88,12 +84,14 @@ bool Stack::pop()
     return false;
 }
 
-bool Stack::ok() const
+template <typename T>
+bool Stack<T>::ok() const
 {
-    return (size() <= capacity());
+    return (size_ <= capacity_);
 }
 
-bool Stack::dump() const
+template <typename T>
+void Stack<T>::dump() const
 {
     cout << "Stack (";
     if (ok())
@@ -105,9 +103,9 @@ bool Stack::dump() const
     cout << "\tcapacity_\t= " << capacity() << endl;
     cout << "\tdata_ [" << capacity() << "]:"<< endl;
     cout << "\t\t{" << endl;
-    for (int i=0; i<capacity(); i++)
+    for (size_t i = 0; i < capacity(); i++)
     {
-        if (i<size())
+        if (i < size())
             cout << "\t*\t" << "[" << i << "] = " << data_[i];
         else
             cout << "\t\t" << "[" << i << "] = " << data_[i];
