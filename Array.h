@@ -114,6 +114,11 @@ public:
     //! @return Значение в ячейке массива с индексом n
     const T& operator [](size_t n) const;
 
+    //! Выделение памяти
+    //! @param n Индекс элемента
+    //! @return указатель на начало блока
+    void* operator new(size_t size, size_t n)
+
     //! Оператор присваивания
     //! @param that Другой массив
     //! @return Ссылка на this
