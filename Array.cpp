@@ -61,17 +61,19 @@ Array<T>::~Array()
 template <typename T>
 const Array<T>& Array<T>::operator =(const Array &that)
 {
-    if(&that == this) return *this;
+    if(&that == this) 
+        return *this;
     Array victum(that);
     std::swap(size_,victum.size);
     std::swap(data_,victum.data);
     return *this;
 }
+
 template <typename T>
 void* Array<T>::operator new(size_t size, size_t n)
 {
     cout<< &n <<endl;
-    return malloc(size *n);
+    return malloc(size*n);
 }
 
 template <typename T>
