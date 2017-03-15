@@ -7,6 +7,7 @@
 
 #include <cmath>
 #include <iostream>
+#include <cstdlib>
 #include "Array.h"
 
 using std::cout;
@@ -34,18 +35,18 @@ Array<T>::Array(size_t size):
     cout << __PRETTY_FUNCTION__ << endl;
 }
 
-template <typename T>
-Array<T>::Array(Array& that)
-{
-    size_ = that.size();
-    data_ = new T [size_];
-
-    for (unsigned int i = 0; i < size_; i++)
-    {
-        data_[i] = that[i];
-    }
-    cout << __PRETTY_FUNCTION__ << endl;
-}
+//template <typename T>
+//Array<T>::Array(Array& that)
+//{
+//    size_ = that.size();
+//    data_ = new T [size_];
+//
+//    for (unsigned int i = 0; i < size_; i++)
+//    {
+//        data_[i] = that[i];
+//    }
+//    cout << __PRETTY_FUNCTION__ << endl;
+//}
 
 template <typename T>
 Array<T>::~Array()
@@ -59,9 +60,9 @@ Array<T>::~Array()
 }
 
 template <typename T>
-const Array<T>& Array<T>::operator =(const Array &that)
+Array<T>& Array<T>::operator =(const Array &that)
 {
-    if(&that == this) 
+    if(&that == this)
         return *this;
     Array victum(that);
     std::swap(size_,victum.size);
@@ -72,17 +73,19 @@ const Array<T>& Array<T>::operator =(const Array &that)
 template <typename T>
 void* Array<T>::operator new(size_t size, size_t n)
 {
-    cout<< &n <<endl;
-    return malloc(size*n);
+    cout << &n << endl;
+    return malloc(size * n);
 }
 
 template <typename T>
-Array<T>::Array<T>(const Array &that)
+Array<T>::Array(const Array &that) :
+    size_(that.size_),
+    data_(new T [that.size_])
 {
-    size_(that.size);
-    data_(new value_type [that.size]);
-    std::copy(that.data_,that.data_+that.size_,data_);
+    cout << __PRETTY_FUNCTION__ << endl;
+    std::copy(that.data_, that.data_ + that.size_, data_);
 }
+
 
 template <typename T>
 bool operator ==(const Array<T>& arr1, const Array<T>& arr2)
@@ -134,7 +137,7 @@ T& Array<T>::operator [](size_t n)
 }
 
 template <typename T>
-Array<T>& operator +(const Array<T> &arr1, const Array<T> &arr2)
+Array<T> operator +(const Array<T> &arr1, const Array<T> &arr2)
 {
     if (arr1.size() != arr2.size())
     {
@@ -154,7 +157,7 @@ Array<T>& operator +(const Array<T> &arr1, const Array<T> &arr2)
 }
 
 template <typename T>
-Array<T>& operator -(const Array<T> &arr1, const Array<T> &arr2)
+Array<T> operator -(const Array<T> &arr1, const Array<T> &arr2)
 {
     if (arr1.size() != arr2.size())
     {

@@ -172,7 +172,6 @@ SUITE(Array)
         c.erase(3);
         CHECK_EQUAL(a == c, false);
     }
-
     TEST(OperatorPlusCheck)
     {
         MESSAGE("Array_OperatorPlusCheck");
@@ -182,6 +181,8 @@ SUITE(Array)
             a[i] = 10 * (i+1);
             b[i] = 11 * (i+1);
         }
+
+        CHECK_EQUAL((a + b).size(), a.size());
         Array <float> c = a + b;
         for (size_t i = 0; i < c.size(); i++)
         {
@@ -201,11 +202,11 @@ SUITE(Array)
             a[i] = 10 * (i+1);
             b[i] = 11 * (i+1);
         }
-        Array <float> c = a + b;
+        Array <float> c = a - b;
         for (size_t i = 0; i < c.size(); i++)
         {
             CHECK_EQUAL(a[i] - b[i], c[i]);
-            CHECK_EQUAL(a[i] - b[i], (a+b)[i]);
+            CHECK_EQUAL(a[i] - b[i], (a-b)[i]);
         }
         b.insert(1, 99);
         CHECK_THROW(a - b, int);

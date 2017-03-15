@@ -95,7 +95,7 @@ public:
 
     //! Инициализирует массив другим массивом (создает копию)
     //! @param that Другой массив
-    Array(Array& that);
+    Array(const Array& that);
 
     //! Освобождает память
     ~Array();
@@ -117,12 +117,12 @@ public:
     //! Выделение памяти
     //! @param n Индекс элемента
     //! @return указатель на начало блока
-    void* operator new(size_t size, size_t n)
+    void* operator new(size_t size, size_t n);
 
     //! Оператор присваивания
     //! @param that Другой массив
     //! @return Ссылка на this
-    Array& operator =(Array &that);
+    Array& operator =(const Array &that);
 
     //! Проверяет, пуст ли массик
     //! @return true/false
@@ -137,7 +137,7 @@ public:
     T last() const;
 
     //! Возвращает элемент массива с индексом pos
-    //! @param pos Индекс элемента
+    //! @param pos Индекс элементаl
     //! @return Элемент массива с индексом pos
     T at(const size_t pos) const;
 
@@ -194,12 +194,12 @@ bool operator ==(const Array<T>& arr1, const Array<T>& arr2);
 //! @param arr1,arr2 Два массива
 //! @return Новый массив
 template <typename T>
-Array<T>& operator +(const Array<T>& arr1, const Array<T>& arr2);
+Array<T> operator +(const Array<T>& arr1, const Array<T>& arr2);
 
 //! Оператор поэлементного вычитания двух массивов одинакового размера
 //! @param arr1,arr2 Два массива
 //! @return Новый массив
 template <typename T>
-Array<T>& operator -(const Array<T>& arr1, const Array<T>& arr2);
+Array<T> operator -(const Array<T>& arr1, const Array<T>& arr2);
 
 #endif // ARRAY_H_INCLUDED
