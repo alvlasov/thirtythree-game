@@ -24,7 +24,6 @@ public:
         Array_iterator():
             p_index(nullptr)
         {
-
         }
 
         //! Конструктор итератора с передачей параметра
@@ -32,7 +31,6 @@ public:
         Array_iterator(T *p_newindex):
             p_index(p_newindex)
         {
-
         }
 
         //! Переопределение оператора *()
@@ -47,6 +45,14 @@ public:
         Array_iterator& operator ++()
         {
             ++p_index;
+            return *this;
+        }
+
+        //! Переопределение оператора -- префикс
+        //! @return следующий итератор
+        Array_iterator& operator --()
+        {
+            --p_index;
             return *this;
         }
 
@@ -74,10 +80,17 @@ public:
         }
 
         //! Переопределение операции пост-инкремента
-        //! Возвращает итератор
+        //! @return Возвращает итератор
         Array_iterator operator ++(int)
         {
             return Array_iterator(p_index++);
+        }
+
+        //! Переопределение операции пост-декремента
+        //! @return Возвращает итератор
+        Array_iterator operator --(int)
+        {
+            return Array_iterator(p_index--);
         }
 
     private:
@@ -117,7 +130,7 @@ public:
     //! Выделение памяти
     //! @param n Индекс элемента
     //! @return указатель на начало блока
-    void* operator new(size_t size, size_t n);
+    void* operator new(size_t size);
 
     //! Оператор присваивания
     //! @param that Другой массив
@@ -160,14 +173,14 @@ public:
     //! @return Статус операции
     bool resize(const size_t new_size);
 
-    //! Возвращает итератор на начало массива
+    //! @return Итератор на начало массива
     Array_iterator begin()
     {
         Array_iterator begin_iterator(&data_[0]);
         return begin_iterator;
     }
 
-    //! Конечный итератор
+    //! @return Итератор на конец массива
     Array_iterator end()
     {
         Array_iterator begin_iterator(&data_[size_-1]);
@@ -201,5 +214,7 @@ Array<T> operator +(const Array<T>& arr1, const Array<T>& arr2);
 //! @return Новый массив
 template <typename T>
 Array<T> operator -(const Array<T>& arr1, const Array<T>& arr2);
+
+#include "Array.hpp"
 
 #endif // ARRAY_H_INCLUDED
