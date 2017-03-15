@@ -192,7 +192,6 @@ SUITE(Array)
         b.insert(1, 99);
         CHECK_THROW(a + b, int);
     }
-
     TEST(OperatorMinusCheck)
     {
         MESSAGE("Array_OperatorMinusCheck");
@@ -210,5 +209,48 @@ SUITE(Array)
         }
         b.insert(1, 99);
         CHECK_THROW(a - b, int);
+    }
+    TEST(OperatorNewCheck)
+    {
+        MESSAGE("Array_OperatorNewCheck");
+        Array <int> *a = new Array <int>(10);
+        for (size_t i = 0; i < a->size(); i++)
+        {
+            (*a)[i] = 10 * (i+1);
+        }
+        for (size_t i = 0; i < a->size(); i++)
+        {
+            CHECK_EQUAL(10 * (i+1), (*a)[i]);
+        }
+
+        Array <int> *b = new Array <int>(*a);
+        for (size_t i = 0; i < b->size(); i++)
+        {
+            CHECK_EQUAL(10 * (i+1), (*b)[i]);
+        }
+    }
+    TEST(IteratorCheck)
+    {
+        MESSAGE("Array_IteratorCheck");
+        Array <int> a(10);
+        for (size_t i = 0; i < a.size(); i++)
+        {
+            a[i] = i;
+        }
+        Array<int>::Array_iterator it = a.begin();
+        int j = 0;
+        for (it = a.begin(); it != a.end(); it++)
+        {
+            CHECK_EQUAL(j++, *it);
+        }
+        CHECK_EQUAL(j, *it);
+
+        Array<int>::Array_iterator it2 = a.end();
+        j = 9;
+        for (it = a.end(); it != a.begin(); it--)
+        {
+            CHECK_EQUAL(j--, *it);
+        }
+        CHECK_EQUAL(j, *it);
     }
 }

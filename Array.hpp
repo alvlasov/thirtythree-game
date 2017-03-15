@@ -1,5 +1,5 @@
 /*!
-    @file Array.cpp
+    @file Array.hpp
     @brief Реализация класса Array
     @author Власов Александр, Татьяна Мамонтова, Алена Бескровная
     @date Март 2017
@@ -8,7 +8,6 @@
 #include <cmath>
 #include <iostream>
 #include <cstdlib>
-#include "Array.h"
 
 using std::cout;
 using std::endl;
@@ -35,19 +34,6 @@ Array<T>::Array(size_t size):
     cout << __PRETTY_FUNCTION__ << endl;
 }
 
-//template <typename T>
-//Array<T>::Array(Array& that)
-//{
-//    size_ = that.size();
-//    data_ = new T [size_];
-//
-//    for (unsigned int i = 0; i < size_; i++)
-//    {
-//        data_[i] = that[i];
-//    }
-//    cout << __PRETTY_FUNCTION__ << endl;
-//}
-
 template <typename T>
 Array<T>::~Array()
 {
@@ -71,10 +57,9 @@ Array<T>& Array<T>::operator =(const Array &that)
 }
 
 template <typename T>
-void* Array<T>::operator new(size_t size, size_t n)
+void* Array<T>::operator new(size_t size)
 {
-    cout << &n << endl;
-    return malloc(size * n);
+    return malloc(size);
 }
 
 template <typename T>

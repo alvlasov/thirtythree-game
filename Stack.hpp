@@ -1,5 +1,5 @@
 /*!
-    @file Stack.cpp
+    @file Stack.hpp
     @brief Реализация класса Stack
     @author Власов Александр, Татьяна Мамонтова, Алена Бескровная
     @date Март 2017
@@ -7,7 +7,6 @@
 
 #include <cassert>
 #include <iostream>
-#include "Stack.h"
 
 #define ASSERT_OK() \
     if (!ok())      \
