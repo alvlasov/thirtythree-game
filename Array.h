@@ -110,6 +110,10 @@ public:
     //! @param that Другой массив
     Array(const Array& that);
 
+    //! Инициализирует массив списком инициализации
+    //! @param init Список инициализации
+    Array(const std::initializer_list<T>& init);
+
     //! Освобождает память
     ~Array();
 

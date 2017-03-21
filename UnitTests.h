@@ -237,7 +237,7 @@ SUITE(Array)
         {
             a[i] = i;
         }
-        Array<int>::Array_iterator it = a.begin();
+        Array<int>::Array_iterator it;
         int j = 0;
         for (it = a.begin(); it != a.end(); it++)
         {
@@ -245,12 +245,22 @@ SUITE(Array)
         }
         CHECK_EQUAL(j, *it);
 
-        Array<int>::Array_iterator it2 = a.end();
+        Array<int>::Array_iterator it2;
         j = 9;
-        for (it = a.end(); it != a.begin(); it--)
+        for (it2 = a.end(); it2 != a.begin(); it2--)
         {
-            CHECK_EQUAL(j--, *it);
+            CHECK_EQUAL(j--, *it2);
         }
-        CHECK_EQUAL(j, *it);
+        CHECK_EQUAL(j, *it2);
+    }
+    TEST(InitializerListConstructor)
+    {
+        MESSAGE("Array_InitializerListConstructor");
+        Array <int> a = {1, 2, 3, 4, 5, 6};
+        CHECK_EQUAL(6, a.size());
+        for (size_t i = 0; i < a.size(); i++)
+        {
+            CHECK_EQUAL(a[i], i + 1);
+        }
     }
 }

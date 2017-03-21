@@ -35,6 +35,15 @@ Array<T>::Array(size_t size):
 }
 
 template <typename T>
+Array<T>::Array(const std::initializer_list<T>& init):
+    data_(new T [init.size()]),
+    size_(init.size())
+{
+    std::copy(init.begin(), init.end(), data_);
+    cout << __PRETTY_FUNCTION__ << endl;
+}
+
+template <typename T>
 Array<T>::~Array()
 {
     cout << __PRETTY_FUNCTION__ << endl;

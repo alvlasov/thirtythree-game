@@ -35,5 +35,6 @@ private:
     size_t capacity_;
 };
 
+#include "Stack.hpp"
 
 #endif
