@@ -11,6 +11,8 @@
 
 using std::cout;
 using std::endl;
+using std::copy;
+using std::swap;
 
 
 template <typename T>
@@ -46,6 +48,7 @@ Array<T>::~Array()
 }
 
 template <typename T>
+<<<<<<< Updated upstream:Array.hpp
 Array<T>& Array<T>::operator =(const Array &that)
 {
     if(&that == this)
@@ -69,8 +72,29 @@ Array<T>::Array(const Array &that) :
 {
     cout << __PRETTY_FUNCTION__ << endl;
     std::copy(that.data_, that.data_ + that.size_, data_);
+=======
+const Array<T>& Array<T>::operator =(const Array &that)
+{
+    if (&that == this) return *this;
+    Array victum(that);
+    swap(size_, victum.size_);
+    swap(data_,victum.data);
 }
 
+void* Array<T>& Array<T>::operator new(size_t size,size_t n)
+{
+    cout<< &n << endl;
+    return malloc(size *n);
+>>>>>>> Stashed changes:Array.cpp
+}
+
+template <typename T>
+Array::Array(const Array& that)
+{
+    size_(that.size);
+    data_(new value_type [that.size]);
+    copy(that.data_, that.data_+that.size_,data_);
+}
 
 template <typename T>
 bool operator ==(const Array<T>& arr1, const Array<T>& arr2)
