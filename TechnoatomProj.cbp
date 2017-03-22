@@ -41,13 +41,12 @@
 		<Linker>
 			<Add library=".\unittest-cpp\Deliv\Release\libUnitTest++.a" />
 		</Linker>
-		<Unit filename="Array.h" />
-		<Unit filename="Array.hpp" />
 		<Unit filename="Stack.h" />
 		<Unit filename="Stack.hpp" />
 		<Unit filename="UnitTests.h" />
-		<Unit filename="Utility.cpp" />
 		<Unit filename="Utility.h" />
+		<Unit filename="Vector.h" />
+		<Unit filename="Vector.hpp" />
 		<Unit filename="main.cpp" />
 		<Extensions>
 			<code_completion />
