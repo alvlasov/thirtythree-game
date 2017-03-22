@@ -1,10 +1,9 @@
 #include <iostream>
 
 #include "Stack.h"
-#include "Array.h"
+#include "Vector.h"
 #include "Utility.h"
 #include "UnitTests.h"
-
 
 int main()
 {

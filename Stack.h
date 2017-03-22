@@ -8,72 +8,76 @@
 #ifndef STACKH
 #define STACKH
 
-#include "Array.h"
+#include "Vector.h"
 
-template <typename T>
-class Stack
+namespace thirtythree
 {
-public:
 
-    //! Инициализирует стек нулевого размера
-    Stack();
+    template <typename T>
+    class Stack
+    {
+    public:
 
-    //! Явно инициализирует стек размера capacity
-    //! @param capacity Размер стека
-    Stack(size_t capacity);
+        //! Инициализирует стек нулевого размера
+        Stack();
 
-    //! Освобождает память
-    ~Stack();
+        //! Явно инициализирует стек размера capacity
+        //! @param capacity Размер стека
+        Stack(size_t capacity);
 
-    //! Возвращает размер стека
-    //! @return Размер стека
-    size_t size() const { return size_; }
+        //! Освобождает память
+        ~Stack();
 
-    //! Возвращает вместимость стека
-    //! @return Вместимость стека
-    size_t capacity() const { return capacity_; }
+        //! Возвращает размер стека
+        //! @return Размер стека
+        size_t size() const { return size_; }
 
-    //! Проверяет, пуст ли стек
-    //! @return true/false
-    bool empty() const;
+        //! Возвращает вместимость стека
+        //! @return Вместимость стека
+        size_t capacity() const { return capacity_; }
 
-    //! Заполняет следующий элемент стека
-    //! @return true/false
-    bool push(T value);
+        //! Проверяет, пуст ли стек
+        //! @return true/false
+        bool empty() const;
 
-    //! Возвращает крайний элемент стека
-    //! @return крайний элемент
-    T top() const;
+        //! Заполняет следующий элемент стека
+        //! @return true/false
+        bool push(T value);
 
-    //! Удаляет крайний элемент стека
-    //! @return true/false
-    bool pop();
+        //! Возвращает крайний элемент стека
+        //! @return крайний элемент
+        T top() const;
 
-    //! Проверяет соответствие размера и вместимости стека
-    //! @return true/false
-    bool ok() const;
+        //! Удаляет крайний элемент стека
+        //! @return true/false
+        bool pop();
 
-    //! Выводит ошибку и данные о стеке при несоответствии размера и вместимости стека
-    void dump() const;
+        //! Проверяет соответствие размера и вместимости стека
+        //! @return true/false
+        bool ok() const;
 
-private:
+        //! Выводит ошибку и данные о стеке при несоответствии размера и вместимости стека
+        void dump() const;
 
-    //! Константа для деструктора
-    static const int POISON_VAR = 660660;
+    private:
 
-    //! Стандартная емкость стека(если не указывать размер в конструкторе)
-    static const size_t def_capacity_ = 10;
+        //! Константа для деструктора
+        static const int POISON_VAR = 660660;
 
-    //! Хранилище данных стека
-    Array <T> data_;
+        //! Стандартная емкость стека(если не указывать размер в конструкторе)
+        static const size_t def_capacity_ = 10;
 
-    //! Размер стека
-    size_t size_;
+        //! Хранилище данных стека
+        Vector <T> data_;
 
-    //! Вместимость стека
-    size_t capacity_;
-};
+        //! Размер стека
+        size_t size_;
 
+        //! Вместимость стека
+        size_t capacity_;
+    };
+
+}
 #include "Stack.hpp"
 
 #endif

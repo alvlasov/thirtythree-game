@@ -1,6 +1,10 @@
 #include "UnitTest++.h"
+#include <iostream>
+
 #define MESSAGE(msg) \
     std::cout << std::endl << "Testing " << msg << "..." << std::endl; \
+
+using namespace thirtythree;
 
 SUITE(Stack)
 {
@@ -39,34 +43,34 @@ SUITE(Stack)
 
 }
 
-SUITE(Array)
+SUITE(Vector)
 {
 
     TEST(ConstructorsCheck)
     {
-        MESSAGE("Array_ConstructorsCheck");
-        Array <float> a(10);
+        MESSAGE("Vector_ConstructorsCheck");
+        Vector <float> a(10);
         CHECK_EQUAL(a.size(), 10);
         CHECK_EQUAL(a.empty(), false);
         for (size_t i = 0; i < a.size(); i++)
         {
             a[i] = 10 * (i+1);
         }
-        Array <float> c = a;
+        Vector <float> c = a;
         CHECK_EQUAL(a.size(), c.size());
         for (size_t i = 0; i < c.size(); i++)
         {
             CHECK_EQUAL(a[i], c[i]);
         }
-        Array <float> b;
+        Vector <float> b;
         CHECK_EQUAL(b.size(), 0);
         CHECK_EQUAL(b.empty(), true);
     }
 
-    TEST(EmptyArrayOperations)
+    TEST(EmptyVectorOperations)
     {
-        MESSAGE("Array_EmptyArrayOperations");
-        Array <float> a;
+        MESSAGE("Vector_EmptyVectorOperations");
+        Vector <float> a;
         CHECK_EQUAL(a.size(), 0);
         CHECK_EQUAL(a.empty(), true);
         CHECK_THROW(a.first(), int);
@@ -82,8 +86,8 @@ SUITE(Array)
 
     TEST(FirstLastAtCheck)
     {
-        MESSAGE("Array_FirstLastAtCheck");
-        Array <float> a(10);
+        MESSAGE("Vector_FirstLastAtCheck");
+        Vector <float> a(10);
         for (size_t i = 0; i < a.size(); i++)
         {
             a[i] = 10 * (i+1);
@@ -100,8 +104,8 @@ SUITE(Array)
 
     TEST(EraseCheck)
     {
-        MESSAGE("Array_EraseCheck");
-        Array <float> a(10);
+        MESSAGE("Vector_EraseCheck");
+        Vector <float> a(10);
         for (size_t i = 0; i < a.size(); i++)
         {
             a[i] = 10 * (i+1);
@@ -118,8 +122,8 @@ SUITE(Array)
 
     TEST(InsertCheck)
     {
-        MESSAGE("Array_InsertCheck");
-        Array <float> a(10);
+        MESSAGE("Vector_InsertCheck");
+        Vector <float> a(10);
         for (size_t i = 0; i < a.size(); i++)
         {
             a[i] = 10 * (i+1);
@@ -139,8 +143,8 @@ SUITE(Array)
 
     TEST(ResizeCheck)
     {
-        MESSAGE("Array_ResizeCheck");
-        Array <float> a(10);
+        MESSAGE("Vector_ResizeCheck");
+        Vector <float> a(10);
         for (size_t i = 0; i < a.size(); i++)
         {
             a[i] = 10 * (i+1);
@@ -158,24 +162,24 @@ SUITE(Array)
 
     TEST(OperatorEqualCheck)
     {
-        MESSAGE("Array_OperatorEqualCheck");
-        Array <float> a(10);
+        MESSAGE("Vector_OperatorEqualCheck");
+        Vector <float> a(10);
         for (size_t i = 0; i < a.size(); i++)
         {
             a[i] = 10 * (i+1);
         }
-        Array <float> b = a;
+        Vector <float> b = a;
         CHECK_EQUAL(a == b, true);
         b[1] = 99;
         CHECK_EQUAL(a == b, false);
-        Array <float> c(a);
+        Vector <float> c(a);
         c.erase(3);
         CHECK_EQUAL(a == c, false);
     }
     TEST(OperatorPlusCheck)
     {
-        MESSAGE("Array_OperatorPlusCheck");
-        Array <float> a(10), b(10);
+        MESSAGE("Vector_OperatorPlusCheck");
+        Vector <float> a(10), b(10);
         for (size_t i = 0; i < a.size(); i++)
         {
             a[i] = 10 * (i+1);
@@ -183,7 +187,7 @@ SUITE(Array)
         }
 
         CHECK_EQUAL((a + b).size(), a.size());
-        Array <float> c = a + b;
+        Vector <float> c = a + b;
         for (size_t i = 0; i < c.size(); i++)
         {
             CHECK_EQUAL(a[i] + b[i], c[i]);
@@ -194,14 +198,14 @@ SUITE(Array)
     }
     TEST(OperatorMinusCheck)
     {
-        MESSAGE("Array_OperatorMinusCheck");
-        Array <float> a(10), b(10);
+        MESSAGE("Vector_OperatorMinusCheck");
+        Vector <float> a(10), b(10);
         for (size_t i = 0; i < a.size(); i++)
         {
             a[i] = 10 * (i+1);
             b[i] = 11 * (i+1);
         }
-        Array <float> c = a - b;
+        Vector <float> c = a - b;
         for (size_t i = 0; i < c.size(); i++)
         {
             CHECK_EQUAL(a[i] - b[i], c[i]);
@@ -212,8 +216,8 @@ SUITE(Array)
     }
     TEST(OperatorNewCheck)
     {
-        MESSAGE("Array_OperatorNewCheck");
-        Array <int> *a = new Array <int>(10);
+        MESSAGE("Vector_OperatorNewCheck");
+        Vector <int> *a = new Vector <int>(10);
         for (size_t i = 0; i < a->size(); i++)
         {
             (*a)[i] = 10 * (i+1);
@@ -223,7 +227,7 @@ SUITE(Array)
             CHECK_EQUAL(10 * (i+1), (*a)[i]);
         }
 
-        Array <int> *b = new Array <int>(*a);
+        Vector <int> *b = new Vector <int>(*a);
         for (size_t i = 0; i < b->size(); i++)
         {
             CHECK_EQUAL(10 * (i+1), (*b)[i]);
@@ -231,13 +235,13 @@ SUITE(Array)
     }
     TEST(IteratorCheck)
     {
-        MESSAGE("Array_IteratorCheck");
-        Array <int> a(10);
+        MESSAGE("Vector_IteratorCheck");
+        Vector <int> a(10);
         for (size_t i = 0; i < a.size(); i++)
         {
             a[i] = i;
         }
-        Array<int>::Array_iterator it;
+        Vector<int>::Vector_iterator it;
         int j = 0;
         for (it = a.begin(); it != a.end(); it++)
         {
@@ -245,7 +249,7 @@ SUITE(Array)
         }
         CHECK_EQUAL(j, *it);
 
-        Array<int>::Array_iterator it2;
+        Vector<int>::Vector_iterator it2;
         j = 9;
         for (it2 = a.end(); it2 != a.begin(); it2--)
         {
@@ -255,8 +259,8 @@ SUITE(Array)
     }
     TEST(InitializerListConstructor)
     {
-        MESSAGE("Array_InitializerListConstructor");
-        Array <int> a = {1, 2, 3, 4, 5, 6};
+        MESSAGE("Vector_InitializerListConstructor");
+        Vector <int> a = {1, 2, 3, 4, 5, 6};
         CHECK_EQUAL(6, a.size());
         for (size_t i = 0; i < a.size(); i++)
         {

@@ -3,24 +3,36 @@
 #ifndef UTILITYH
 #define UTILITYH
 
-void print(const char *str);
-
-template <typename T, typename... Args>
-void print(const char *str, T val, Args... args)
+namespace thirtythree
 {
-    while (*str)
+
+    void print(const char *str)
     {
-        if (*str != '%')
+        while (*str)
         {
             std::cout << *str++;
         }
-        else
+    }
+
+
+    template <typename T, typename... Args>
+    void print(const char *str, T val, Args... args)
+    {
+        while (*str)
         {
-            std::cout << val;
-            print(str + 1, args...);
-            break;
+            if (*str != '%')
+            {
+                std::cout << *str++;
+            }
+            else
+            {
+                std::cout << val;
+                print(str + 1, args...);
+                break;
+            }
         }
     }
+
 }
 
 #endif
