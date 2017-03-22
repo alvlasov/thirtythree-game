@@ -264,3 +264,8 @@ SUITE(Array)
         }
     }
 }
+
+TEST(PrintFunction)
+{
+    print("This is a % functi%n test % % %", "print()", 'O', 42, 4.2, "\n");
+}
