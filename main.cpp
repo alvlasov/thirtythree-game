@@ -7,5 +7,9 @@
 
 int main()
 {
-    return UnitTest::RunAllTests();
+    //return UnitTest::RunAllTests();
+    /*
+    Array <bool> S(9);
+    std::cout << S[0]<< std:: endl;
+    */
 }

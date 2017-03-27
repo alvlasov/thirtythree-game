@@ -25,12 +25,12 @@ namespace thirtythree
 
     template <typename T>
     Vector<T>::Vector(size_t size):
-        data_(new T [size]),
-        size_(size)
+        size_(size),
+        data_(new T [reserve_])
     {
-        for (unsigned int i = 0; i < size_; i++ )
+        for (Vector_iterator it = begin(); it != end(); ++it )
         {
-            data_[i] = 0;
+            *it = 0;
         }
 
         cout << __PRETTY_FUNCTION__ << endl;
@@ -38,11 +38,11 @@ namespace thirtythree
 
     template <typename T>
     Vector<T>::Vector(const std::initializer_list<T>& init):
-        data_(new T [init.size()]),
-        size_(init.size())
+        size_(init.size()),
+        data_(new T [reserve_])
+
     {
         std::copy(init.begin(), init.end(), data_);
-        cout << __PRETTY_FUNCTION__ << endl;
     }
 
     template <typename T>
@@ -67,16 +67,11 @@ namespace thirtythree
         return *this;
     }
 
-    template <typename T>
-    void* Vector<T>::operator new(size_t size)
-    {
-        return malloc(size);
-    }
 
     template <typename T>
     Vector<T>::Vector(const Vector &that) :
         size_(that.size_),
-        data_(new T [that.size_])
+        data_(new T [reserve_])
     {
         cout << __PRETTY_FUNCTION__ << endl;
         std::copy(that.data_, that.data_ + that.size_, data_);
@@ -90,9 +85,9 @@ namespace thirtythree
                 return false;
         else
         {
-            for (unsigned int i = 0; i < arr1.size(); i++)
+            for ( unsigned int i=0; i < arr1.size(); i++ )
             {
-                if (arr1.at(i) != arr2.at(i))
+                if (arr1[i] != arr2[i])
                     return false;
             }
         }
@@ -110,6 +105,7 @@ namespace thirtythree
         return false;
     }
 
+
     template <typename T>
     const T& Vector<T>::operator [](size_t n) const
     {
@@ -121,52 +117,28 @@ namespace thirtythree
         return data_[n];
     }
 
+
     template <typename T>
     T& Vector<T>::operator [](size_t n)
     {
-        if (!(0 <= n && n < size_))
-        {
-            throw 0;
-        }
-
-        return data_[n];
+       return at(n);
     }
 
     template <typename T>
     Vector<T> operator +(const Vector<T> &arr1, const Vector<T> &arr2)
     {
-        if (arr1.size() != arr2.size())
-        {
-            throw 0;
-        }
-
-        size_t arr_size = arr1.size();
+        size_t arr_size = arr1.size() + arr2.size();
 
         Vector <T> new_Vector(arr_size);
 
-        for (unsigned int i = 0; i < arr_size; i++ )
+        for (unsigned int i = 0; i < arr1.size(); i++ )
         {
-            new_Vector[i] = arr1.at(i) + arr2.at(i);
+            new_Vector[i] = arr1[i];
         }
 
-        return new_Vector;
-    }
-
-    template <typename T>
-    Vector<T> operator -(const Vector<T> &arr1, const Vector<T> &arr2)
-    {
-        if (arr1.size() != arr2.size())
+        for (unsigned int i = arr1.size(); i < arr_size; i++ )
         {
-            throw 0;
-        }
-
-        size_t arr_size = arr1.size();
-
-        Vector <T> new_Vector(arr_size);
-
-        for (unsigned int i = 0; i < arr_size; i++ )
-        {
-            new_Vector[i] = arr1.at(i)- arr2.at(i);
+            new_Vector[i] = arr2[i];
         }
 
         return new_Vector;
@@ -195,7 +167,7 @@ namespace thirtythree
     }
 
     template <typename T>
-    T Vector<T>::at(const size_t pos) const
+    T& Vector<T>::at(const size_t pos)
     {
         if (pos >= size_)
         {
@@ -205,29 +177,27 @@ namespace thirtythree
     }
 
     template <typename T>
-    size_t Vector<T>::insert(const size_t pos, const T n)
+    void Vector<T>::insert(const size_t pos, const T n)
     {
-        if (pos >= size_)
+        if (pos >= reserve_)
         {
             throw 0;
         }
         T *newdata_ = new T [size_ - pos];
 
-        for (unsigned int i = pos ; i < size_; i++)
+        for (unsigned int i = pos; i < size_; i++)
         {
             newdata_[i - pos] = data_[i];
         }
 
         data_[pos] = n;
 
-        this->resize(size_ + 1);
-
-        for (unsigned int i = pos + 1; i < size_; i++)
+        for (unsigned int i = pos + 1 ; i < size_; i++)
         {
               data_[i] = newdata_[i - pos - 1];
         }
 
-        return size_;
+        reserve_--;
     }
 
     template <typename T>
@@ -240,7 +210,7 @@ namespace thirtythree
 
         T *datanew_ = new T [size_-1];
 
-        for (unsigned int i = 0; i < pos; i++)
+        for (unsigned int i = 0 ; i < pos; i++)
         {
             datanew_[i] = data_[i];
         }
@@ -272,32 +242,24 @@ namespace thirtythree
     }
 
     template <typename T>
-    bool Vector<T>::resize(const size_t new_size)
+    void Vector<T>::resize(const size_t new_size)
     {
-        if (new_size < size_)
+
+        if (new_size <= reserve_)
         {
-            return false;
-        }
-        else
-        {
-            T *newdata_ = new T [new_size];
-
-            for (unsigned int i = 0; i < size_; i++)
-            {
-                newdata_[i] = data_[i];
-            }
-
-            for (unsigned int i = size_; i < new_size; i++)
-            {
-                newdata_[i] = 0;
-            }
-
             size_ = new_size;
-            data_ = newdata_;
-
-            return true;
         }
+
+        T *newdata_ = new int [new_size + 10];
+
+        for (unsigned int i = 0; i < size_; i++)
+        {
+            newdata_[i] = data_[i];
+        }
+
+        delete [] data_;
+
+        size_ = new_size;
+        data_ = newdata_;
 
     }
-
-}

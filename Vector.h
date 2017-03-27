@@ -158,7 +158,7 @@ namespace thirtythree
         //! Возвращает элемент массива с индексом pos
         //! @param pos Индекс элементаl
         //! @return Элемент массива с индексом pos
-        T at(const size_t pos) const;
+        T& at(const size_t pos);
 
         //! Удаляет элемент с индексом pos
         //! @param pos Индекс элемента
@@ -168,16 +168,14 @@ namespace thirtythree
         //! Вставляет элемент на позицию pos
         //! @param pos Индекс элемента
         //! @param n Вставляемый элемент
-        //! @return Новый размер массива
-        size_t insert(const size_t pos, const T n);
+        void insert(const size_t pos, const T n);
 
         //! Выводит на экран дамп массива
         void dump() const;
 
-        //! Изменяет размер массива в большую сторону
+        //! Изменяет размер массива
         //! @param new_size Новый размер массива
-        //! @return Статус операции
-        bool resize(const size_t new_size);
+        void resize(const size_t new_size);
 
         //! @return Итератор на начало массива
         Vector_iterator begin()
@@ -189,17 +187,22 @@ namespace thirtythree
         //! @return Итератор на конец массива
         Vector_iterator end()
         {
-            Vector_iterator begin_iterator(&data_[size_-1]);
-            return begin_iterator;
+            Vector_iterator end_iterator(&data_[size_-1]);
+            return end_iterator;
         }
 
     private:
 
+        //! Размер массива
+        size_t size_;
+
+        //! Зрезервированное место
+        size_t reserve_ = size_ + 10;
+
         //! Указатель на область памяти, в которой хранятся данные
         T *data_;
 
-        //! Размер массива
-        size_t size_;
+
 
     };
 
@@ -209,19 +212,36 @@ namespace thirtythree
     template <typename T>
     bool operator ==(const Vector<T>& arr1, const Vector<T>& arr2);
 
-    //! Оператор поэлементного сложения двух массивов одинакового размера
+    //! Оператор присоединения второго массива к первому
     //! @param arr1,arr2 Два массива
     //! @return Новый массив
     template <typename T>
     Vector<T> operator +(const Vector<T>& arr1, const Vector<T>& arr2);
 
-    //! Оператор поэлементного вычитания двух массивов одинакового размера
-    //! @param arr1,arr2 Два массива
-    //! @return Новый массив
-    template <typename T>
-    Vector<T> operator -(const Vector<T>& arr1, const Vector<T>& arr2);
 
 }
 #include "Vector.hpp"
 
 #endif // Vector_H_INCLUDED
+/*
+template <>
+class Array <bool>
+{
+public:
+    Array(size_t _size) : size_(_size), data_(new unsigned char[_size]) {};
+
+    bool operator [] (int n) const;
+    void print();
+
+
+private:
+
+    size_t size_;
+    unsigned char* data_;
+
+};
+
+#include "Array.hpp"
+#include "Array_bool.hpp"
+#endif
+*/

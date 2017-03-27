@@ -196,6 +196,7 @@ SUITE(Vector)
         b.insert(1, 99);
         CHECK_THROW(a + b, int);
     }
+    /*
     TEST(OperatorMinusCheck)
     {
         MESSAGE("Vector_OperatorMinusCheck");
@@ -233,6 +234,7 @@ SUITE(Vector)
             CHECK_EQUAL(10 * (i+1), (*b)[i]);
         }
     }
+    */
     TEST(IteratorCheck)
     {
         MESSAGE("Vector_IteratorCheck");

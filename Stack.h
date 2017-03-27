@@ -9,7 +9,6 @@
 #define STACKH
 
 #include "Vector.h"
-
 namespace thirtythree
 {
 
@@ -46,7 +45,7 @@ namespace thirtythree
 
         //! Возвращает крайний элемент стека
         //! @return крайний элемент
-        T top() const;
+        T top() ;//const;
 
         //! Удаляет крайний элемент стека
         //! @return true/false
@@ -79,5 +78,4 @@ namespace thirtythree
 
 }
 #include "Stack.hpp"
-
 #endif

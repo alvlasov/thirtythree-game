@@ -64,7 +64,7 @@ namespace thirtythree
     }
 
     template <typename T>
-    T Stack<T>::top() const
+    T Stack<T>::top() //const
     {
         ASSERT_OK();
         if (size_ != 0)
