@@ -1,5 +1,6 @@
 #include <iostream>
 
+#include "Smart_ptr.h"
 #include "Stack.h"
 #include "Vector.h"
 #include "Utility.h"
