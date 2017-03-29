@@ -43,11 +43,11 @@ namespace thirtythree
 
         //! Заполняет следующий элемент стека
         //! @return true/false
-        bool push(T value);
+        void push(T value);
 
         //! Возвращает крайний элемент стека
         //! @return крайний элемент
-        T top() ;//const;
+        T top();
 
         //! Удаляет крайний элемент стека
         //! @return true/false
@@ -61,9 +61,6 @@ namespace thirtythree
         void dump() const;
 
     private:
-
-        //! Константа для деструктора
-        static const int POISON_VAR = 660660;
 
         //! Стандартная емкость стека(если не указывать размер в конструкторе)
         static const size_t def_capacity_ = 10;

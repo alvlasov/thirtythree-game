@@ -33,13 +33,16 @@ SUITE(Stack)
         CHECK_EQUAL(p->ok(), false);
     }
 
-    TEST(CannotPushMore)
+    TEST(FilledStack)
     {
-        MESSAGE("Stack_CannotPushMore");
-        Stack <float> s;
+        MESSAGE("Stack_FilledStack");
+        Stack <float> s(10);
         for (size_t i = 0; i < s.capacity(); i++)
             s.push(100 + i);
-        CHECK_EQUAL(s.push(0xF00D), false);
+        CHECK_EQUAL(10, s.size());
+        s.push(23);
+        CHECK_EQUAL(11, s.size());
+        CHECK_EQUAL(11, s.capacity());
     }
 
 }

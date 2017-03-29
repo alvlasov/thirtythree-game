@@ -8,13 +8,6 @@
 #include <cassert>
 #include <iostream>
 
-#define ASSERT_OK() \
-    if (!ok())      \
-    {               \
-        dump();     \
-        throw 1;  \
-    }               \
-
 using std::cout;
 using std::endl;
 
@@ -46,8 +39,8 @@ namespace thirtythree
     {
         if (DEV_MESSAGES)
             cout << __PRETTY_FUNCTION__ << endl;
-        size_ = POISON_VAR;
         capacity_ = 0;
+        size_ = -1;
     }
 
     template <typename T>
@@ -57,19 +50,22 @@ namespace thirtythree
     }
 
     template <typename T>
-    bool Stack<T>::push(T value)
+    void Stack<T>::push(T value)
     {
-        ASSERT_OK();
         if (size_ >= capacity_)
-            return false;
-        data_[size_++] = value;
-        return true;
+        {
+            data_.insert(size_++, value);
+            capacity_ = size_;
+        }
+        else
+        {
+            data_[size_++] = value;
+        }
     }
 
     template <typename T>
-    T Stack<T>::top() //const
+    T Stack<T>::top()
     {
-        ASSERT_OK();
         if (size_ != 0)
             return data_[size_ - 1];
         else
@@ -79,11 +75,9 @@ namespace thirtythree
     template <typename T>
     bool Stack<T>::pop()
     {
-        ASSERT_OK();
         if (size_ != 0)
         {
-            data_[--size_] = POISON_VAR;
-            ASSERT_OK();
+            size_--;
             return true;
         }
         return false;
@@ -114,10 +108,7 @@ namespace thirtythree
                 cout << "\t*\t" << "[" << i << "] = " << data_[i];
             else
                 cout << "\t\t" << "[" << i << "] = " << data_[i];
-            if (data_[i] == POISON_VAR)
-                cout << " (POISON_VAR)" << endl;
-            else
-                cout << endl;
+            cout << endl;
         }
         cout << "\t\t}" << endl;
         cout << "\t}" << endl;
