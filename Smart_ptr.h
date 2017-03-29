@@ -8,6 +8,8 @@
 #ifndef SMART_PTR_H_INCLUDED
 #define SMART_PTR_H_INCLUDED
 
+#include <stdexcept>
+
 namespace thirtythree
 {
     template <typename T>
@@ -33,14 +35,24 @@ namespace thirtythree
 
             //! Перегруженный оператор ->
             //! @return Возвращает указатель на объект
-            T* operator->() { return obj_; }
+            T* operator->()
+            {
+                return obj_;
+            }
 
             //! Перегруженный оператор *
             //! @return объект, который он хранит
-            T& operator* () { return *obj_; }
+            T& operator* ()
+            {
+                if (obj_ == nullptr)
+                {
+                    throw std::runtime_error("Nullptr access");
+                }
+                return *obj_;
+            }
 
             //! Функция "перемещения" указателя
-            T *Release()
+            T* release()
             {
                 T *result = obj_;
                 obj_ = nullptr;
@@ -55,9 +67,8 @@ namespace thirtythree
                 if (&that != this)
                 {
                     this->~my_auto_ptr();
-                    obj_ = that.Release();
+                    obj_ = that.release();
                 }
-
                 return *this;
             }
 

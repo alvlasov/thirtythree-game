@@ -1,5 +1,6 @@
 #include "UnitTest++.h"
 #include <iostream>
+#include <stdexcept>
 
 #define MESSAGE(msg) \
     std::cout << std::endl << "Testing " << msg << "..." << std::endl; \
@@ -241,5 +242,24 @@ SUITE(Vector)
 
 TEST(PrintFunction)
 {
+    MESSAGE("PrintFunction");
     print("This is a % functi%n test % % %", "print()", 'O', 42, 4.2, "\n");
+}
+
+SUITE(SmartPtr)
+{
+    TEST(my_auto_ptr)
+    {
+        MESSAGE("SmartPtr_my_auto_ptr");
+        my_auto_ptr <int> p1(new int);
+        *p1 = 10;
+        CHECK_EQUAL(10, *p1);
+        my_auto_ptr <int> p2;
+        p2 = p1;
+        CHECK_EQUAL(10, *p2);
+        CHECK_THROW(*p1, std::exception);
+        int *p3 = p2.release();
+        CHECK_EQUAL(10, *p3);
+        CHECK_THROW(*p2, std::exception);
+    }
 }

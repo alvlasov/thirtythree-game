@@ -6,6 +6,8 @@
 #include "Utility.h"
 #include "UnitTests.h"
 
+#include "GlobalOptions.h"
+
 int main()
 {
     /*

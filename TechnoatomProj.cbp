@@ -42,6 +42,7 @@
 			<Add library=".\unittest-cpp\Deliv\Release\libUnitTest++.a" />
 		</Linker>
 		<Unit filename="Array_bool.hpp" />
+		<Unit filename="GlobalOptions.h" />
 		<Unit filename="Smart_ptr.h" />
 		<Unit filename="Stack.h" />
 		<Unit filename="Stack.hpp" />

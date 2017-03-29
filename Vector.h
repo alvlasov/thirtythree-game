@@ -8,6 +8,8 @@
 #ifndef Vector_H_INCLUDED
 #define Vector_H_INCLUDED
 
+#include "GlobalOptions.h"
+
 namespace thirtythree
 {
 
@@ -198,7 +200,8 @@ namespace thirtythree
 
     private:
 
-        size_t RESERVED_ = 10;
+        //! Размер дополительно резервируемой памяти
+        static const size_t RESERVED_ = 10;
 
         //! Размер массива
         size_t size_;

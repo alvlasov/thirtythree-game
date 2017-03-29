@@ -27,7 +27,8 @@ namespace thirtythree
         size_(0),
         capacity_(def_capacity_)
     {
-        cout << __PRETTY_FUNCTION__ << endl;
+        if (DEV_MESSAGES)
+            cout << __PRETTY_FUNCTION__ << endl;
     }
 
     template <typename T>
@@ -36,13 +37,15 @@ namespace thirtythree
         size_(0),
         capacity_(capacity)
     {
-        cout << __PRETTY_FUNCTION__ << endl;
+        if (DEV_MESSAGES)
+            cout << __PRETTY_FUNCTION__ << endl;
     }
 
     template <typename T>
     Stack<T>::~Stack()
     {
-        cout << __PRETTY_FUNCTION__ << endl;
+        if (DEV_MESSAGES)
+            cout << __PRETTY_FUNCTION__ << endl;
         size_ = POISON_VAR;
         capacity_ = 0;
     }

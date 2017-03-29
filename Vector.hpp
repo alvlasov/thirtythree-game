@@ -21,7 +21,8 @@ namespace thirtythree
         size_(0),
         reserve_(0)
     {
-        cout << __PRETTY_FUNCTION__ << endl;
+        if (DEV_MESSAGES)
+            cout << __PRETTY_FUNCTION__ << endl;
     }
 
     template <typename T>
@@ -36,7 +37,8 @@ namespace thirtythree
             *it = 0;
         }
         *it = 0;
-        cout << __PRETTY_FUNCTION__ << endl;
+        if (DEV_MESSAGES)
+            cout << __PRETTY_FUNCTION__ << endl;
     }
 
     template <typename T>
@@ -47,12 +49,14 @@ namespace thirtythree
 
     {
         std::copy(init.begin(), init.end(), data_);
+        if (DEV_MESSAGES)
+            cout << __PRETTY_FUNCTION__ << endl;
     }
 
     template <typename T>
     Vector<T>& Vector<T>::operator =(const Vector &that)
     {
-        if(&that == this)
+        if (&that == this)
         {
             return *this;
         }
@@ -66,7 +70,8 @@ namespace thirtythree
     template <typename T>
     Vector<T>::~Vector()
     {
-        cout << __PRETTY_FUNCTION__ << endl;
+        if (DEV_MESSAGES)
+            cout << __PRETTY_FUNCTION__ << endl;
 
         delete [] data_;
 
@@ -80,7 +85,8 @@ namespace thirtythree
         reserve_(that.size_ + RESERVED_),
         data_(new T [reserve_])
     {
-        cout << __PRETTY_FUNCTION__ << endl;
+        if (DEV_MESSAGES)
+            cout << __PRETTY_FUNCTION__ << endl;
         std::copy(that.data_, that.data_ + that.size_, data_);
     }
 

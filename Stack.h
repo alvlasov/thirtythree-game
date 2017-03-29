@@ -9,6 +9,8 @@
 #define STACKH
 
 #include "Vector.h"
+#include "GlobalOptions.h"
+
 namespace thirtythree
 {
 
