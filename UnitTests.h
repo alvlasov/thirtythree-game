@@ -54,6 +54,7 @@ SUITE(Vector)
         CHECK_EQUAL(a.empty(), false);
         for (size_t i = 0; i < a.size(); i++)
         {
+            CHECK_EQUAL(0, a[i]);
             a[i] = 10 * (i+1);
         }
         Vector <float> c = a;
@@ -66,42 +67,6 @@ SUITE(Vector)
         CHECK_EQUAL(b.size(), 0);
         CHECK_EQUAL(b.empty(), true);
     }
-
-    TEST(EmptyVectorOperations)
-    {
-        MESSAGE("Vector_EmptyVectorOperations");
-        Vector <float> a;
-        CHECK_EQUAL(a.size(), 0);
-        CHECK_EQUAL(a.empty(), true);
-        CHECK_THROW(a.first(), int);
-        CHECK_THROW(a.last(), int);
-        CHECK_THROW(a.at(10), int);
-        CHECK_THROW(a[10], int);
-        CHECK_THROW(a.erase(10), int);
-        CHECK_THROW(a.insert(10, 66), int);
-        CHECK_THROW(a.insert(0, 66), int);
-        CHECK_EQUAL(a.resize(10), true);
-        CHECK_EQUAL(a.size(), 10);
-    }
-
-    TEST(FirstLastAtCheck)
-    {
-        MESSAGE("Vector_FirstLastAtCheck");
-        Vector <float> a(10);
-        for (size_t i = 0; i < a.size(); i++)
-        {
-            a[i] = 10 * (i+1);
-        }
-        CHECK_EQUAL(a[0], a.first());
-        CHECK_EQUAL(a[a.size() - 1], a.last());
-        for (size_t i = 0; i < a.size(); i++)
-        {
-            CHECK_EQUAL(a[i], a.at(i));
-        }
-        CHECK_THROW(a.at(a.size() + 1), int);
-        CHECK_THROW(a.at(-1), int);
-    }
-
     TEST(EraseCheck)
     {
         MESSAGE("Vector_EraseCheck");
@@ -149,15 +114,53 @@ SUITE(Vector)
         {
             a[i] = 10 * (i+1);
         }
-        CHECK_EQUAL(a.resize(9), false);
-        CHECK_EQUAL(a.resize(15), true);
+        CHECK_THROW(a.resize(9), int);
+        CHECK_EQUAL(a.resize(15), 15);
         for (size_t i = 0; i < a.size(); i++)
         {
             if (i < 10)
-                CHECK_EQUAL(a[i], 10 * (i+1));
+                CHECK_EQUAL(10 * (i+1), a[i]);
             else
-                CHECK_EQUAL(a[i], 0);
+                CHECK_EQUAL(0, a[i]);
         }
+    }
+
+    TEST(EmptyVectorOperations)
+    {
+        MESSAGE("Vector_EmptyVectorOperations");
+        Vector <float> a;
+
+        CHECK_EQUAL(a.size(), 0);
+        CHECK_EQUAL(a.empty(), true);
+        CHECK_THROW(a.first(), int);
+        CHECK_THROW(a.last(), int);
+        CHECK_THROW(a.at(10), int);
+        CHECK_THROW(a[10], int);
+        CHECK_THROW(a.erase(10), int);
+        CHECK_THROW(a.insert(10, 66), int);
+        CHECK_THROW(a.insert(1, 66), int);
+        a.dump();
+        CHECK_EQUAL(a.resize(10), 10);
+        a.dump();
+        CHECK_EQUAL(a.size(), 10);
+    }
+
+    TEST(FirstLastAtCheck)
+    {
+        MESSAGE("Vector_FirstLastAtCheck");
+        Vector <float> a(10);
+        for (size_t i = 0; i < a.size(); i++)
+        {
+            a[i] = 10 * (i+1);
+        }
+        CHECK_EQUAL(a[0], a.first());
+        CHECK_EQUAL(a[a.size() - 1], a.last());
+        for (size_t i = 0; i < a.size(); i++)
+        {
+            CHECK_EQUAL(a[i], a.at(i));
+        }
+        CHECK_THROW(a.at(a.size() + 1), int);
+        CHECK_THROW(a.at(-1), int);
     }
 
     TEST(OperatorEqualCheck)
@@ -186,55 +189,23 @@ SUITE(Vector)
             b[i] = 11 * (i+1);
         }
 
-        CHECK_EQUAL((a + b).size(), a.size());
-        Vector <float> c = a + b;
-        for (size_t i = 0; i < c.size(); i++)
-        {
-            CHECK_EQUAL(a[i] + b[i], c[i]);
-            CHECK_EQUAL(a[i] + b[i], (a+b)[i]);
-        }
-        b.insert(1, 99);
-        CHECK_THROW(a + b, int);
+        CHECK_EQUAL((a + b).size(), a.size() + b.size());
+        //Vector <float> c = a + b;
+        //(a+b).dump();
+//        for (size_t i = 0; i < c.size(); i++)
+//        {
+//            if (i < a.size())
+//            {
+//                CHECK_EQUAL(a[i], c[i]);
+//            }
+//            else
+//            {
+//                CHECK_EQUAL(b[i], c[i]);
+//            }
+//        }
+//        b.insert(1, 99);
+//        CHECK_THROW(a + b, int);
     }
-    /*
-    TEST(OperatorMinusCheck)
-    {
-        MESSAGE("Vector_OperatorMinusCheck");
-        Vector <float> a(10), b(10);
-        for (size_t i = 0; i < a.size(); i++)
-        {
-            a[i] = 10 * (i+1);
-            b[i] = 11 * (i+1);
-        }
-        Vector <float> c = a - b;
-        for (size_t i = 0; i < c.size(); i++)
-        {
-            CHECK_EQUAL(a[i] - b[i], c[i]);
-            CHECK_EQUAL(a[i] - b[i], (a-b)[i]);
-        }
-        b.insert(1, 99);
-        CHECK_THROW(a - b, int);
-    }
-    TEST(OperatorNewCheck)
-    {
-        MESSAGE("Vector_OperatorNewCheck");
-        Vector <int> *a = new Vector <int>(10);
-        for (size_t i = 0; i < a->size(); i++)
-        {
-            (*a)[i] = 10 * (i+1);
-        }
-        for (size_t i = 0; i < a->size(); i++)
-        {
-            CHECK_EQUAL(10 * (i+1), (*a)[i]);
-        }
-
-        Vector <int> *b = new Vector <int>(*a);
-        for (size_t i = 0; i < b->size(); i++)
-        {
-            CHECK_EQUAL(10 * (i+1), (*b)[i]);
-        }
-    }
-    */
     TEST(IteratorCheck)
     {
         MESSAGE("Vector_IteratorCheck");

@@ -16,16 +16,17 @@ namespace thirtythree
         public:
 
             //! Конструкторы
-            my_auto_ptr()
-                : obj_(nullptr)
+            my_auto_ptr() :
+                obj_(nullptr)
             { }
 
-            explicit my_auto_ptr(T *obj)
-                : obj_(obj)
+            explicit my_auto_ptr(T *obj) :
+                obj_(obj)
             { }
 
             //! Деструктор
-            ~my_auto_ptr() {
+            ~my_auto_ptr()
+            {
                 delete obj_;
                 obj_ = nullptr;
             }
@@ -41,8 +42,8 @@ namespace thirtythree
             //! Функция "перемещения" указателя
             T *Release()
             {
-                T *result = data_;
-                data_ = nullptr;
+                T *result = obj_;
+                obj_ = nullptr;
                 return result;
             }
 
@@ -117,14 +118,14 @@ namespace thirtythree
 
     public:
             //! Конструкторы
-            my_shared_ptr()
-                    : obj_(nullptr),
-                    cnt_(nullptr),
+            my_shared_ptr() :
+                obj_(nullptr),
+                cnt_(nullptr)
             { }
 
-            explicit my_shared_ptr(T* p)
-                    : obj_(p),
-                    cnt_( new int(1) )
+            explicit my_shared_ptr(T* p) :
+                obj_(p),
+                cnt_(new int(1))
             { }
 
             //! Деструктор

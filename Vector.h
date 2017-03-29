@@ -168,14 +168,14 @@ namespace thirtythree
         //! Вставляет элемент на позицию pos
         //! @param pos Индекс элемента
         //! @param n Вставляемый элемент
-        void insert(const size_t pos, const T n);
+        size_t insert(const size_t pos, const T n);
 
         //! Выводит на экран дамп массива
         void dump() const;
 
         //! Изменяет размер массива
         //! @param new_size Новый размер массива
-        void resize(const size_t new_size);
+        size_t resize(const size_t new_size);
 
         //! @return Итератор на начало массива
         Vector_iterator begin()
@@ -193,11 +193,13 @@ namespace thirtythree
 
     private:
 
+        size_t RESERVED_ = 10;
+
         //! Размер массива
         size_t size_;
 
-        //! Зрезервированное место
-        size_t reserve_ = size_ + 10;
+        //! Зарезервированное место
+        size_t reserve_;
 
         //! Указатель на область памяти, в которой хранятся данные
         T *data_;
@@ -223,6 +225,7 @@ namespace thirtythree
 #include "Vector.hpp"
 
 #endif // Vector_H_INCLUDED
+
 /*
 template <>
 class Array <bool>

@@ -16,29 +16,33 @@ namespace thirtythree
 {
 
     template <typename T>
-    Vector<T>::Vector():
-        data_(NULL),
-        size_(0)
+    Vector<T>::Vector() :
+        data_(nullptr),
+        size_(0),
+        reserve_(0)
     {
         cout << __PRETTY_FUNCTION__ << endl;
     }
 
     template <typename T>
-    Vector<T>::Vector(size_t size):
+    Vector<T>::Vector(size_t size) :
         size_(size),
+        reserve_(size_ + RESERVED_),
         data_(new T [reserve_])
     {
-        for (Vector_iterator it = begin(); it != end(); ++it )
+        Vector_iterator it;
+        for (it = begin(); it != end(); ++it )
         {
             *it = 0;
         }
-
+        *it = 0;
         cout << __PRETTY_FUNCTION__ << endl;
     }
 
     template <typename T>
     Vector<T>::Vector(const std::initializer_list<T>& init):
         size_(init.size()),
+        reserve_(size_ + RESERVED_),
         data_(new T [reserve_])
 
     {
@@ -60,10 +64,13 @@ namespace thirtythree
     Vector<T>& Vector<T>::operator =(const Vector &that)
     {
         if(&that == this)
+        {
             return *this;
-        Vector victum(that);
-        std::swap(size_,victum.size);
-        std::swap(data_,victum.data);
+        }
+        Vector <T> victim(that);
+        std::swap(size_, victim.size_);
+        std::swap(reserve_, victim.reserve_);
+        std::swap(data_, victim.data_);
         return *this;
     }
 
@@ -71,6 +78,7 @@ namespace thirtythree
     template <typename T>
     Vector<T>::Vector(const Vector &that) :
         size_(that.size_),
+        reserve_(that.size_ + RESERVED_),
         data_(new T [reserve_])
     {
         cout << __PRETTY_FUNCTION__ << endl;
@@ -109,14 +117,13 @@ namespace thirtythree
     template <typename T>
     const T& Vector<T>::operator [](size_t n) const
     {
-        if (!(0 <= n && n < size_))
+        if (n >= size_)
         {
             throw 0;
         }
 
         return data_[n];
     }
-
 
     template <typename T>
     T& Vector<T>::operator [](size_t n)
@@ -128,9 +135,7 @@ namespace thirtythree
     Vector<T> operator +(const Vector<T> &arr1, const Vector<T> &arr2)
     {
         size_t arr_size = arr1.size() + arr2.size();
-
         Vector <T> new_Vector(arr_size);
-
         for (unsigned int i = 0; i < arr1.size(); i++ )
         {
             new_Vector[i] = arr1[i];
@@ -138,9 +143,9 @@ namespace thirtythree
 
         for (unsigned int i = arr1.size(); i < arr_size; i++ )
         {
-            new_Vector[i] = arr2[i];
+            new_Vector[i] = arr2[i - arr1.size()];
         }
-
+        cout << "check\n";
         return new_Vector;
     }
 
@@ -177,27 +182,27 @@ namespace thirtythree
     }
 
     template <typename T>
-    void Vector<T>::insert(const size_t pos, const T n)
+    size_t Vector<T>::insert(const size_t pos, const T n)
     {
-        if (pos >= reserve_)
+        if (pos >= size_)
         {
             throw 0;
         }
-        T *newdata_ = new T [size_ - pos];
 
-        for (unsigned int i = pos; i < size_; i++)
+        if (size_ == reserve_)
         {
-            newdata_[i - pos] = data_[i];
+            resize(size_);
+        }
+
+        for (size_t i = size_; i > pos; i--)
+        {
+            data_[i] = data_[i - 1];
         }
 
         data_[pos] = n;
 
-        for (unsigned int i = pos + 1 ; i < size_; i++)
-        {
-              data_[i] = newdata_[i - pos - 1];
-        }
-
-        reserve_--;
+        size_++;
+        return size_;
     }
 
     template <typename T>
@@ -208,19 +213,11 @@ namespace thirtythree
             throw 0;
         }
 
-        T *datanew_ = new T [size_-1];
-
-        for (unsigned int i = 0 ; i < pos; i++)
+        for (size_t i = pos; i < size_ - 1; i++)
         {
-            datanew_[i] = data_[i];
+            data_[i] = data_[i + 1];
         }
 
-        for (unsigned int i = pos + 1; i < size_; i++)
-        {
-            datanew_[i-1] = data_[i];
-        }
-        delete[] data_;
-        data_ = datanew_;
         size_--;
         return size_;
     }
@@ -231,6 +228,7 @@ namespace thirtythree
         cout << "Vector";
         cout << "\t{" << endl;
         cout << "\tsize_\t\t= " << size_ << endl;
+        cout << "\treserve_\t\t= " << reserve_ << endl;
         cout << "\tdata_ [" << size_ << "]:" << endl;
         cout << "\t\t{" << endl;
         for (unsigned int i = 0; i < size_; i++)
@@ -242,24 +240,42 @@ namespace thirtythree
     }
 
     template <typename T>
-    void Vector<T>::resize(const size_t new_size)
+    size_t Vector<T>::resize(const size_t new_size)
     {
+        if (new_size < size_)
+        {
+            throw 1;
+        }
 
         if (new_size <= reserve_)
         {
+            for (size_t i = size_; i < new_size; i++)
+            {
+                data_[i] = 0;
+            }
             size_ = new_size;
+            return size_;
         }
 
-        T *newdata_ = new int [new_size + 10];
+        T *newdata_ = new T [new_size + RESERVED_];
 
-        for (unsigned int i = 0; i < size_; i++)
+        for (size_t i = 0; i < size_; i++)
         {
             newdata_[i] = data_[i];
+        }
+
+        for (size_t i = size_; i < new_size; i++)
+        {
+            newdata_[i] = 0;
         }
 
         delete [] data_;
 
         size_ = new_size;
+        reserve_ = new_size + RESERVED_;
         data_ = newdata_;
-
+        return size_;
     }
+
+
+}
