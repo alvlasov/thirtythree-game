@@ -160,6 +160,11 @@ namespace thirtythree
         //! @return Элемент массива с индексом pos
         T& at(const size_t pos);
 
+        //! Возвращает элемент массива с индексом pos для константных объектов
+        //! @param pos Индекс элементаl
+        //! @return Элемент массива с индексом pos
+        const T& at(const size_t pos) const;
+
         //! Удаляет элемент с индексом pos
         //! @param pos Индекс элемента
         //! @return Новый размер массива

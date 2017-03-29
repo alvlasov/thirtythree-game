@@ -101,9 +101,10 @@ SUITE(Vector)
         }
         CHECK_THROW(a.insert(-1, 0), int);
         CHECK_THROW(a.insert(a.size() + 100, 0), int);
-
         CHECK_EQUAL(a.insert(5, 111), 12);
         CHECK_EQUAL(a[5], 111);
+        CHECK_EQUAL(a.insert(12, 33), 13);
+        CHECK_EQUAL(a[12], 33);
     }
 
     TEST(ResizeCheck)
@@ -139,9 +140,7 @@ SUITE(Vector)
         CHECK_THROW(a.erase(10), int);
         CHECK_THROW(a.insert(10, 66), int);
         CHECK_THROW(a.insert(1, 66), int);
-        a.dump();
         CHECK_EQUAL(a.resize(10), 10);
-        a.dump();
         CHECK_EQUAL(a.size(), 10);
     }
 
@@ -190,21 +189,19 @@ SUITE(Vector)
         }
 
         CHECK_EQUAL((a + b).size(), a.size() + b.size());
-        //Vector <float> c = a + b;
-        //(a+b).dump();
-//        for (size_t i = 0; i < c.size(); i++)
-//        {
-//            if (i < a.size())
-//            {
-//                CHECK_EQUAL(a[i], c[i]);
-//            }
-//            else
-//            {
-//                CHECK_EQUAL(b[i], c[i]);
-//            }
-//        }
-//        b.insert(1, 99);
-//        CHECK_THROW(a + b, int);
+        Vector <float> c = a + b;
+        for (size_t i = 0; i < c.size(); i++)
+        {
+            if (i < a.size())
+            {
+                CHECK_EQUAL(a[i], c[i]);
+            }
+            else
+            {
+                CHECK_EQUAL(b[i - a.size()], c[i]);
+            }
+        }
+
     }
     TEST(IteratorCheck)
     {

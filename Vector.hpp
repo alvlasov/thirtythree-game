@@ -50,17 +50,6 @@ namespace thirtythree
     }
 
     template <typename T>
-    Vector<T>::~Vector()
-    {
-        cout << __PRETTY_FUNCTION__ << endl;
-
-        delete [] data_;
-
-        data_ = NULL;
-        size_ = 0;
-    }
-
-    template <typename T>
     Vector<T>& Vector<T>::operator =(const Vector &that)
     {
         if(&that == this)
@@ -74,6 +63,16 @@ namespace thirtythree
         return *this;
     }
 
+    template <typename T>
+    Vector<T>::~Vector()
+    {
+        cout << __PRETTY_FUNCTION__ << endl;
+
+        delete [] data_;
+
+        data_ = NULL;
+        size_ = 0;
+    }
 
     template <typename T>
     Vector<T>::Vector(const Vector &that) :
@@ -90,13 +89,14 @@ namespace thirtythree
     bool operator ==(const Vector<T>& arr1, const Vector<T>& arr2)
     {
         if (arr1.size() != arr2.size())
-                return false;
-        else
         {
-            for ( unsigned int i=0; i < arr1.size(); i++ )
+                return false;
+        }
+        for ( unsigned int i=0; i < arr1.size(); i++ )
+        {
+            if (arr1[i] != arr2[i])
             {
-                if (arr1[i] != arr2[i])
-                    return false;
+                return false;
             }
         }
         return true;
@@ -113,16 +113,10 @@ namespace thirtythree
         return false;
     }
 
-
     template <typename T>
     const T& Vector<T>::operator [](size_t n) const
     {
-        if (n >= size_)
-        {
-            throw 0;
-        }
-
-        return data_[n];
+        return at(n);
     }
 
     template <typename T>
@@ -145,7 +139,6 @@ namespace thirtythree
         {
             new_Vector[i] = arr2[i - arr1.size()];
         }
-        cout << "check\n";
         return new_Vector;
     }
 
@@ -157,7 +150,7 @@ namespace thirtythree
             throw 0;
         }
 
-        return data_[0];
+        return at(0);
     }
 
     template <typename T>
@@ -168,7 +161,7 @@ namespace thirtythree
             throw 0;
         }
 
-        return data_[size_-1];
+        return at(size_ - 1);
     }
 
     template <typename T>
@@ -182,9 +175,19 @@ namespace thirtythree
     }
 
     template <typename T>
-    size_t Vector<T>::insert(const size_t pos, const T n)
+    const T& Vector<T>::at(const size_t pos) const
     {
         if (pos >= size_)
+        {
+            throw 0;
+        }
+        return data_[pos];
+    }
+
+    template <typename T>
+    size_t Vector<T>::insert(const size_t pos, const T n)
+    {
+        if (pos > size_)
         {
             throw 0;
         }
@@ -276,6 +279,5 @@ namespace thirtythree
         data_ = newdata_;
         return size_;
     }
-
 
 }
