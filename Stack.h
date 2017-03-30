@@ -8,32 +8,73 @@
 #ifndef STACKH
 #define STACKH
 
-#include "Array.h"
+#include "Vector.h"
+#include "GlobalOptions.h"
 
-template <typename T>
-class Stack
+namespace thirtythree
 {
-public:
 
-    Stack();
-    Stack(size_t capacity);
-    ~Stack();
-    size_t size() const { return size_; }
-    size_t capacity() const { return capacity_; }
-    bool empty() const;
-    bool push(T value);
-    T top() const;
-    bool pop();
-    bool ok() const;
-    void dump() const;
+    template <typename T>
+    class Stack
+    {
+    public:
 
-private:
-    static const int POISON_VAR = 660660;
-    static const size_t def_capacity_ = 10;
-    Array <T> data_;
-    size_t size_;
-    size_t capacity_;
-};
+        //! Инициализирует стек нулевого размера
+        Stack();
 
+        //! Явно инициализирует стек размера capacity
+        //! @param capacity Размер стека
+        Stack(size_t capacity);
 
+        //! Освобождает память
+        ~Stack();
+
+        //! Возвращает размер стека
+        //! @return Размер стека
+        size_t size() const { return size_; }
+
+        //! Возвращает вместимость стека
+        //! @return Вместимость стека
+        size_t capacity() const { return capacity_; }
+
+        //! Проверяет, пуст ли стек
+        //! @return true/false
+        bool empty() const;
+
+        //! Заполняет следующий элемент стека
+        //! @return true/false
+        void push(T value);
+
+        //! Возвращает крайний элемент стека
+        //! @return крайний элемент
+        T top();
+
+        //! Удаляет крайний элемент стека
+        //! @return true/false
+        bool pop();
+
+        //! Проверяет соответствие размера и вместимости стека
+        //! @return true/false
+        bool ok() const;
+
+        //! Выводит ошибку и данные о стеке при несоответствии размера и вместимости стека
+        void dump() const;
+
+    private:
+
+        //! Стандартная емкость стека(если не указывать размер в конструкторе)
+        static const size_t def_capacity_ = 10;
+
+        //! Хранилище данных стека
+        Vector <T> data_;
+
+        //! Размер стека
+        size_t size_;
+
+        //! Вместимость стека
+        size_t capacity_;
+    };
+
+}
+#include "Stack.hpp"
 #endif
