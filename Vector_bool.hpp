@@ -94,6 +94,7 @@ namespace thirtythree
             return size_;
         }
 
+        data_.resize(new_size + RESERVED_);
 
         for (size_t i = size_; i < new_size; i++)
         {
