@@ -104,7 +104,14 @@ namespace thirtythree
 
             //! Перегруженный оператор *
             //! @return объект, который он хранит
-            T& operator* () { return *obj_; }
+            T& operator* ()
+            {
+                if (obj_ == nullptr)
+                {
+                    throw std::runtime_error("Nullptr access");
+                }
+                return *obj_;
+            }
 
             //! Оператор присваивания без перемещения, принимает только временные объекты
             //! @param умный указатель that
@@ -139,13 +146,17 @@ namespace thirtythree
                 cnt_(new int(1))
             { }
 
-            //! Деструктор
+            //! Деструктор с уменьшением счетчика
             ~my_shared_ptr()
             {
-                    if (cnt_ != nullptr && --*cnt_ == 0)
+                    if (cnt_ != nullptr && *cnt_ == 1)
                     {
                             delete obj_;
                             delete cnt_;
+                    }
+                    else
+                    {
+                        (*cnt_)--;
                     }
             }
 
@@ -154,7 +165,8 @@ namespace thirtythree
             //! @return ссылка на объект
             my_shared_ptr& operator = (const my_shared_ptr &that)
             {
-                    if (this != &that) {
+                    if (this != &that)
+                    {
                             reset();
                             obj_= that.obj_;
                             cnt_ = that.cnt_;
@@ -198,17 +210,23 @@ namespace thirtythree
             //! Функция обнуление указателей
             void reset()
             {
-                    this->~shared_ptr();
+                    this->~my_shared_ptr();
                     obj_ = nullptr;
                     cnt_ = nullptr;
             }
+
+            bool unique()
+            {
+                return (*cnt_ == 1);
+            }
+
 
     private:
 
         //! Указатель на объект
         T* obj_;
 
-        //! Счетчик
+        //! Счетчик ссылок на объект
         int *cnt_;
     };
 

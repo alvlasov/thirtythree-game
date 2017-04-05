@@ -265,4 +265,30 @@ SUITE(SmartPtr)
         CHECK_EQUAL(10, *p3);
         CHECK_THROW(*p2, std::exception);
     }
+
+    TEST(my_unique_ptr)
+    {
+        MESSAGE("SmartPtr_my_unique_ptr");
+        my_unique_ptr <int> p1(new int);
+        *p1 = 10;
+        CHECK_EQUAL(10, *p1);
+        my_unique_ptr <int> p2;
+        p2 = my_unique_ptr <int>(new int (42));
+        CHECK_EQUAL(42, *p2);
+    }
+
+    TEST(my_shared_ptr)
+    {
+         MESSAGE("SmartPtr_my_shared_ptr");
+         my_shared_ptr <int> p1;
+         //*p1 = 10;
+         //CHECK_EQUAL(10, *p1);
+         //my_shared_ptr <int> p2(new int(42));
+         //p1 = p2;
+         //CHECK_EQUAL(42, *p1);
+         //CHECK_EQUAL(false, p1.unique());
+
+    }
+
+
 }
