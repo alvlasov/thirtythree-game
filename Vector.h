@@ -139,11 +139,6 @@ namespace thirtythree
         //! @return Значение в ячейке массива с индексом n
         const T& operator [](size_t n) const;
 
-        //! Выделение памяти
-        //! @param n Индекс элемента
-        //! @return указатель на начало блока
-        void* operator new(size_t size);
-
         //! Оператор присваивания
         //! @param that Другой массив
         //! @return Ссылка на this
@@ -237,6 +232,7 @@ namespace thirtythree
         class reference
         {
         public:
+
             friend class Bitset;
 
             reference()
@@ -354,47 +350,81 @@ namespace thirtythree
             {
                 throw std::runtime_error("Index out of bounds");
             }
-            else
-            {
-                return reference(*this, pos);
-            }
+            return reference(*this, pos);
         }
 
         bool operator[] (size_t pos) const
         {
-            if (pos >= size_)
-            {
-                throw std::runtime_error("Index out of bounds");
-            }
-            else
-            {
-                return get(pos);
-            }
+            return get(pos);
         }
 
         void dump() const
         {
-            cout << "Bitset [" << size_ << endl;
+            cout << "Bitset [" << size_ << "]"<< endl;
             for (size_t i = 0; i < size_; i++)
             {
-                cout << "data_[" << i << "] = " << get(i) << endl;
+                cout << "\tdata_[" << i << "] = " << get(i) << endl;
             }
+        }
+
+        size_t size() const { return size_; }
+
+        size_t resize(const size_t new_size)
+        {
+            if (new_size < size_)
+            {
+                throw std::runtime_error("New size is smaller than current size");
+            }
+
+            size_t new_charsize = new_size / 8 + 1;
+            size_t charsize = size_ / 8 + 1;
+            size_t num = new_size - size_;
+
+            unsigned char *newdata = new unsigned char [new_charsize];
+
+            for (size_t i = 0; i < charsize; i++)
+            {
+                newdata[i] = data_[i];
+            }
+
+            delete [] data_;
+            data_ = newdata;
+            size_ = new_size;
+
+            for (size_t i = size_ - num; i < size_; i++)
+            {
+                set(false, i);
+            }
+
+            return size_;
         }
 
     private:
 
         bool get(size_t pos) const
         {
+            if (pos >= size_)
+            {
+                throw std::runtime_error("Index out of bounds");
+            }
             int bit = data_[pos/8] & 1 << (pos % 8);
             return !!bit;
         }
 
         void set(bool value, size_t pos)
         {
+            if (pos >= size_)
+            {
+                throw std::runtime_error("Index out of bounds");
+            }
             if (value)
+            {
                 data_[pos / 8] |= 1 << (pos % 8);
+            }
             else
+            {
                 data_[pos / 8] &= ~(1 << (pos % 8));
+            }
         }
 
         size_t size_;
@@ -477,7 +507,6 @@ namespace thirtythree
         size_t size() const { return size_; }
         Bitset::reference operator [](size_t n);
         const bool operator [](size_t n) const;
-        void* operator new(size_t size);
         Vector& operator =(const Vector &that);
         bool empty() const;
         bool first() const;
@@ -491,12 +520,12 @@ namespace thirtythree
 
 //        Vector_iterator begin()
 //        {
-//            return Vector_iterator(Bitset::reference(*data_, 0));
+//            return Vector_iterator(Bitset::reference(data_, 0));
 //        }
 //
 //        Vector_iterator end()
 //        {
-//            return Vector_iterator(Bitset::reference(*data_, size_ - 1));
+//            return Vector_iterator(Bitset::reference(data_, size_ - 1));
 //        }
 
     private:
@@ -504,7 +533,7 @@ namespace thirtythree
         static const size_t RESERVED_ = 10;
         size_t size_;
         size_t reserve_;
-        Bitset *data_;
+        Bitset data_;
 
     };
 }

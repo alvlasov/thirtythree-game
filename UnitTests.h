@@ -279,12 +279,10 @@ SUITE(Vector_bool)
         CHECK_THROW(bits[10], std::exception);
 
         CHECK_EQUAL(bits[8], --bits[9]);
-
         bool b1 = --bits[9];
         CHECK_EQUAL(b1, bits[8]);
         bool b2 = bits[9];
         CHECK_EQUAL(b2, bits[9]);
-
         bits[8] = bits[9];
         CHECK_EQUAL(bits[9], bits[8]);
 
@@ -292,8 +290,19 @@ SUITE(Vector_bool)
         CHECK_EQUAL(false, bits[9] == bits[0]);
         CHECK_EQUAL(true, bits[9] != bits[0]);
         CHECK_EQUAL(false, !bits[9]);
+
+        CHECK_EQUAL(16, bits.resize(16));
+        CHECK_EQUAL(16, bits.size());
+        for (int i = 10; i < bits.size(); i++)
+        {
+            CHECK_EQUAL(false, bits[i]);
+        }
+        bits[15] = 1;
+        CHECK_EQUAL(true, bits[15]);
+        CHECK_THROW(bits[16], std::exception);
+
     }
-        TEST(ConstructorsCheck)
+    TEST(ConstructorsCheck)
     {
         MESSAGE("Vector_Bool_ConstructorsCheck");
         Vector <bool> a(10);
@@ -462,12 +471,16 @@ SUITE(Vector_bool)
 //        {
 //            a[i] = i % 2;
 //        }
+//        cout << "check1" << endl;
 //        Vector<bool>::Vector_iterator it;
 //        int j = 0;
-//
+//        cout << "check2" << endl;
+//        cout << *it << endl;
+//        it = a.begin();
+//        cout << "check3" << endl;
 //        for (it = a.begin(); it != a.end(); it++)
 //        {
-//            cout << "check1" << endl;
+//
 //            CHECK_EQUAL((j % 2), *it);
 //            j++;
 //        }

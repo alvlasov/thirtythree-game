@@ -16,7 +16,7 @@ namespace thirtythree
 {
 
     Vector<bool>::Vector() :
-        data_(nullptr),
+        data_(0),
         size_(0),
         reserve_(0)
     {
@@ -27,11 +27,11 @@ namespace thirtythree
     Vector<bool>::Vector(size_t size) :
         size_(size),
         reserve_(size_ + RESERVED_),
-        data_(new Bitset(reserve_))
+        data_(reserve_)
     {
         for (size_t i = 0; i < size_; i++)
         {
-            (*data_)[i] = false;
+            data_[i] = false;
         }
         if (DEV_MESSAGES)
             cout << __PRETTY_FUNCTION__ << endl;
@@ -40,14 +40,14 @@ namespace thirtythree
     Vector<bool>::Vector(const std::initializer_list<bool>& init):
         size_(init.size()),
         reserve_(size_ + RESERVED_),
-        data_(new Bitset(reserve_))
+        data_(reserve_)
 
     {
         bool *data = new bool [reserve_];
         std::copy(init.begin(), init.end(), data);
         for (size_t i = 0; i < size_; i++)
         {
-            (*data_)[i] = data[i];
+            data_[i] = data[i];
         }
         delete [] data;
         if (DEV_MESSAGES)
@@ -60,9 +60,6 @@ namespace thirtythree
         if (DEV_MESSAGES)
             cout << __PRETTY_FUNCTION__ << endl;
 
-        delete data_;
-
-        data_ = NULL;
         size_ = 0;
     }
 
@@ -70,13 +67,13 @@ namespace thirtythree
     Vector<bool>::Vector(const Vector<bool> &that) :
         size_(that.size_),
         reserve_(that.size_ + RESERVED_),
-        data_(new Bitset(reserve_))
+        data_(reserve_)
     {
         if (DEV_MESSAGES)
             cout << __PRETTY_FUNCTION__ << endl;
         for (size_t i = 0; i < size_; i++)
         {
-            (*data_)[i] = (*that.data_)[i];
+            data_[i] = that.data_[i];
         }
     }
 
@@ -91,32 +88,36 @@ namespace thirtythree
         {
             for (size_t i = size_; i < new_size; i++)
             {
-                (*data_)[i] = 0;
+                data_[i] = 0;
             }
             size_ = new_size;
             return size_;
         }
 
-        Bitset *newdata_ = new Bitset(new_size + RESERVED_);
-
-        for (size_t i = 0; i < size_; i++)
-        {
-            (*newdata_)[i] = (*data_)[i];
-        }
 
         for (size_t i = size_; i < new_size; i++)
         {
-            (*newdata_)[i] = 0;
+            data_[i] = 0;
         }
-
-        delete data_;
 
         size_ = new_size;
         reserve_ = new_size + RESERVED_;
-        data_ = newdata_;
         return size_;
     }
 
+    Bitset::reference Vector<bool>::at(const size_t pos)
+    {
+        if (pos >= size_)
+        {
+            throw 0;
+        }
+        return data_[pos];
+    }
+
+    Bitset::reference Vector<bool>::operator [](size_t n)
+    {
+        return at(n);
+    }
 // Далее то же, что и в Vector.hpp
 
     bool operator ==(const Vector<bool>& arr1, const Vector<bool>& arr2)
@@ -125,7 +126,7 @@ namespace thirtythree
         {
                 return false;
         }
-        for ( unsigned int i=0; i < arr1.size(); i++ )
+        for ( unsigned int i = 0; i < arr1.size(); i++ )
         {
             if (arr1[i] != arr2[i])
             {
@@ -148,11 +149,6 @@ namespace thirtythree
     const bool Vector<bool>::operator [](size_t n) const
     {
         return at(n);
-    }
-
-    Bitset::reference Vector<bool>::operator [](size_t n)
-    {
-       return at(n);
     }
 
     Vector<bool> operator +(const Vector<bool> &arr1, const Vector<bool> &arr2)
@@ -189,22 +185,13 @@ namespace thirtythree
         return at(size_ - 1);
     }
 
-    Bitset::reference Vector<bool>::at(const size_t pos)
-    {
-        if (pos >= size_)
-        {
-            throw 0;
-        }
-        return (*data_)[pos];
-    }
-
     const bool Vector<bool>::at(const size_t pos) const
     {
         if (pos >= size_)
         {
             throw 0;
         }
-        return (*data_)[pos];
+        return data_[pos];
     }
 
     size_t Vector<bool>::insert(const size_t pos, const bool n)
@@ -221,10 +208,10 @@ namespace thirtythree
 
         for (size_t i = size_; i > pos; i--)
         {
-            (*data_)[i] = (*data_)[i - 1];
+            data_[i] = data_[i - 1];
         }
 
-        (*data_)[pos] = n;
+        data_[pos] = n;
 
         size_++;
         return size_;
@@ -239,7 +226,7 @@ namespace thirtythree
 
         for (size_t i = pos; i < size_ - 1; i++)
         {
-            (*data_)[i] = (*data_)[i + 1];
+            data_[i] = data_[i + 1];
         }
 
         size_--;
@@ -256,12 +243,11 @@ namespace thirtythree
         cout << "\t\t{" << endl;
         for (unsigned int i = 0; i < size_; i++)
         {
-            cout << "\t\t" << "[" << i << "] = " << (*data_)[i] << endl;
+            cout << "\t\t" << "[" << i << "] = " << data_[i] << endl;
         }
         cout << "\t\t}" << endl;
         cout << "\t}" << endl;
     }
-
 
 }
 
