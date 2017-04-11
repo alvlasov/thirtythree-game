@@ -8,11 +8,9 @@
 
 #include "GlobalOptions.h"
 
+using namespace thirtythree;
+
 int main()
 {
-    /*
-    Array <bool> S(9);
-    std::cout << S[0]<< std:: endl;
-    */
     return UnitTest::RunAllTests();
 }

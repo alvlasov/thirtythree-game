@@ -31,12 +31,10 @@ namespace thirtythree
         reserve_(size_ + RESERVED_),
         data_(new T [reserve_])
     {
-        Vector_iterator it;
-        for (it = begin(); it != end(); ++it )
+        for (iterator it = begin(); it != end(); ++it )
         {
             *it = 0;
         }
-        *it = 0;
         if (DEV_MESSAGES)
             cout << __PRETTY_FUNCTION__ << endl;
     }
@@ -54,6 +52,18 @@ namespace thirtythree
     }
 
     template <typename T>
+    Vector<T>::~Vector()
+    {
+        if (DEV_MESSAGES)
+            cout << __PRETTY_FUNCTION__ << endl;
+
+        delete [] data_;
+
+        data_ = NULL;
+        size_ = 0;
+    }
+
+    template <typename T>
     Vector<T>& Vector<T>::operator =(const Vector &that)
     {
         if (&that == this)
@@ -68,18 +78,6 @@ namespace thirtythree
     }
 
     template <typename T>
-    Vector<T>::~Vector()
-    {
-        if (DEV_MESSAGES)
-            cout << __PRETTY_FUNCTION__ << endl;
-
-        delete [] data_;
-
-        data_ = NULL;
-        size_ = 0;
-    }
-
-    template <typename T>
     Vector<T>::Vector(const Vector &that) :
         size_(that.size_),
         reserve_(that.size_ + RESERVED_),
@@ -89,7 +87,6 @@ namespace thirtythree
             cout << __PRETTY_FUNCTION__ << endl;
         std::copy(that.data_, that.data_ + that.size_, data_);
     }
-
 
     template <typename T>
     bool operator ==(const Vector<T>& arr1, const Vector<T>& arr2)
@@ -153,7 +150,7 @@ namespace thirtythree
     {
         if (empty())
         {
-            throw 0;
+            throw std::runtime_error("Vector is empty");
         }
 
         return at(0);
@@ -164,7 +161,7 @@ namespace thirtythree
     {
         if (empty())
         {
-            throw 0;
+            throw std::runtime_error("Vector is empty");
         }
 
         return at(size_ - 1);
@@ -175,7 +172,7 @@ namespace thirtythree
     {
         if (pos >= size_)
         {
-            throw 0;
+            throw std::runtime_error("Index out of bounds");
         }
         return data_[pos];
     }
@@ -185,7 +182,7 @@ namespace thirtythree
     {
         if (pos >= size_)
         {
-            throw 0;
+            throw std::runtime_error("Index out of bounds");
         }
         return data_[pos];
     }
@@ -195,7 +192,7 @@ namespace thirtythree
     {
         if (pos > size_)
         {
-            throw 0;
+            throw std::runtime_error("Index out of bounds");
         }
 
         if (size_ == reserve_)
@@ -219,7 +216,7 @@ namespace thirtythree
     {
         if (pos >= size_)
         {
-            throw 0;
+            throw std::runtime_error("Index out of bounds");
         }
 
         for (size_t i = pos; i < size_ - 1; i++)
@@ -240,7 +237,7 @@ namespace thirtythree
         cout << "\treserve_\t\t= " << reserve_ << endl;
         cout << "\tdata_ [" << size_ << "]:" << endl;
         cout << "\t\t{" << endl;
-        for (unsigned int i = 0; i < size_; i++)
+        for (size_t i = 0; i < size_; i++)
         {
             cout << "\t\t" << "[" << i << "] = " << data_[i] << endl;
         }
@@ -253,7 +250,7 @@ namespace thirtythree
     {
         if (new_size < size_)
         {
-            throw 1;
+            throw std::runtime_error("New size is smaller than current size");
         }
 
         if (new_size <= reserve_)

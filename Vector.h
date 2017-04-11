@@ -8,7 +8,11 @@
 #ifndef Vector_H_INCLUDED
 #define Vector_H_INCLUDED
 
+#include <stdexcept>
 #include "GlobalOptions.h"
+
+using std::cout;
+using std::endl;
 
 namespace thirtythree
 {
@@ -19,20 +23,20 @@ namespace thirtythree
     public:
 
         //! Переопределение итератора для массива
-        class Vector_iterator
+        class iterator
         {
         public:
 
             //! Пустой итератор
             //! Присваивает указателю значение NULL
-            Vector_iterator():
+            iterator():
                 p_index(nullptr)
             {
             }
 
             //! Конструктор итератора с передачей параметра
             //! Передает значение указателя
-            Vector_iterator(T *p_newindex):
+            iterator(T *p_newindex):
                 p_index(p_newindex)
             {
             }
@@ -46,7 +50,7 @@ namespace thirtythree
 
             //! Переопределение оператора ++ префикс
             //! @return следующий итератор
-            Vector_iterator& operator ++()
+            iterator& operator ++()
             {
                 ++p_index;
                 return *this;
@@ -54,7 +58,7 @@ namespace thirtythree
 
             //! Переопределение оператора -- префикс
             //! @return следующий итератор
-            Vector_iterator& operator --()
+            iterator& operator --()
             {
                 --p_index;
                 return *this;
@@ -70,7 +74,7 @@ namespace thirtythree
             //! Переопределение операции сравнения двух итераторов
             //! @param that - итератор, с которым сравниваем
             //! @return TRUE/FALSE
-            bool operator == (const Vector_iterator& that) const
+            bool operator == (const iterator& that) const
             {
                 return (p_index == that.p_index);
             }
@@ -78,23 +82,23 @@ namespace thirtythree
             //! Переопределение операции неравенства
             //! @param that - итератор, с которым сравниваем
             //! @return TRUE/FALSE
-            bool operator != (const Vector_iterator& that) const
+            bool operator != (const iterator& that) const
             {
                 return (p_index != that.p_index);
             }
 
             //! Переопределение операции пост-инкремента
             //! @return Возвращает итератор
-            Vector_iterator operator ++(int)
+            iterator operator ++(int)
             {
-                return Vector_iterator(p_index++);
+                return iterator(p_index++);
             }
 
             //! Переопределение операции пост-декремента
             //! @return Возвращает итератор
-            Vector_iterator operator --(int)
+            iterator operator --(int)
             {
-                return Vector_iterator(p_index--);
+                return iterator(p_index--);
             }
 
         private:
@@ -134,11 +138,6 @@ namespace thirtythree
         //! @param n Индекс элемента
         //! @return Значение в ячейке массива с индексом n
         const T& operator [](size_t n) const;
-
-        //! Выделение памяти
-        //! @param n Индекс элемента
-        //! @return указатель на начало блока
-        void* operator new(size_t size);
 
         //! Оператор присваивания
         //! @param that Другой массив
@@ -185,16 +184,16 @@ namespace thirtythree
         size_t resize(const size_t new_size);
 
         //! @return Итератор на начало массива
-        Vector_iterator begin()
+        iterator begin()
         {
-            Vector_iterator begin_iterator(&data_[0]);
+            iterator begin_iterator(&data_[0]);
             return begin_iterator;
         }
 
         //! @return Итератор на конец массива
-        Vector_iterator end()
+        iterator end()
         {
-            Vector_iterator end_iterator(&data_[size_-1]);
+            iterator end_iterator(&data_[size_]);
             return end_iterator;
         }
 
@@ -212,8 +211,6 @@ namespace thirtythree
         //! Указатель на область памяти, в которой хранятся данные
         T *data_;
 
-
-
     };
 
     //! Оператор сравнения
@@ -228,31 +225,297 @@ namespace thirtythree
     template <typename T>
     Vector<T> operator +(const Vector<T>& arr1, const Vector<T>& arr2);
 
+    class Bitset
+    {
+    public:
+
+        class reference
+        {
+        public:
+
+            template <typename T>
+            friend class Vector<T>::iterator;
+
+            reference(Bitset& b, size_t pos) :
+                parent_ (&b),
+                pos_ (pos),
+                value_ (parent_->get(pos))
+            {
+            }
+
+            ~reference()
+            {
+            }
+
+            reference& operator=(bool x)
+            {
+                value_ = x;
+                parent_->set(value_, pos_);
+                return *this;
+            }
+
+            reference& operator=(const reference& x)
+            {
+                value_ = (bool) x;
+                parent_->set(value_, pos_);
+                return *this;
+            }
+
+            operator bool() const
+            {
+                return value_;
+            }
+
+            bool operator == (const reference& that) const
+            {
+                return (value_ == that.value_);
+            }
+
+            bool operator != (const reference& that) const
+            {
+                return (value_ != that.value_);
+            }
+
+        private:
+
+            Bitset *parent_;
+            size_t pos_;
+            bool value_;
+
+        };
+
+        Bitset(size_t size) :
+            size_ (size),
+            data_ (new unsigned char [size / 8 + 1])
+        {
+            if (DEV_MESSAGES)
+                cout << __PRETTY_FUNCTION__ << endl;
+            for (size_t i = 0; i < size_; i++)
+            {
+                set(false, i);
+            }
+        }
+
+        ~Bitset()
+        {
+            if (DEV_MESSAGES)
+                cout << __PRETTY_FUNCTION__ << endl;
+            delete [] data_;
+            data_ = nullptr;
+            size_ = 0;
+        }
+
+        reference operator[] (size_t pos)
+        {
+            if (pos >= size_)
+            {
+                throw std::runtime_error("Index out of bounds");
+            }
+            return reference(*this, pos);
+        }
+
+        bool operator[] (size_t pos) const
+        {
+            return get(pos);
+        }
+
+        void dump() const
+        {
+            cout << "Bitset [" << size_ << "]"<< endl;
+            for (size_t i = 0; i < size_; i++)
+            {
+                cout << "\tdata_[" << i << "] = " << get(i) << endl;
+            }
+        }
+
+        size_t size() const { return size_; }
+
+        size_t resize(const size_t new_size)
+        {
+            if (new_size < size_)
+            {
+                throw std::runtime_error("New size is smaller than current size");
+            }
+
+            size_t new_charsize = new_size / 8 + 1;
+            size_t charsize = size_ / 8 + 1;
+            size_t num = new_size - size_;
+
+            unsigned char *newdata = new unsigned char [new_charsize];
+
+            for (size_t i = 0; i < charsize; i++)
+            {
+                newdata[i] = data_[i];
+            }
+
+            delete [] data_;
+            data_ = newdata;
+            size_ = new_size;
+
+            for (size_t i = size_ - num; i < size_; i++)
+            {
+                set(false, i);
+            }
+
+            return size_;
+        }
+
+    private:
+
+        bool get(size_t pos) const
+        {
+            if (pos >= size_)
+            {
+                throw std::runtime_error("Index out of bounds");
+            }
+            int bit = data_[pos/8] & 1 << (pos % 8);
+            return !!bit;
+        }
+
+        void set(bool value, size_t pos)
+        {
+            if (pos >= size_)
+            {
+                throw std::runtime_error("Index out of bounds");
+            }
+            if (value)
+            {
+                data_[pos / 8] |= 1 << (pos % 8);
+            }
+            else
+            {
+                data_[pos / 8] &= ~(1 << (pos % 8));
+            }
+        }
+
+        size_t size_;
+        unsigned char *data_;
+
+    };
+
+    template <>
+    class Vector<bool>
+    {
+    public:
+
+        class iterator
+        {
+        public:
+
+            iterator()
+            {
+                if (DEV_MESSAGES)
+                    cout << __PRETTY_FUNCTION__ << endl;
+            }
+
+            iterator(Bitset &bitset, size_t pos):
+                bitset_ (&bitset),
+                pos_ (pos)
+            {
+                if (DEV_MESSAGES)
+                    cout << __PRETTY_FUNCTION__ << endl;
+            }
+
+            iterator& operator =(const iterator& that)
+            {
+                bitset_ = that.bitset_;
+                pos_ = that.pos_;
+                return *this;
+            }
+
+            iterator& operator =(const Bitset::reference& ref)
+            {
+                pos_ = ref.pos_;
+                return *this;
+            }
+
+            Bitset::reference operator *()
+            {
+                return (*bitset_)[pos_];
+            }
+
+
+            iterator& operator ++()
+            {
+                pos_++;
+                return *this;
+            }
+
+            iterator& operator --()
+            {
+                pos_--;
+                return *this;
+            }
+
+            bool operator == (const iterator& that) const
+            {
+                return (pos_ == that.pos_);
+            }
+
+            bool operator != (const iterator& that) const
+            {
+                return (pos_ != that.pos_);
+            }
+
+            iterator operator ++(int)
+            {
+                return iterator(*bitset_, pos_++);
+            }
+
+            iterator operator --(int)
+            {
+                return iterator(*bitset_, pos_--);
+            }
+
+        private:
+
+            Bitset *bitset_;
+            size_t pos_;
+
+        };
+
+        Vector();
+        explicit Vector(size_t size);
+        Vector(const Vector& that);
+        Vector(const std::initializer_list<bool>& init);
+        ~Vector();
+
+        size_t size() const { return size_; }
+        Bitset::reference operator [](size_t n);
+        const bool operator [](size_t n) const;
+        Vector& operator =(const Vector &that);
+        bool empty() const;
+        bool first() const;
+        bool last() const;
+        Bitset::reference at(const size_t pos);
+        const bool at(const size_t pos) const;
+        size_t erase(const size_t pos);
+        size_t insert(const size_t pos, const bool n);
+        void dump() const;
+        size_t resize(const size_t new_size);
+
+        iterator begin()
+        {
+            return iterator(data_, 0);
+        }
+
+        iterator end()
+        {
+            return iterator(data_, size_);
+        }
+
+    private:
+
+        static const size_t RESERVED_ = 10;
+        size_t size_;
+        size_t reserve_;
+        Bitset data_;
+
+    };
 
 }
+
 #include "Vector.hpp"
+#include "Vector_bool.hpp"
 
 #endif // Vector_H_INCLUDED
-
-/*
-template <>
-class Array <bool>
-{
-public:
-    Array(size_t _size) : size_(_size), data_(new unsigned char[_size]) {};
-
-    bool operator [] (int n) const;
-    void print();
-
-
-private:
-
-    size_t size_;
-    unsigned char* data_;
-
-};
-
-#include "Array.hpp"
-#include "Array_bool.hpp"
-#endif
-*/
