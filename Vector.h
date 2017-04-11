@@ -23,20 +23,20 @@ namespace thirtythree
     public:
 
         //! Переопределение итератора для массива
-        class Vector_iterator
+        class iterator
         {
         public:
 
             //! Пустой итератор
             //! Присваивает указателю значение NULL
-            Vector_iterator():
+            iterator():
                 p_index(nullptr)
             {
             }
 
             //! Конструктор итератора с передачей параметра
             //! Передает значение указателя
-            Vector_iterator(T *p_newindex):
+            iterator(T *p_newindex):
                 p_index(p_newindex)
             {
             }
@@ -50,7 +50,7 @@ namespace thirtythree
 
             //! Переопределение оператора ++ префикс
             //! @return следующий итератор
-            Vector_iterator& operator ++()
+            iterator& operator ++()
             {
                 ++p_index;
                 return *this;
@@ -58,7 +58,7 @@ namespace thirtythree
 
             //! Переопределение оператора -- префикс
             //! @return следующий итератор
-            Vector_iterator& operator --()
+            iterator& operator --()
             {
                 --p_index;
                 return *this;
@@ -74,7 +74,7 @@ namespace thirtythree
             //! Переопределение операции сравнения двух итераторов
             //! @param that - итератор, с которым сравниваем
             //! @return TRUE/FALSE
-            bool operator == (const Vector_iterator& that) const
+            bool operator == (const iterator& that) const
             {
                 return (p_index == that.p_index);
             }
@@ -82,23 +82,23 @@ namespace thirtythree
             //! Переопределение операции неравенства
             //! @param that - итератор, с которым сравниваем
             //! @return TRUE/FALSE
-            bool operator != (const Vector_iterator& that) const
+            bool operator != (const iterator& that) const
             {
                 return (p_index != that.p_index);
             }
 
             //! Переопределение операции пост-инкремента
             //! @return Возвращает итератор
-            Vector_iterator operator ++(int)
+            iterator operator ++(int)
             {
-                return Vector_iterator(p_index++);
+                return iterator(p_index++);
             }
 
             //! Переопределение операции пост-декремента
             //! @return Возвращает итератор
-            Vector_iterator operator --(int)
+            iterator operator --(int)
             {
-                return Vector_iterator(p_index--);
+                return iterator(p_index--);
             }
 
         private:
@@ -184,16 +184,15 @@ namespace thirtythree
         size_t resize(const size_t new_size);
 
         //! @return Итератор на начало массива
-        Vector_iterator begin()
+        iterator begin()
         {
-            Vector_iterator begin_iterator(&data_[0]);
+            iterator begin_iterator(&data_[0]);
             return begin_iterator;
         }
 
         //! @return Итератор на конец массива
-        Vector_iterator end()
+        iterator end()
         {
-            Vector_iterator end_iterator(&data_[size_-1]);
             return end_iterator;
         }
 
@@ -233,26 +232,18 @@ namespace thirtythree
         {
         public:
 
-            friend class Bitset;
-
-            reference()
-            {
-            }
+            template <typename T>
+            friend class Vector<T>::iterator;
 
             reference(Bitset& b, size_t pos) :
                 parent_ (&b),
                 pos_ (pos),
                 value_ (parent_->get(pos))
             {
-//                if (DEV_MESSAGES)
-//                    cout << __PRETTY_FUNCTION__ << endl;
             }
 
             ~reference()
             {
-                parent_->set(value_, pos_);
-//                if (DEV_MESSAGES)
-//                    cout << __PRETTY_FUNCTION__ << endl;
             }
 
             reference& operator=(bool x)
@@ -274,35 +265,6 @@ namespace thirtythree
                 return value_;
             }
 
-            bool& operator *()
-            {
-                return value_;
-            }
-
-            reference& operator ++()
-            {
-                pos_++;
-                value_ = parent_->get(pos_);
-                return *this;
-            }
-
-            reference& operator --()
-            {
-                pos_--;
-                value_ = parent_->get(pos_);
-                return *this;
-            }
-
-            reference operator ++(int)
-            {
-                return reference(*parent_, ++pos_);
-            }
-
-            reference operator --(int)
-            {
-                return reference(*parent_, --pos_);
-            }
-
             bool operator == (const reference& that) const
             {
                 return (value_ == that.value_);
@@ -320,8 +282,6 @@ namespace thirtythree
             bool value_;
 
         };
-
-        friend class reference;
 
         Bitset(size_t size) :
             size_ (size),
@@ -437,66 +397,81 @@ namespace thirtythree
     {
     public:
 
-//        class Vector_iterator
-//        {
-//        public:
-//
-//            Vector_iterator()
-//            {
-//                if (DEV_MESSAGES)
-//                    cout << __PRETTY_FUNCTION__ << endl;
-//            }
-//
-//            Vector_iterator(Bitset::reference p_newindex):
-//                p_index (p_newindex)
-//            {
-//                if (DEV_MESSAGES)
-//                    cout << __PRETTY_FUNCTION__ << endl;
-//            }
-//
-//            bool& operator *()
-//            {
-//                return *p_index;
-//            }
-//
-//
-//            Vector_iterator& operator ++()
-//            {
-//                ++p_index;
-//                return *this;
-//            }
-//
-//            Vector_iterator& operator --()
-//            {
-//                --p_index;
-//                return *this;
-//            }
-//
-//            bool operator == (const Vector_iterator& that) const
-//            {
-//                return (p_index == that.p_index);
-//            }
-//
-//            bool operator != (const Vector_iterator& that) const
-//            {
-//                return (p_index != that.p_index);
-//            }
-//
-//            Vector_iterator operator ++(int)
-//            {
-//                return Vector_iterator(p_index++);
-//            }
-//
-//            Vector_iterator operator --(int)
-//            {
-//                return Vector_iterator(p_index--);
-//            }
-//
-//        private:
-//
-//            Bitset::reference p_index;
-//
-//        };
+        class iterator
+        {
+        public:
+
+            iterator()
+            {
+                if (DEV_MESSAGES)
+                    cout << __PRETTY_FUNCTION__ << endl;
+            }
+
+            iterator(Bitset &bitset, size_t pos):
+                bitset_ (&bitset),
+                pos_ (pos)
+            {
+                if (DEV_MESSAGES)
+                    cout << __PRETTY_FUNCTION__ << endl;
+            }
+
+            iterator& operator =(const iterator& that)
+            {
+                bitset_ = that.bitset_;
+                pos_ = that.pos_;
+                return *this;
+            }
+
+            iterator& operator =(const Bitset::reference& ref)
+            {
+                pos_ = ref.pos_;
+                return *this;
+            }
+
+            Bitset::reference operator *()
+            {
+                return (*bitset_)[pos_];
+            }
+
+
+            iterator& operator ++()
+            {
+                pos_++;
+                return *this;
+            }
+
+            iterator& operator --()
+            {
+                pos_--;
+                return *this;
+            }
+
+            bool operator == (const iterator& that) const
+            {
+                return (pos_ == that.pos_);
+            }
+
+            bool operator != (const iterator& that) const
+            {
+                return (pos_ != that.pos_);
+            }
+
+            iterator operator ++(int)
+            {
+                return iterator(*bitset_, pos_++);
+            }
+
+            iterator operator --(int)
+            {
+                return iterator(*bitset_, pos_--);
+            }
+
+        private:
+
+            Bitset *bitset_;
+            size_t pos_;
+
+        };
 
         Vector();
         explicit Vector(size_t size);
@@ -518,15 +493,15 @@ namespace thirtythree
         void dump() const;
         size_t resize(const size_t new_size);
 
-//        Vector_iterator begin()
-//        {
-//            return Vector_iterator(Bitset::reference(data_, 0));
-//        }
-//
-//        Vector_iterator end()
-//        {
-//            return Vector_iterator(Bitset::reference(data_, size_ - 1));
-//        }
+        iterator begin()
+        {
+            return iterator(data_, 0);
+        }
+
+        iterator end()
+        {
+            return iterator(data_, size_);
+        }
 
     private:
 
@@ -536,6 +511,7 @@ namespace thirtythree
         Bitset data_;
 
     };
+
 }
 
 #include "Vector.hpp"

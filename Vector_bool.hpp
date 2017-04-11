@@ -29,9 +29,9 @@ namespace thirtythree
         reserve_(size_ + RESERVED_),
         data_(reserve_)
     {
-        for (size_t i = 0; i < size_; i++)
+        for (iterator it = begin(); it != end(); it++)
         {
-            data_[i] = false;
+            *it = false;
         }
         if (DEV_MESSAGES)
             cout << __PRETTY_FUNCTION__ << endl;
@@ -45,15 +45,15 @@ namespace thirtythree
     {
         bool *data = new bool [reserve_];
         std::copy(init.begin(), init.end(), data);
-        for (size_t i = 0; i < size_; i++)
+        int i = 0;
+        for (iterator it = begin(); it != end(); it++)
         {
-            data_[i] = data[i];
+            *it = data[i++];
         }
         delete [] data;
         if (DEV_MESSAGES)
             cout << __PRETTY_FUNCTION__ << endl;
     }
-
 
     Vector<bool>::~Vector()
     {
@@ -63,7 +63,6 @@ namespace thirtythree
         size_ = 0;
     }
 
-
     Vector<bool>::Vector(const Vector<bool> &that) :
         size_(that.size_),
         reserve_(that.size_ + RESERVED_),
@@ -71,9 +70,10 @@ namespace thirtythree
     {
         if (DEV_MESSAGES)
             cout << __PRETTY_FUNCTION__ << endl;
-        for (size_t i = 0; i < size_; i++)
+        int i = 0;
+        for (iterator it = begin(); it != end(); it++)
         {
-            data_[i] = that.data_[i];
+            *it = that[i++];
         }
     }
 
@@ -81,7 +81,7 @@ namespace thirtythree
     {
         if (new_size < size_)
         {
-            throw 1;
+            throw std::runtime_error("New size is smaller than current size");
         }
 
         if (new_size <= reserve_)
@@ -110,7 +110,7 @@ namespace thirtythree
     {
         if (pos >= size_)
         {
-            throw 0;
+            throw std::runtime_error("Index out of bounds");
         }
         return data_[pos];
     }
@@ -119,6 +119,7 @@ namespace thirtythree
     {
         return at(n);
     }
+
 // Далее то же, что и в Vector.hpp
 
     bool operator ==(const Vector<bool>& arr1, const Vector<bool>& arr2)
@@ -172,7 +173,7 @@ namespace thirtythree
     {
         if (empty())
         {
-            throw 0;
+            throw std::runtime_error("Vector is empty");
         }
         return at(0);
     }
@@ -181,7 +182,7 @@ namespace thirtythree
     {
         if (empty())
         {
-            throw 0;
+            throw std::runtime_error("Vector is empty");
         }
         return at(size_ - 1);
     }
@@ -190,7 +191,7 @@ namespace thirtythree
     {
         if (pos >= size_)
         {
-            throw 0;
+            throw std::runtime_error("Index out of bounds");
         }
         return data_[pos];
     }
@@ -199,7 +200,7 @@ namespace thirtythree
     {
         if (pos > size_)
         {
-            throw 0;
+            throw std::runtime_error("Index out of bounds");
         }
 
         if (size_ == reserve_)
@@ -222,7 +223,7 @@ namespace thirtythree
     {
         if (pos >= size_)
         {
-            throw 0;
+            throw std::runtime_error("Index out of bounds");
         }
 
         for (size_t i = pos; i < size_ - 1; i++)
@@ -236,13 +237,13 @@ namespace thirtythree
 
     void Vector<bool>::dump() const
     {
-        cout << "Vector";
+        cout << "Vector<bool>" << endl;
         cout << "\t{" << endl;
         cout << "\tsize_\t\t= " << size_ << endl;
         cout << "\treserve_\t\t= " << reserve_ << endl;
         cout << "\tdata_ [" << size_ << "]:" << endl;
         cout << "\t\t{" << endl;
-        for (unsigned int i = 0; i < size_; i++)
+        for (size_t i = 0; i < size_; i++)
         {
             cout << "\t\t" << "[" << i << "] = " << data_[i] << endl;
         }

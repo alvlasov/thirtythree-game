@@ -85,8 +85,8 @@ SUITE(Vector)
         {
             CHECK_EQUAL(a[i], 10 * (i+2));
         }
-        CHECK_THROW(a.erase(-1), int);
-        CHECK_THROW(a.erase(a.size() + 100), int);
+        CHECK_THROW(a.erase(-1), std::exception);
+        CHECK_THROW(a.erase(a.size() + 100), std::exception);
     }
 
     TEST(InsertCheck)
@@ -103,8 +103,8 @@ SUITE(Vector)
         {
             CHECK_EQUAL(a[i], 10 * i);
         }
-        CHECK_THROW(a.insert(-1, 0), int);
-        CHECK_THROW(a.insert(a.size() + 100, 0), int);
+        CHECK_THROW(a.insert(-1, 0), std::exception);
+        CHECK_THROW(a.insert(a.size() + 100, 0), std::exception);
         CHECK_EQUAL(a.insert(5, 111), 12);
         CHECK_EQUAL(a[5], 111);
         CHECK_EQUAL(a.insert(12, 33), 13);
@@ -119,7 +119,7 @@ SUITE(Vector)
         {
             a[i] = 10 * (i+1);
         }
-        CHECK_THROW(a.resize(9), int);
+        CHECK_THROW(a.resize(9), std::exception);
         CHECK_EQUAL(a.resize(15), 15);
         for (size_t i = 0; i < a.size(); i++)
         {
@@ -137,13 +137,13 @@ SUITE(Vector)
 
         CHECK_EQUAL(a.size(), 0);
         CHECK_EQUAL(a.empty(), true);
-        CHECK_THROW(a.first(), int);
-        CHECK_THROW(a.last(), int);
-        CHECK_THROW(a.at(10), int);
-        CHECK_THROW(a[10], int);
-        CHECK_THROW(a.erase(10), int);
-        CHECK_THROW(a.insert(10, 66), int);
-        CHECK_THROW(a.insert(1, 66), int);
+        CHECK_THROW(a.first(), std::exception);
+        CHECK_THROW(a.last(), std::exception);
+        CHECK_THROW(a.at(10), std::exception);
+        CHECK_THROW(a[10], std::exception);
+        CHECK_THROW(a.erase(10), std::exception);
+        CHECK_THROW(a.insert(10, 66), std::exception);
+        CHECK_THROW(a.insert(1, 66), std::exception);
         CHECK_EQUAL(a.resize(10), 10);
         CHECK_EQUAL(a.size(), 10);
     }
@@ -162,8 +162,8 @@ SUITE(Vector)
         {
             CHECK_EQUAL(a[i], a.at(i));
         }
-        CHECK_THROW(a.at(a.size() + 1), int);
-        CHECK_THROW(a.at(-1), int);
+        CHECK_THROW(a.at(a.size() + 1), std::exception);
+        CHECK_THROW(a.at(-1), std::exception);
     }
 
     TEST(OperatorEqualCheck)
@@ -215,21 +215,13 @@ SUITE(Vector)
         {
             a[i] = i;
         }
-        Vector<int>::Vector_iterator it;
+        Vector<int>::iterator it;
         int j = 0;
         for (it = a.begin(); it != a.end(); it++)
         {
             CHECK_EQUAL(j++, *it);
         }
-        CHECK_EQUAL(j, *it);
 
-        Vector<int>::Vector_iterator it2;
-        j = 9;
-        for (it2 = a.end(); it2 != a.begin(); it2--)
-        {
-            CHECK_EQUAL(j--, *it2);
-        }
-        CHECK_EQUAL(j, *it2);
     }
     TEST(InitializerListConstructor)
     {
@@ -278,9 +270,6 @@ SUITE(Vector_bool)
         CHECK_EQUAL(true, bits[9]);
         CHECK_THROW(bits[10], std::exception);
 
-        CHECK_EQUAL(bits[8], --bits[9]);
-        bool b1 = --bits[9];
-        CHECK_EQUAL(b1, bits[8]);
         bool b2 = bits[9];
         CHECK_EQUAL(b2, bits[9]);
         bits[8] = bits[9];
@@ -337,8 +326,8 @@ SUITE(Vector_bool)
         {
             CHECK_EQUAL((i + 1) % 2, a[i]);
         }
-        CHECK_THROW(a.erase(-1), int);
-        CHECK_THROW(a.erase(a.size() + 100), int);
+        CHECK_THROW(a.erase(-1), std::exception);
+        CHECK_THROW(a.erase(a.size() + 100), std::exception);
     }
 
     TEST(InsertCheck)
@@ -358,8 +347,8 @@ SUITE(Vector_bool)
             else
                 CHECK_EQUAL((i - 1) % 2, a[i]);
         }
-        CHECK_THROW(a.insert(-1, 0), int);
-        CHECK_THROW(a.insert(a.size() + 100, 0), int);
+        CHECK_THROW(a.insert(-1, 0), std::exception);
+        CHECK_THROW(a.insert(a.size() + 100, 0), std::exception);
         CHECK_EQUAL(a.insert(5, false), 12);
         CHECK_EQUAL(false, a[5]);
         CHECK_EQUAL(13, a.insert(12, true));
@@ -374,7 +363,7 @@ SUITE(Vector_bool)
         {
             a[i] = i % 2;
         }
-        CHECK_THROW(a.resize(9), int);
+        CHECK_THROW(a.resize(9), std::exception);
         CHECK_EQUAL(15, a.resize(15));
         for (size_t i = 0; i < a.size(); i++)
         {
@@ -392,13 +381,13 @@ SUITE(Vector_bool)
 
         CHECK_EQUAL(0, a.size());
         CHECK_EQUAL(true, a.empty());
-        CHECK_THROW(a.first(), int);
-        CHECK_THROW(a.last(), int);
-        CHECK_THROW(a.at(10), int);
-        CHECK_THROW(a[10], int);
-        CHECK_THROW(a.erase(10), int);
-        CHECK_THROW(a.insert(10, 66), int);
-        CHECK_THROW(a.insert(1, 66), int);
+        CHECK_THROW(a.first(), std::exception);
+        CHECK_THROW(a.last(), std::exception);
+        CHECK_THROW(a.at(10), std::exception);
+        CHECK_THROW(a[10], std::exception);
+        CHECK_THROW(a.erase(10), std::exception);
+        CHECK_THROW(a.insert(10, 66), std::exception);
+        CHECK_THROW(a.insert(1, 66), std::exception);
         CHECK_EQUAL(10, a.resize(10));
         CHECK_EQUAL(10, a.size());
     }
@@ -417,8 +406,8 @@ SUITE(Vector_bool)
         {
             CHECK_EQUAL(a[i], a.at(i));
         }
-        CHECK_THROW(a.at(a.size() + 1), int);
-        CHECK_THROW(a.at(-1), int);
+        CHECK_THROW(a.at(a.size() + 1), std::exception);
+        CHECK_THROW(a.at(-1), std::exception);
     }
 
     TEST(OperatorEqualCheck)
@@ -463,38 +452,28 @@ SUITE(Vector_bool)
         }
 
     }
-//    TEST(IteratorCheck)
-//    {
-//        MESSAGE("Vector_Bool_IteratorCheck");
-//        Vector <bool> a(10);
-//        for (size_t i = 0; i < a.size(); i++)
-//        {
-//            a[i] = i % 2;
-//        }
-//        cout << "check1" << endl;
-//        Vector<bool>::Vector_iterator it;
-//        int j = 0;
-//        cout << "check2" << endl;
-//        cout << *it << endl;
-//        it = a.begin();
-//        cout << "check3" << endl;
-//        for (it = a.begin(); it != a.end(); it++)
-//        {
-//
-//            CHECK_EQUAL((j % 2), *it);
-//            j++;
-//        }
-//        CHECK_EQUAL(j, *it);
-//
-//        Vector<bool>::Vector_iterator it2;
-//        j = 9;
-//        for (it2 = a.end(); it2 != a.begin(); it2--)
-//        {
-//            CHECK_EQUAL((j % 2), *it2);
-//            j--;
-//        }
-//        CHECK_EQUAL(j, *it2);
-//    }
+    TEST(IteratorCheck)
+    {
+        MESSAGE("Vector_Bool_IteratorCheck");
+        Vector <bool> a(10);
+        for (size_t i = 0; i < a.size(); i++)
+        {
+            a[i] = i % 2;
+        }
+        Vector<bool>::iterator it;
+        int j = 0;
+        for (it = a.begin(); it != a.end(); it++)
+        {
+            CHECK_EQUAL((j % 2), *it);
+            *it = true;
+            j++;
+        }
+        for (it = a.begin(); it != a.end(); it++)
+        {
+            CHECK_EQUAL(true, *it);
+        }
+
+    }
     TEST(InitializerListConstructor)
     {
         MESSAGE("Vector_Bool_InitializerListConstructor");
