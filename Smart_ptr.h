@@ -138,7 +138,7 @@ namespace thirtythree
             //! Конструкторы
             my_shared_ptr() :
                 obj_(nullptr),
-                cnt_(nullptr)
+                cnt_(new int(0))
             { }
 
             explicit my_shared_ptr(T* p) :
@@ -197,14 +197,18 @@ namespace thirtythree
             //! @return Возвращает указатель на объект
             T* operator -> () const
             {
-                    return obj_;
+                if (obj_ == nullptr)
+                {
+                    throw std::runtime_error("Nullptr access");
+                }
+                return obj_;
             }
 
             //! Перегруженный оператор *
             //! @return объект, который он хранит
             T& operator * () const
             {
-                    return *obj_;
+                return *obj_;
             }
 
             //! Функция обнуление указателей

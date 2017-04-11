@@ -280,14 +280,13 @@ SUITE(SmartPtr)
     TEST(my_shared_ptr)
     {
          MESSAGE("SmartPtr_my_shared_ptr");
-         my_shared_ptr <int> p1;
-         //*p1 = 10;
-         //CHECK_EQUAL(10, *p1);
-         //my_shared_ptr <int> p2(new int(42));
-         //p1 = p2;
-         //CHECK_EQUAL(42, *p1);
-         //CHECK_EQUAL(false, p1.unique());
-
+         my_shared_ptr <int> p1(new int(10));
+         *p1 = 20;
+         CHECK_EQUAL(20, *p1);
+         my_shared_ptr <int> p2;
+         p2 = p1;
+         CHECK_EQUAL(20, *p1);
+         CHECK_EQUAL(false, p1.unique());
     }
 
 
