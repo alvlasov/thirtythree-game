@@ -193,6 +193,7 @@ namespace thirtythree
         //! @return Итератор на конец массива
         iterator end()
         {
+            iterator end_iterator(&data_[size_]);
             return end_iterator;
         }
 
