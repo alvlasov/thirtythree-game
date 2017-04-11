@@ -41,6 +41,7 @@
 		<Linker>
 			<Add library=".\unittest-cpp\Deliv\Release\libUnitTest++.a" />
 		</Linker>
+		<Unit filename="CPU.h" />
 		<Unit filename="GlobalOptions.h" />
 		<Unit filename="Smart_ptr.h" />
 		<Unit filename="Stack.h" />
