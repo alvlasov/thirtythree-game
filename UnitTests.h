@@ -2,8 +2,14 @@
 #include <iostream>
 #include <stdexcept>
 
+#include "Smart_ptr.h"
+#include "Stack.h"
+#include "Vector.h"
+#include "Utility.h"
+#include "CPU.h"
+
 #define MESSAGE(msg) \
-    std::cout << std::endl << "Testing " << msg << "..." << std::endl; \
+    std::cout << std::endl << "Testing " << msg << "..." << std::endl;
 
 using namespace thirtythree;
 
@@ -508,5 +514,21 @@ SUITE(Vector_bool)
         {
             CHECK_EQUAL(a[i], (i + 1) % 2);
         }
+    }
+}
+
+SUITE(CPU)
+{
+    TEST(Execution)
+    {
+        MESSAGE("CPU_Execution");
+        CPU cpu;
+        cpu.setCode({PUSH_CMD, 1, PUSH_CONST_CMD, 324, ADD_CMD, POP_CMD, 0, END_CMD});
+        cpu.setRegisters({11, 33});
+        cpu.execute();
+        CHECK_EQUAL(357, cpu.readRegister(0));
+
+//        cpu.setCode({PUSH_CMD, 2, PUSH_CONST_CMD, 324, ADD_CMD, PUSH_CMD, 0, PUSH_CMD, 1, DIV_CMD, END_CMD});
+//        cpu.execute();
     }
 }

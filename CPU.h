@@ -18,7 +18,8 @@ namespace thirtythree
         void readCode(char *filename);
         void setCode(std::vector<int> code) { code_ = code; }
         void setRegisters(std::vector<double> registers) { registers_ = registers; }
-        std::vector<double> readRegisters() { return registers_; }
+        std::vector<double> readAllRegisters() { return registers_; }
+        double readRegister(size_t pos) { return registers_.at(pos); }
         void execute();
 
     private:

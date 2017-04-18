@@ -76,7 +76,12 @@ namespace thirtythree
                 {
                     registers_.at(code_[pos + 1])=stack_.top();
                     stack_.pop();
-                    LOG_INFO("CPU: Pop " << registers_.at(code_[pos + 1]));
+                    LOG_INFO("CPU: Pop " << registers_.at(code_[pos + 1]) << " to " << code_[pos + 1]);
+                    pos += 2;
+                    break;
+                }
+                case MARK_CMD:
+                {
                     pos += 2;
                     break;
                 }
@@ -84,11 +89,6 @@ namespace thirtythree
                 {
                     pos = marks_[code_[pos + 1]];
                     LOG_INFO("CPU: Jump to mark " << code_[pos + 1]);
-                    break;
-                }
-                case MARK_CMD:
-                {
-                    pos +=1;
                     break;
                 }
                 case JE_CMD:
