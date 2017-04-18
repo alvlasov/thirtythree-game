@@ -14,7 +14,7 @@ using namespace thirtythree;
 int main()
 {
     CPU cpu;
-    cpu.setCode({PUSH_CMD, 2, PUSH_CMD, 0, ADD_CMD, END_CMD});
+    cpu.setCode({PUSH_CMD, 2, PUSH_CONST_CMD, 324, ADD_CMD, PUSH_CMD, 0, PUSH_CMD, 1, DIV_CMD, 3323232, END_CMD});
     cpu.setRegisters({11, 22, 33});
     cpu.execute();
     //return UnitTest::RunAllTests();

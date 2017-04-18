@@ -1,6 +1,7 @@
 #include <iostream>
 #include <fstream>
 #include <string>
+#include <stdexcept>
 
 #include "GlobalOptions.h"
 #include "CPU.h"
@@ -24,7 +25,6 @@ namespace thirtythree
     void CPU::execute()
     {
         size_t pos = 0;
-        // enum { END_CMD, PUSH_CMD, ADD_CMD, PUSH_CONST_CMD, DIV_CMD, POP_CMD, JMP_CMD, MARK_CMD, JE_CMD, JG_CMD, JGE_CMD, JL_CMD, JLE_CMD, JNE_CMD, CALL_CMD, RET_CMD};
         while (true)
         {
             switch (code_[pos])
@@ -41,19 +41,196 @@ namespace thirtythree
                     pos += 2;
                     break;
                 }
-                case ADD_CMD:
+                case PUSH_CONST_CMD:
                 {
-                    int sum;
-                    sum = stack_.top();
-                    stack_.pop();
-                    sum += stack_.top();
-                    stack_.pop();
-                    stack_.push(sum);
-                    pos += 1;
-                    LOG_INFO("CPU: Sum items = " << stack_.top());
+                    stack_.push(code_[pos + 1]);
+                    LOG_INFO("CPU: Push " << stack_.top());
+                    pos += 2;
                     break;
                 }
-            }
+                case ADD_CMD:
+                {
+                    double x1, x2;
+                    x1 = stack_.top();
+                    stack_.pop();
+                    x2 = stack_.top();
+                    stack_.pop();
+                    stack_.push(x2 + x1);
+                    pos += 1;
+                    LOG_INFO("CPU: Sum of items = " << stack_.top());
+                    break;
+                }
+                case DIV_CMD:
+                {
+                    double x1, x2;
+                    x1 = stack_.top();
+                    stack_.pop();
+                    x2 = stack_.top();
+                    stack_.pop();
+                    stack_.push(x2 / x1);
+                    pos += 1;
+                    LOG_INFO("CPU: Div of items = " << stack_.top());
+                    break;
+                }
+                case POP_CMD:
+                {
+                    registers_.at(code_[pos + 1])=stack_.top();
+                    stack_.pop();
+                    LOG_INFO("CPU: Pop " << registers_.at(code_[pos + 1]));
+                    pos += 2;
+                    break;
+                }
+                case JMP_CMD:
+                {
+                    pos = marks_[code_[pos + 1]];
+                    LOG_INFO("CPU: Jump to mark " << code_[pos + 1]);
+                    break;
+                }
+                case MARK_CMD:
+                {
+                    pos +=1;
+                    break;
+                }
+                case JE_CMD:
+                {
+
+                    double x1, x2;
+                    x1 = stack_.top();
+                    stack_.pop();
+                    x2 = stack_.top();
+                    stack_.pop();
+                    if (x1==x2)
+                    {
+                        pos = marks_[code_[pos + 1]];
+                        LOG_INFO("CPU: Jump to mark " << code_[pos + 1]);
+                    }
+                    else
+                    {
+                        pos +=2;
+                        LOG_INFO("CPU:  no Jump ");
+                    }
+                    break;
+                }
+                case JG_CMD:
+                {
+
+                    double x1, x2;
+                    x1 = stack_.top();
+                    stack_.pop();
+                    x2 = stack_.top();
+                    stack_.pop();
+                    if (x2>x1)
+                    {
+                        pos = marks_[code_[pos + 1]];
+                        LOG_INFO("CPU: Jump to mark " << code_[pos + 1]);
+                    }
+                    else
+                    {
+                        pos +=2;
+                        LOG_INFO("CPU:  no Jump ");
+                    }
+                    break;
+                }
+                case JGE_CMD:
+                {
+
+                    double x1, x2;
+                    x1 = stack_.top();
+                    stack_.pop();
+                    x2 = stack_.top();
+                    stack_.pop();
+                    if (x2>=x1)
+                    {
+                        pos = marks_[code_[pos + 1]];
+                        LOG_INFO("CPU: Jump to mark " << code_[pos + 1]);
+                    }
+                    else
+                    {
+                        pos +=2;
+                        LOG_INFO("CPU:  no Jump ");
+                    }
+                    break;
+                }
+                case JL_CMD:
+                {
+
+                    double x1, x2;
+                    x1 = stack_.top();
+                    stack_.pop();
+                    x2 = stack_.top();
+                    stack_.pop();
+                    if (x2<x1)
+                    {
+                        pos = marks_[code_[pos + 1]];
+                        LOG_INFO("CPU: Jump to mark " << code_[pos + 1]);
+                    }
+                    else
+                    {
+                        pos +=2;
+                        LOG_INFO("CPU:  no Jump ");
+                    }
+                    break;
+                }
+                case JLE_CMD:
+                {
+
+                    double x1, x2;
+                    x1 = stack_.top();
+                    stack_.pop();
+                    x2 = stack_.top();
+                    stack_.pop();
+                    if (x2<=x1)
+                    {
+                        pos = marks_[code_[pos + 1]];
+                        LOG_INFO("CPU: Jump to mark " << code_[pos + 1]);
+                    }
+                    else
+                    {
+                        pos +=2;
+                        LOG_INFO("CPU:  no Jump ");
+                    }
+                    break;
+                }
+                case JNE_CMD:
+                {
+
+                    double x1, x2;
+                    x1 = stack_.top();
+                    stack_.pop();
+                    x2 = stack_.top();
+                    stack_.pop();
+                    if (x2!=x1)
+                    {
+                        pos = marks_[code_[pos + 1]];
+                        LOG_INFO("CPU: Jump to mark " << code_[pos + 1]);
+                    }
+                    else
+                    {
+                        pos +=2;
+                        LOG_INFO("CPU:  no Jump ");
+                    }
+                    break;
+                }
+                case CALL_CMD:
+                {
+                    return_.push(pos + 1);
+                    pos = marks_[code_[pos + 1]];
+                    LOG_INFO("CPU: Calling mark " << code_[pos + 1]);
+                    break;
+                }
+                case RET_CMD:
+                {
+                    pos = return_.top();
+                    return_.pop();
+                    LOG_INFO("CPU: Returning to " << pos);
+                    break;
+                }
+                default:
+                {
+                    LOG_ERROR("CPU: Code error on " << pos);
+                    throw std::runtime_error("CPU: Code error");
+                }
+          }
         }
     }
 

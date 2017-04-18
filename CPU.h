@@ -17,16 +17,16 @@ namespace thirtythree
 
         void readCode(char *filename);
         void setCode(std::vector<int> code) { code_ = code; }
-        void setRegisters(std::vector<int> registers) { registers_ = registers; }
-        std::vector<int> readRegisters() { return registers_; }
+        void setRegisters(std::vector<double> registers) { registers_ = registers; }
+        std::vector<double> readRegisters() { return registers_; }
         void execute();
 
     private:
 
-        std::stack<int> stack_;
+        std::stack<double> stack_;
         std::stack<int> return_;
         std::vector<int> code_;
-        std::vector<int> registers_;
+        std::vector<double> registers_;
         std::vector<int> marks_;
 
         void mark();
