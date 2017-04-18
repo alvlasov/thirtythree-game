@@ -25,7 +25,7 @@ namespace thirtythree
         Vector<int> marks_;
 
         void mark();
-        void assemble(char *filename);
+        void assembly(char *filename);
 
     };
 }
