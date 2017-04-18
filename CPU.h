@@ -1,8 +1,13 @@
+#include <vector>
+#include <stack>
+
 #ifndef CPU_H_INCLUDED
 #define CPU_H_INCLUDED
 
 namespace thirtythree
 {
+    enum { END_CMD, PUSH_CMD, ADD_CMD, PUSH_CONST_CMD, DIV_CMD, POP_CMD, JMP_CMD, MARK_CMD, JE_CMD, JG_CMD, JGE_CMD, JL_CMD, JLE_CMD, JNE_CMD, CALL_CMD, RET_CMD};
+
     class CPU
     {
     public:
@@ -10,22 +15,21 @@ namespace thirtythree
         CPU();
         ~CPU();
 
-        void setCode(char *filename);
-        void setCode(Vector<int> code);
-        void setRegisters(Vector<int> registers);
-        int* readRegisters();
+        void readCode(char *filename);
+        void setCode(std::vector<int> code) { code_ = code; }
+        void setRegisters(std::vector<int> registers) { registers_ = registers; }
+        std::vector<int> readRegisters() { return registers_; }
         void execute();
 
     private:
 
-        Stack<int> stack_;
-        Stack<int> return_;
-        Vector<int> code_;
-        Vector<int> registers_;
-        Vector<int> marks_;
+        std::stack<int> stack_;
+        std::stack<int> return_;
+        std::vector<int> code_;
+        std::vector<int> registers_;
+        std::vector<int> marks_;
 
         void mark();
-        void assembly(char *filename);
 
     };
 }
