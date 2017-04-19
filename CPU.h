@@ -28,7 +28,7 @@ namespace thirtythree
         std::stack<int> return_;
         std::vector<int> code_;
         std::vector<double> registers_;
-        std::vector<int> marks_;
+        std::map<int, int> marks_;
 
         void mark();
 

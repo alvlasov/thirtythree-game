@@ -278,6 +278,97 @@ namespace thirtythree
 
     void CPU::mark()
     {
+        size_t pos = 0;
+        while (true)
+        {
+            switch (code_[pos])
+            {
+                case END_CMD:{}
+
+                case PUSH_CMD:
+                {
+                 pos += 2;
+                }
+
+                case PUSH_CONST_CMD:
+                {
+                    pos += 2;
+                }
+
+                case ADD_CMD:
+                {
+                    pos += 1;
+                }
+
+                case DIV_CMD:
+                {
+                    pos += 1;
+                }
+
+                case POP_CMD:
+                {
+                    pos += 2;
+                }
+
+                case JMP_CMD:
+                {
+                    pos += 2;
+                }
+
+                case MARK_CMD:
+                {
+                    pos +=1;
+                    marks.insert(std::pair<int, int>(code_[pos], pos));
+                    pos +=1;
+                }
+
+                case JE_CMD:
+                {
+                    pos += 2;
+                }
+
+                case JG_CMD:
+                {
+                    pos +=2;
+                }
+
+                case JGE_CMD:
+                {
+                    pos +=2;
+                }
+
+                case JL_CMD:
+                {
+                    pos +=2;
+                }
+
+                case JLE_CMD:
+                {
+                    pos +=2;
+                }
+
+                case JNE_CMD:
+                {
+                    pos +=2;
+                }
+
+                case CALL_CMD:
+                {
+                    pos += 2;
+                }
+
+                case RET_CMD:
+                {
+                    pos +=1
+                }
+
+                default:
+                {
+                    LOG_ERROR("CPU: Code error on " << pos);
+                    throw std::runtime_error("CPU: Code error");
+                }
+          }
+        }
     }
 
 }
