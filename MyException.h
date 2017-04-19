@@ -1,12 +1,13 @@
 /*!
-    @file Smart_ptr.h
-    @brief Реализация классов умных указателей
-    @author Власов Александр, Татьяна Мамонтова, Алена Бескровная
-    @date Март 2017
+    @file MyException.h
+    @brief Р РµР°Р»РёР·Р°С†РёСЏ РєР»Р°СЃСЃР° РёСЃРєР»СЋС‡РµРЅРёР№
+    @author Р’Р»Р°СЃРѕРІ РђР»РµРєСЃР°РЅРґСЂ, РўР°С‚СЊСЏРЅР° РњР°РјРѕРЅС‚РѕРІР°, РђР»РµРЅР° Р‘РµСЃРєСЂРѕРІРЅР°СЏ
+    @date РђРїСЂРµР»СЊ 2017
 */
 
 #ifndef MYEXCEPTION_H_INCLUDED
 #define MYEXCEPTION_H_INCLUDED
+
 namespace thirtythree
 {
     class MyException: public std::exception
@@ -14,8 +15,8 @@ namespace thirtythree
 
     public:
 
-        //! Конструктор исключения
-        //! @param line -  строка исключения, func - функция, в которой было вызвано исключение, file - файл, msg - сообщение об исключении
+        //! РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ РёСЃРєР»СЋС‡РµРЅРёСЏ
+        //! @param line -  СЃС‚СЂРѕРєР° РёСЃРєР»СЋС‡РµРЅРёСЏ, func - С„СѓРЅРєС†РёСЏ, РІ РєРѕС‚РѕСЂРѕР№ Р±С‹Р»Рѕ РІС‹Р·РІР°РЅРѕ РёСЃРєР»СЋС‡РµРЅРёРµ, file - С„Р°Р№Р», msg - СЃРѕРѕР±С‰РµРЅРёРµ РѕР± РёСЃРєР»СЋС‡РµРЅРёРё
         MyException(int line, const char *func, const char *file,  const char *msg, const MyException *other = nullptr)
         {
             if (other != nullptr)
@@ -25,36 +26,49 @@ namespace thirtythree
             exc_vect.push_back(Data(line,  std::string(func), std::string(file), std::string(msg)));
         }
 
-        //! Вывод содержания исключения
-        //! Возвращает строку, в котором записана информация о вызванном исключении
+        //! Р’С‹РІРѕРґ СЃРѕРґРµСЂР¶Р°РЅРёСЏ РёСЃРєР»СЋС‡РµРЅРёСЏ
+        //! Р’РѕР·РІСЂР°С‰Р°РµС‚ СЃС‚СЂРѕРєСѓ, РІ РєРѕС‚РѕСЂРѕРј Р·Р°РїРёСЃР°РЅР° РёРЅС„РѕСЂРјР°С†РёСЏ Рѕ РІС‹Р·РІР°РЅРЅРѕРј РёСЃРєР»СЋС‡РµРЅРёРё
         const std::string what() const
         {
             std::stringstream os;
             for(auto it : exc_vect)
             {
-                os<<"On line: "<<it.line<<" In func: "<<it.func <<" In file: "<<it.file<<" Message: "<<it.msg<<"\n";
+                os<<"On line: "<< it.line <<" In func: "<< it.func <<" In file: "<< it.file <<" Message: "<< it.msg <<"\n";
             }
             return os.str();
         }
-    private:
 
+    private:
 
         std::vector<Data> exc_vect;
 
-        //! Содержание исключения: строка, функция, файл, в котором вызвалось исключение, и сообщение об исключении
+        //! РЎРѕРґРµСЂР¶Р°РЅРёРµ РёСЃРєР»СЋС‡РµРЅРёСЏ: СЃС‚СЂРѕРєР°, С„СѓРЅРєС†РёСЏ, С„Р°Р№Р», РІ РєРѕС‚РѕСЂРѕРј РІС‹Р·РІР°Р»РѕСЃСЊ РёСЃРєР»СЋС‡РµРЅРёРµ, Рё СЃРѕРѕР±С‰РµРЅРёРµ РѕР± РёСЃРєР»СЋС‡РµРЅРёРё
         class Data
         {
             public:
-            //! Конструкторы
-            Data() : line(0), func(""), file(""), msg("") {}
-            Data(int line_, string &&func_, string &&file_, string &&msg_) : line(line_),  func(func_), file(file_), msg(msg_) {}
+            //! РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂС‹
+            Data() :
+                line(0),
+                func(""),
+                file(""),
+                msg("")
+            {}
 
-            //! Поля класса
+            Data(int line_, string &&func_, string &&file_, string &&msg_) :
+                line(line_),
+                func(func_),
+                file(file_),
+                msg(msg_)
+            {}
+
+            //! РџРѕР»СЏ РєР»Р°СЃСЃР°
             int line;
             string func;
             string file;
             string msg;
+
         };
+
     };
 }
 #endif // MYEXCEPTION_H_INCLUDED
