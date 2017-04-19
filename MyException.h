@@ -8,6 +8,9 @@
 #ifndef MYEXCEPTION_H_INCLUDED
 #define MYEXCEPTION_H_INCLUDED
 
+#include <sstream>
+#include <string>
+
 namespace thirtythree
 {
     class MyException: public std::exception
@@ -28,47 +31,48 @@ namespace thirtythree
 
         //! Вывод содержания исключения
         //! Возвращает строку, в котором записана информация о вызванном исключении
-        const std::string what() const
+        const std::string what()
         {
             std::stringstream os;
             for(auto it : exc_vect)
             {
-                os<<"On line: "<< it.line <<" In func: "<< it.func <<" In file: "<< it.file <<" Message: "<< it.msg <<"\n";
+                os << "On line: "<< it.line <<" In func: "<< it.func <<" In file: "<< it.file <<" Message: "<< it.msg <<"\n";
             }
             return os.str();
         }
 
     private:
 
-        std::vector<Data> exc_vect;
-
         //! Содержание исключения: строка, функция, файл, в котором вызвалось исключение, и сообщение об исключении
         class Data
         {
-            public:
+        public:
             //! Конструкторы
             Data() :
                 line(0),
                 func(""),
                 file(""),
                 msg("")
-            {}
+            {
+            }
 
-            Data(int line_, string &&func_, string &&file_, string &&msg_) :
+            Data(int line_, std::string &&func_, std::string &&file_, std::string &&msg_) :
                 line(line_),
                 func(func_),
                 file(file_),
                 msg(msg_)
-            {}
+            {
+            }
 
             //! Поля класса
             int line;
-            string func;
-            string file;
-            string msg;
+            std::string func;
+            std::string file;
+            std::string msg;
 
         };
 
+        std::vector<Data> exc_vect;
     };
 }
 #endif // MYEXCEPTION_H_INCLUDED

@@ -1,7 +1,7 @@
-#include <iostream>
-
 #ifndef UTILITYH
 #define UTILITYH
+
+#include <iostream>
 
 namespace thirtythree
 {

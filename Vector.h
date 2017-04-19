@@ -288,8 +288,7 @@ namespace thirtythree
             size_ (size),
             data_ (new unsigned char [size / 8 + 1])
         {
-            if (DEV_MESSAGES)
-                cout << __PRETTY_FUNCTION__ << endl;
+            LOG_DEV(__PRETTY_FUNCTION__);
             for (size_t i = 0; i < size_; i++)
             {
                 set(false, i);
@@ -298,8 +297,7 @@ namespace thirtythree
 
         ~Bitset()
         {
-            if (DEV_MESSAGES)
-                cout << __PRETTY_FUNCTION__ << endl;
+            LOG_DEV(__PRETTY_FUNCTION__);
             delete [] data_;
             data_ = nullptr;
             size_ = 0;
@@ -404,16 +402,14 @@ namespace thirtythree
 
             iterator()
             {
-                if (DEV_MESSAGES)
-                    cout << __PRETTY_FUNCTION__ << endl;
+                LOG_DEV(__PRETTY_FUNCTION__);
             }
 
             iterator(Bitset &bitset, size_t pos):
                 bitset_ (&bitset),
                 pos_ (pos)
             {
-                if (DEV_MESSAGES)
-                    cout << __PRETTY_FUNCTION__ << endl;
+                LOG_DEV(__PRETTY_FUNCTION__);
             }
 
             iterator& operator =(const iterator& that)

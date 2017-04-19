@@ -4,20 +4,13 @@
 #include <fstream>
 #include <cstdio>
 
-#include "Smart_ptr.h"
-#include "Stack.h"
-#include "Vector.h"
-#include "Utility.h"
-#include "CPU.h"
-
 #define MESSAGE(msg) \
-    std::cout << std::endl << "Testing " << msg << "..." << std::endl;
+    LOG_INFO("Testing " << #msg);
 
 using namespace thirtythree;
 
 SUITE(Stack)
 {
-
     TEST(PushSingleNumber)
     {
         MESSAGE("Stack_PushSingleNumber");

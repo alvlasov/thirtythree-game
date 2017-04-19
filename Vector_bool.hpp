@@ -20,8 +20,7 @@ namespace thirtythree
         size_(0),
         reserve_(0)
     {
-        if (DEV_MESSAGES)
-            cout << __PRETTY_FUNCTION__ << endl;
+        LOG_DEV(__PRETTY_FUNCTION__);
     }
 
     Vector<bool>::Vector(size_t size) :
@@ -33,8 +32,7 @@ namespace thirtythree
         {
             *it = false;
         }
-        if (DEV_MESSAGES)
-            cout << __PRETTY_FUNCTION__ << endl;
+        LOG_DEV(__PRETTY_FUNCTION__);
     }
 
     Vector<bool>::Vector(const std::initializer_list<bool>& init):
@@ -51,14 +49,12 @@ namespace thirtythree
             *it = data[i++];
         }
         delete [] data;
-        if (DEV_MESSAGES)
-            cout << __PRETTY_FUNCTION__ << endl;
+        LOG_DEV(__PRETTY_FUNCTION__);
     }
 
     Vector<bool>::~Vector()
     {
-        if (DEV_MESSAGES)
-            cout << __PRETTY_FUNCTION__ << endl;
+        LOG_DEV(__PRETTY_FUNCTION__);
 
         size_ = 0;
     }
@@ -68,8 +64,7 @@ namespace thirtythree
         reserve_(that.size_ + RESERVED_),
         data_(reserve_)
     {
-        if (DEV_MESSAGES)
-            cout << __PRETTY_FUNCTION__ << endl;
+        LOG_DEV(__PRETTY_FUNCTION__);
         int i = 0;
         for (iterator it = begin(); it != end(); it++)
         {

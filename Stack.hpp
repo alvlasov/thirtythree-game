@@ -5,7 +5,6 @@
     @date Март 2017
 */
 
-#include <cassert>
 #include <iostream>
 
 using std::cout;
@@ -20,8 +19,7 @@ namespace thirtythree
         size_(0),
         capacity_(def_capacity_)
     {
-        if (DEV_MESSAGES)
-            cout << __PRETTY_FUNCTION__ << endl;
+        LOG_DEV(__PRETTY_FUNCTION__);
     }
 
     template <typename T>
@@ -30,15 +28,13 @@ namespace thirtythree
         size_(0),
         capacity_(capacity)
     {
-        if (DEV_MESSAGES)
-            cout << __PRETTY_FUNCTION__ << endl;
+        LOG_DEV(__PRETTY_FUNCTION__);
     }
 
     template <typename T>
     Stack<T>::~Stack()
     {
-        if (DEV_MESSAGES)
-            cout << __PRETTY_FUNCTION__ << endl;
+        LOG_DEV(__PRETTY_FUNCTION__);
         capacity_ = 0;
         size_ = -1;
     }

@@ -1,11 +1,13 @@
+#include "GlobalOptions.h"
+
 #include "Smart_ptr.h"
 #include "Stack.h"
 #include "Vector.h"
 #include "Utility.h"
-#include "UnitTests.h"
 #include "CPU.h"
+#include "MyException.h"
 
-#include "GlobalOptions.h"
+#include "UnitTests.h"
 
 using namespace thirtythree;
 

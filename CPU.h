@@ -5,12 +5,12 @@
     @date Апрель 2017
 */
 
+#ifndef CPU_H_INCLUDED
+#define CPU_H_INCLUDED
+
 #include <vector>
 #include <stack>
 #include <map>
-
-#ifndef CPU_H_INCLUDED
-#define CPU_H_INCLUDED
 
 namespace thirtythree
 {
