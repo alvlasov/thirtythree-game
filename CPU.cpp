@@ -6,6 +6,23 @@
 #include "GlobalOptions.h"
 #include "CPU.h"
 
+#define JMP_COND(condition) \
+        double x1, x2; \
+        x1 = stack_.top(); \
+        stack_.pop(); \
+        x2 = stack_.top(); \
+        stack_.pop(); \
+        if (x2 condition x1) \
+        { \
+            pos = marks_[code_[pos + 1]]; \
+            LOG_INFO("CPU: Jump " << #condition << " to mark " << code_[pos + 1]); \
+        } \
+        else \
+        { \
+            pos += 2; \
+            LOG_INFO("CPU: Skipping jump " << #condition); \
+        }
+
 namespace thirtythree
 {
 
@@ -19,7 +36,121 @@ namespace thirtythree
 
     void CPU::readCode(char *filename)
     {
+        int k = 0;
+        char buff[50]; // буфер промежуточного хранения считываемого из файла текста
+        std::ifstream fin(filename); // открыли файл для чтения
 
+        while (fin)
+        {
+            fin >> buff; // считали первое слово из файла
+            if (!strcmp(buff, "push")) {
+                code_.push_back(PUSH_CMD);
+                fin >> buff;
+                if (buff[0] == 'x')
+                {
+                    code_.push_back(atoi(buff + 1));
+                }
+                else
+                {
+                    code_.back() = PUSH_CONST_CMD;
+                    code_.push_back(atoi(buff));
+                }
+
+            }
+            else if (!strcmp(buff, "add"))
+            {
+                code_.push_back(ADD_CMD_;
+            }
+            else if (!strcmp(buff, "div"))
+            {
+                code_.push_back(DIV_CMD);
+            }
+            else if (!strcmp(buff, "pop"))
+            {
+                code_.push_back(POP_CMD);
+                fin >> buff;
+                if (buff[0] == 'x')
+                {
+                    code_.push_back(atoi(buff + 1));
+                }
+                else
+                {
+                    LOG_ERROR("CPU: Wrong syntax in file " << filename);
+                    throw std::runtime_error("CPU: Wrong syntax in file");
+                }
+            }
+            else if (!strcmp(buff, "jmp"))
+            {
+                code_.push_back(JMP_CMD);
+                fin >> buff;
+                code_.push_back(atoi(buff));
+            }
+            else if (!strcmp(buff, "mark"))
+            {
+                code_.push_back(MARK_CMD);
+                fin >> buff;
+                code_.push_back(atoi(buff));
+            }
+            else if (!strcmp(buff, "je"))
+            {
+                code_.push_back(JE_CMD);
+                fin >> buff;
+                code_.push_back(atoi(buff));
+            }
+            else if (!strcmp(buff, "jg"))
+            {
+                code_.push_back(JG_CMD);
+                fin >> buff;
+                code_.push_back(atoi(buff));
+            }
+            else if (!strcmp(buff, "jge"))
+            {
+                code_.push_back(JGE_CMD);
+                fin >> buff;
+                code_.push_back(atoi(buff));
+            }
+            else if (!strcmp(buff, "jl"))
+            {
+                code_.push_back(JL_CMD);
+                fin >> buff;
+                code_.push_back(atoi(buff));
+            }
+            else if (!strcmp(buff, "jle"))
+            {
+                code_.push_back(JLE_CMD);
+                fin >> buff;
+                code_.push_back(atoi(buff));
+            }
+            else if (!strcmp(buff, "jne"))
+            {
+                code_.push_back(JNE_CMD);
+                fin >> buff;
+                code_.push_back(atoi(buff));
+            }
+            else if (!strcmp(buff, "call"))
+            {
+                code_.push_back(CALL_CMD);
+                fin >> buff;
+                code_.push_back(atoi(buff));
+            }
+            else if (!strcmp(buff, "ret"))
+            {
+                code_.push_back(RET_CMD);
+            }
+
+            else if (!strcmp(buff, "end"))
+            {
+                code_.push_back(END_CMD);
+                break;
+            }
+            else
+            {
+                LOG_ERROR("CPU: Unknown command in file " << filename);
+                throw std::runtime_error("CPU: Unknown command in file");
+            }
+        }
+
+        fin.close();
     }
 
     void CPU::execute()
@@ -93,122 +224,32 @@ namespace thirtythree
                 }
                 case JE_CMD:
                 {
-
-                    double x1, x2;
-                    x1 = stack_.top();
-                    stack_.pop();
-                    x2 = stack_.top();
-                    stack_.pop();
-                    if (x1==x2)
-                    {
-                        pos = marks_[code_[pos + 1]];
-                        LOG_INFO("CPU: Jump to mark " << code_[pos + 1]);
-                    }
-                    else
-                    {
-                        pos +=2;
-                        LOG_INFO("CPU:  no Jump ");
-                    }
+                    JMP_COND(==);
                     break;
                 }
                 case JG_CMD:
                 {
-
-                    double x1, x2;
-                    x1 = stack_.top();
-                    stack_.pop();
-                    x2 = stack_.top();
-                    stack_.pop();
-                    if (x2>x1)
-                    {
-                        pos = marks_[code_[pos + 1]];
-                        LOG_INFO("CPU: Jump to mark " << code_[pos + 1]);
-                    }
-                    else
-                    {
-                        pos +=2;
-                        LOG_INFO("CPU:  no Jump ");
-                    }
+                    JMP_COND(>);
                     break;
                 }
                 case JGE_CMD:
                 {
-
-                    double x1, x2;
-                    x1 = stack_.top();
-                    stack_.pop();
-                    x2 = stack_.top();
-                    stack_.pop();
-                    if (x2>=x1)
-                    {
-                        pos = marks_[code_[pos + 1]];
-                        LOG_INFO("CPU: Jump to mark " << code_[pos + 1]);
-                    }
-                    else
-                    {
-                        pos +=2;
-                        LOG_INFO("CPU:  no Jump ");
-                    }
+                    JMP_COND(>=);
                     break;
                 }
                 case JL_CMD:
                 {
-
-                    double x1, x2;
-                    x1 = stack_.top();
-                    stack_.pop();
-                    x2 = stack_.top();
-                    stack_.pop();
-                    if (x2<x1)
-                    {
-                        pos = marks_[code_[pos + 1]];
-                        LOG_INFO("CPU: Jump to mark " << code_[pos + 1]);
-                    }
-                    else
-                    {
-                        pos +=2;
-                        LOG_INFO("CPU:  no Jump ");
-                    }
+                    JMP_COND(<);
                     break;
                 }
                 case JLE_CMD:
                 {
-
-                    double x1, x2;
-                    x1 = stack_.top();
-                    stack_.pop();
-                    x2 = stack_.top();
-                    stack_.pop();
-                    if (x2<=x1)
-                    {
-                        pos = marks_[code_[pos + 1]];
-                        LOG_INFO("CPU: Jump to mark " << code_[pos + 1]);
-                    }
-                    else
-                    {
-                        pos +=2;
-                        LOG_INFO("CPU:  no Jump ");
-                    }
+                    JMP_COND(<=);
                     break;
                 }
                 case JNE_CMD:
                 {
-
-                    double x1, x2;
-                    x1 = stack_.top();
-                    stack_.pop();
-                    x2 = stack_.top();
-                    stack_.pop();
-                    if (x2!=x1)
-                    {
-                        pos = marks_[code_[pos + 1]];
-                        LOG_INFO("CPU: Jump to mark " << code_[pos + 1]);
-                    }
-                    else
-                    {
-                        pos +=2;
-                        LOG_INFO("CPU:  no Jump ");
-                    }
+                    JMP_COND(!=);
                     break;
                 }
                 case CALL_CMD:
@@ -233,6 +274,7 @@ namespace thirtythree
           }
         }
     }
+
 
     void CPU::mark()
     {
