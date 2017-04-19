@@ -1,9 +1,17 @@
 #include "UnitTest++.h"
 #include <iostream>
 #include <stdexcept>
+#include <fstream>
+#include <cstdio>
+
+#include "Smart_ptr.h"
+#include "Stack.h"
+#include "Vector.h"
+#include "Utility.h"
+#include "CPU.h"
 
 #define MESSAGE(msg) \
-    std::cout << std::endl << "Testing " << msg << "..." << std::endl; \
+    std::cout << std::endl << "Testing " << msg << "..." << std::endl;
 
 using namespace thirtythree;
 
@@ -509,4 +517,79 @@ SUITE(Vector_bool)
             CHECK_EQUAL(a[i], (i + 1) % 2);
         }
     }
+}
+
+SUITE(CPU)
+{
+    TEST(RegistersIndexing)
+    {
+        MESSAGE("CPU_RegistersIndexing");
+        CPU cpu;
+        CHECK_EQUAL(8, cpu.registersCount());
+        CHECK_EQUAL(0, cpu[1]);
+        cpu[1] = 101;
+        CHECK_EQUAL(101, cpu[1]);
+        CHECK_EQUAL(101, cpu.readRegister(1));
+        cpu.setRegister(25, 7);
+        CHECK_EQUAL(25, cpu[7]);
+        cpu.setAllRegisters({1, 2, 3, 4});
+        CHECK_EQUAL(4, cpu.registersCount());
+        std::vector<double> regs = cpu.readAllRegisters();
+        for (int i = 1; i <= 4; i++)
+        {
+            CHECK_EQUAL(i, regs[i - 1]);
+        }
+
+        CHECK_THROW(cpu[5], std::exception);
+    }
+    TEST(Push_Pop_Add_Div)
+    {
+        MESSAGE("CPU_Push_Pop_Add_Mult_Div");
+
+        std::ofstream fout("test.script");
+        fout << "push x1 \n push 324 \n add \n pop x0 \n push x0 \n push x2 \n div \n pop x2 \n push x2 \n push 3 \n mult \n pop x1 end";
+        fout.close();
+
+        CPU cpu("test.script", {0, 33, 714});
+        cpu.execute();
+        CHECK_EQUAL(357, cpu.readRegister(0));
+        CHECK_EQUAL(1.5, cpu.readRegister(1));
+        CHECK_EQUAL(0.5, cpu.readRegister(2));
+
+        remove("test.script");
+    }
+    TEST(Call_Ret)
+    {
+        MESSAGE("CPU_Call_Ret");
+
+        std::ofstream fout("test.script");
+        fout << "push 1 \n push 2 \n div \n call 3 \n pop x0 \n end \n mark 3 \n pop x1 \n push x1 \n push x1 \n mult \n ret ";
+        fout.close();
+
+        CPU cpu("test.script");
+        cpu.execute();
+        CHECK_EQUAL(0.25, cpu.readRegister(0));
+
+        remove("test.script");
+    }
+    TEST(Jump)
+    {
+        MESSAGE("CPU_Jump");
+
+        std::ofstream fout("test.script");
+        fout << " push x0 \n push x0 \n add \n pop x1 \n push x0 \n push x1 \n add \n pop x2 \n mark 10 \n push x0 \n push x1 \n add \n pop x1 \n push x1 \n push x2 \n add \n pop x2 \n push x1 \n push 4 \n jge 20 \n jmp 10 \n mark 20 \n end";
+        fout.close();
+
+        CPU cpu("test.script", {1, 0, 0, 0});
+        cpu.execute();
+        int f = 0;
+        for (int i = 1; i <= 4; i++)
+        {
+            f += i;
+        }
+        CHECK_EQUAL(f, cpu.readRegister(2));
+
+        remove("test.script");
+    }
+
 }
