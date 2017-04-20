@@ -16,9 +16,9 @@ namespace thirtythree
 {
 
     Vector<bool>::Vector() :
-        data_(0),
         size_(0),
-        reserve_(0)
+        reserve_(0),
+        data_(0)
     {
         LOG_DEV(__PRETTY_FUNCTION__);
     }

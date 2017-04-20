@@ -32,12 +32,12 @@ namespace thirtythree
         //! Конструктор, принимающий имя файла и число регистров
         //! @param filename Имя файла с кодом
         //! @param registersCount Число регистров, по умолчанию defRegistersCount_
-        CPU(char *filename, size_t registersCount = defRegistersCount_);
+        CPU(std::string filename, size_t registersCount = defRegistersCount_);
 
         //! Конструктор, принимающий имя файла и вектор регистров
         //! @param filename Имя файла с кодом
         //! @param registers Содержимое регистров
-        CPU(char *filename, std::vector<double> registers);
+        CPU(std::string filename, std::vector<double> registers);
 
         //! Конструктор, принимающий код и число регистров
         //! @param code Вектор с кодом
@@ -54,7 +54,7 @@ namespace thirtythree
 
         //! Считывает код из файла и транслирует его
         //! @param filename Имя файла с кодом
-        void readCode(char *filename);
+        void readCode(std::string filename);
 
         //! Считывает код из вектора без трансляции
         //! @param code Вектор с кодом
@@ -111,7 +111,7 @@ namespace thirtythree
         std::map<int, int> marks_;
 
         //! Служебная функция, заполняющяя словарь меток
-        void mark();
+        void collectMarks();
 
     };
 }

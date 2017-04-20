@@ -308,7 +308,7 @@ SUITE(Vector_bool)
 
         CHECK_EQUAL(16, bits.resize(16));
         CHECK_EQUAL(16, bits.size());
-        for (int i = 10; i < bits.size(); i++)
+        for (size_t i = 10; i < bits.size(); i++)
         {
             CHECK_EQUAL(false, bits[i]);
         }
@@ -514,75 +514,125 @@ SUITE(Vector_bool)
 
 SUITE(CPU)
 {
-    TEST(RegistersIndexing)
+    TEST(Registers_operatorSquareBrackets)
     {
-        MESSAGE("CPU_RegistersIndexing");
+        MESSAGE("CPU_Registers_operatorSquareBrackets");
+
+        // Given
         CPU cpu;
-        CHECK_EQUAL(8, cpu.registersCount());
-        CHECK_EQUAL(0, cpu[1]);
+
+        // When
         cpu[1] = 101;
+
+        // Then
+        CHECK_EQUAL(8, cpu.registersCount());
         CHECK_EQUAL(101, cpu[1]);
         CHECK_EQUAL(101, cpu.readRegister(1));
+    }
+    TEST(Registers_setRegister)
+    {
+        MESSAGE("CPU_Registers_setRegister");
+
+        // Given
+        CPU cpu;
+
+        // When
         cpu.setRegister(25, 7);
+
+        // Then
         CHECK_EQUAL(25, cpu[7]);
+    }
+    TEST(Registers_setAllRegisters)
+    {
+        MESSAGE("CPU_Registers_setAllRegisters");
+
+        // Given
+        CPU cpu;
+
+        // When
         cpu.setAllRegisters({1, 2, 3, 4});
+
+        // Then
         CHECK_EQUAL(4, cpu.registersCount());
         std::vector<double> regs = cpu.readAllRegisters();
         for (int i = 1; i <= 4; i++)
         {
             CHECK_EQUAL(i, regs[i - 1]);
         }
+        CHECK_THROW(cpu[5], std::exception);
 
+    }
+    TEST(Registers_OutOfRange)
+    {
+        MESSAGE("CPU_Registers_OutOfRange");
+
+        // Given
+        CPU cpu;
+
+        // When
+        cpu.setAllRegisters({1, 2, 3, 4});
+
+        // Then
         CHECK_THROW(cpu[5], std::exception);
     }
-    TEST(Push_Pop_Add_Div)
+    TEST(Program_MathOperations)
     {
-        MESSAGE("CPU_Push_Pop_Add_Mult_Div");
+        MESSAGE("CPU_Program_MathOperations");
 
+        // Given
         std::ofstream fout("test.script");
         fout << "push x1 \n push 324 \n add \n pop x0 \n push x0 \n push x2 \n div \n pop x2 \n push x2 \n push 3 \n mult \n pop x1 end";
         fout.close();
+        CPU cpu("test.script", {0, 33, 714}); // x1 + 324 -> x0;   x0 / x2 -> x2;   x2 * 3 -> x1
+        remove("test.script");
 
-        CPU cpu("test.script", {0, 33, 714});
+        // When
         cpu.execute();
+
+        // Then
         CHECK_EQUAL(357, cpu.readRegister(0));
         CHECK_EQUAL(1.5, cpu.readRegister(1));
         CHECK_EQUAL(0.5, cpu.readRegister(2));
-
-        remove("test.script");
     }
-    TEST(Call_Ret)
+    TEST(Program_CallFunction)
     {
-        MESSAGE("CPU_Call_Ret");
+        MESSAGE("CPU_Program_CallFunction");
 
+        // Given
         std::ofstream fout("test.script");
-        fout << "push 1 \n push 2 \n div \n call 3 \n pop x0 \n end \n mark 3 \n pop x1 \n push x1 \n push x1 \n mult \n ret ";
+        fout << "push x0 \n push x1 \n div \n call 3 \n pop x2 \n end \n mark 3 \n pop x2 \n push x2 \n push x2 \n mult \n ret ";
         fout.close();
-
-        CPU cpu("test.script");
-        cpu.execute();
-        CHECK_EQUAL(0.25, cpu.readRegister(0));
-
+        CPU cpu("test.script", {1, 2, 0}); // Вычисляет квадрат числа x0/x1
         remove("test.script");
-    }
-    TEST(Jump)
-    {
-        MESSAGE("CPU_Jump");
 
-        std::ofstream fout("test.script");
-        fout << " push x0 \n push x0 \n add \n pop x1 \n push x0 \n push x1 \n add \n pop x2 \n mark 10 \n push x0 \n push x1 \n add \n pop x1 \n push x1 \n push x2 \n add \n pop x2 \n push x1 \n push 4 \n jge 20 \n jmp 10 \n mark 20 \n end";
-        fout.close();
-
-        CPU cpu("test.script", {1, 0, 0, 0});
+        // When
         cpu.execute();
-        int f = 0;
-        for (int i = 1; i <= 4; i++)
+
+        // Then
+        CHECK_EQUAL(0.25, cpu.readRegister(2));
+    }
+    TEST(Program_Cycle)
+    {
+        MESSAGE("CPU_Program_Cycle");
+
+        // Given
+        std::ofstream fout("test.script");
+        fout << " push x0 \n push x0 \n add \n pop x1 \n push x0 \n push x1 \n add \n pop x2 \n mark 10 \n push x0 \n push x1 \n add \n pop x1 \n push x1 \n push x2 \n add \n pop x2 \n push x1 \n push x4 \n jge 20 \n jmp 10 \n mark 20 \n end";
+        fout.close();
+        double x4 = 4;
+        CPU cpu("test.script", {1, 0, 0, 0, x4}); // вычисляет сумму чисел от 1 до x4
+        remove("test.script");
+
+        // When
+        cpu.execute();
+        double f = 0;
+        for (int i = 1; i <= x4; i++)
         {
             f += i;
         }
-        CHECK_EQUAL(f, cpu.readRegister(2));
 
-        remove("test.script");
+        // Then
+        CHECK_EQUAL(f, cpu.readRegister(2));
     }
 
 }

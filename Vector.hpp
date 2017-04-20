@@ -15,9 +15,9 @@ namespace thirtythree
 
     template <typename T>
     Vector<T>::Vector() :
-        data_(nullptr),
         size_(0),
-        reserve_(0)
+        reserve_(0),
+        data_(nullptr)
     {
         LOG_DEV(__PRETTY_FUNCTION__);
     }

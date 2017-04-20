@@ -14,26 +14,10 @@
 #include "GlobalOptions.h"
 #include "CPU.h"
 
-#define JMP_COND(condition) \
-        double x1, x2; \
-        x1 = stack_.top(); \
-        stack_.pop(); \
-        x2 = stack_.top(); \
-        stack_.pop(); \
-        if (x2 condition x1) \
-        { \
-            LOG_DEV("CPU: Jump " << #condition << " to mark " << code_[pos + 1]); \
-            pos = marks_[code_[pos + 1]]; \
-        } \
-        else \
-        { \
-            pos += 2; \
-            LOG_DEV("CPU: Skipping jump " << #condition); \
-        }
+using std::stoi;
 
 namespace thirtythree
 {
-
 
     CPU::CPU(size_t registersCount) :
         registers_ (registersCount)
@@ -55,7 +39,7 @@ namespace thirtythree
         LOG_DEBUG("CPU: Destructor " << __PRETTY_FUNCTION__);
     }
 
-    CPU::CPU(char *filename, size_t registersCount) :
+    CPU::CPU(std::string filename, size_t registersCount) :
         registers_ (registersCount)
     {
         LOG_DEBUG("CPU: Constructor " << __PRETTY_FUNCTION__);
@@ -63,7 +47,7 @@ namespace thirtythree
         readCode(filename);
     }
 
-    CPU::CPU(char *filename, std::vector<double> registers) :
+    CPU::CPU(std::string filename, std::vector<double> registers) :
         registers_ (registers)
     {
         LOG_DEBUG("CPU: Constructor " << __PRETTY_FUNCTION__);
@@ -87,10 +71,10 @@ namespace thirtythree
         LOG_DEV("CPU: Registers count = " << registers_.size());
     }
 
-    void CPU::readCode(char *filename)
+    void CPU::readCode(std::string filename)
     {
-        char buff[50]; // буфер промежуточного хранения считываемого из файла текста
-        std::ifstream fin(filename); // открыли файл для чтения
+        std::string buff;
+        std::ifstream fin(filename);
         LOG_DEBUG("CPU: Reading code from " << filename);
         while (true)
         {
@@ -98,45 +82,45 @@ namespace thirtythree
             {
                 break;
             }
-            if (!strcmp(buff, "push")) {
+            if (buff == "push") {
                 code_.push_back(PUSH_CMD);
                 fin >> buff;
                 if (buff[0] == 'x')
                 {
-                    LOG_DEV("CPU: Push register " << atoi(buff + 1));
-                    code_.push_back(atoi(buff + 1));
+                    LOG_DEV("CPU: Push register " << stoi(buff.substr(1)));
+                    code_.push_back(stoi(buff.substr(1)));
                 }
                 else
                 {
-                    LOG_DEV("CPU: Push const " << atoi(buff));
+                    LOG_DEV("CPU: Push const " << stoi(buff));
                     code_.back() = PUSH_CONST_CMD;
-                    code_.push_back(atoi(buff));
+                    code_.push_back(stoi(buff));
                 }
 
             }
-            else if (!strcmp(buff, "mult"))
+            else if (buff == "mult")
             {
                 LOG_DEV("CPU: Mult");
                 code_.push_back(MULT_CMD);
             }
-            else if (!strcmp(buff, "add"))
+            else if (buff == "add")
             {
                 LOG_DEV("CPU: Add");
                 code_.push_back(ADD_CMD);
             }
-            else if (!strcmp(buff, "div"))
+            else if (buff == "div")
             {
                 LOG_DEV("CPU: Div");
                 code_.push_back(DIV_CMD);
             }
-            else if (!strcmp(buff, "pop"))
+            else if (buff == "pop")
             {
                 code_.push_back(POP_CMD);
                 fin >> buff;
                 if (buff[0] == 'x')
                 {
-                    LOG_DEV("CPU: Pop register " << atoi(buff + 1));
-                    code_.push_back(atoi(buff + 1));
+                    LOG_DEV("CPU: Pop register " << stoi(buff.substr(1)));
+                    code_.push_back(stoi(buff.substr(1)));
                 }
                 else
                 {
@@ -144,76 +128,76 @@ namespace thirtythree
                     throw std::runtime_error("CPU: Wrong syntax in file");
                 }
             }
-            else if (!strcmp(buff, "jmp"))
+            else if (buff == "jmp")
             {
                 code_.push_back(JMP_CMD);
                 fin >> buff;
-                code_.push_back(atoi(buff));
-                LOG_DEV("CPU: Jump to " << atoi(buff));
+                code_.push_back(stoi(buff));
+                LOG_DEV("CPU: Jump to " << stoi(buff));
             }
-            else if (!strcmp(buff, "mark"))
+            else if (buff == "mark")
             {
                 code_.push_back(MARK_CMD);
                 fin >> buff;
-                code_.push_back(atoi(buff));
-                LOG_DEV("CPU: :" << atoi(buff));
+                code_.push_back(stoi(buff));
+                LOG_DEV("CPU: :" << stoi(buff));
             }
-            else if (!strcmp(buff, "je"))
+            else if (buff == "je")
             {
                 code_.push_back(JE_CMD);
                 fin >> buff;
-                code_.push_back(atoi(buff));
-                LOG_DEV("CPU: Jump to " << atoi(buff) << " if equal");
+                code_.push_back(stoi(buff));
+                LOG_DEV("CPU: Jump to " << stoi(buff) << " if equal");
             }
-            else if (!strcmp(buff, "jg"))
+            else if (buff == "jg")
             {
                 code_.push_back(JG_CMD);
                 fin >> buff;
-                code_.push_back(atoi(buff));
-                LOG_DEV("CPU: Jump to " << atoi(buff) << " if greater");
+                code_.push_back(stoi(buff));
+                LOG_DEV("CPU: Jump to " << stoi(buff) << " if greater");
             }
-            else if (!strcmp(buff, "jge"))
+            else if (buff == "jge")
             {
                 code_.push_back(JGE_CMD);
                 fin >> buff;
-                code_.push_back(atoi(buff));
-                LOG_DEV("CPU: Jump to " << atoi(buff) << " if greater/equal");
+                code_.push_back(stoi(buff));
+                LOG_DEV("CPU: Jump to " << stoi(buff) << " if greater/equal");
             }
-            else if (!strcmp(buff, "jl"))
+            else if (buff == "jl")
             {
                 code_.push_back(JL_CMD);
                 fin >> buff;
-                code_.push_back(atoi(buff));
-                LOG_DEV("CPU: Jump to " << atoi(buff) << " if less");
+                code_.push_back(stoi(buff));
+                LOG_DEV("CPU: Jump to " << stoi(buff) << " if less");
             }
-            else if (!strcmp(buff, "jle"))
+            else if (buff == "jle")
             {
                 code_.push_back(JLE_CMD);
                 fin >> buff;
-                code_.push_back(atoi(buff));
-                LOG_DEV("CPU: Jump to " << atoi(buff) << " if less/equal");
+                code_.push_back(stoi(buff));
+                LOG_DEV("CPU: Jump to " << stoi(buff) << " if less/equal");
             }
-            else if (!strcmp(buff, "jne"))
+            else if (buff == "jne")
             {
                 code_.push_back(JNE_CMD);
                 fin >> buff;
-                code_.push_back(atoi(buff));
-                LOG_DEV("CPU: Jump to " << atoi(buff) << " if not equal");
+                code_.push_back(stoi(buff));
+                LOG_DEV("CPU: Jump to " << stoi(buff) << " if not equal");
             }
-            else if (!strcmp(buff, "call"))
+            else if (buff == "call")
             {
                 code_.push_back(CALL_CMD);
                 fin >> buff;
-                code_.push_back(atoi(buff));
-                LOG_DEV("CPU: Call :" << atoi(buff));
+                code_.push_back(stoi(buff));
+                LOG_DEV("CPU: Call :" << stoi(buff));
             }
-            else if (!strcmp(buff, "ret"))
+            else if (buff == "ret")
             {
                 code_.push_back(RET_CMD);
                 LOG_DEV("CPU: Return");
             }
 
-            else if (!strcmp(buff, "end"))
+            else if (buff == "end")
             {
                 code_.push_back(END_CMD);
                 LOG_DEV("CPU: End");
@@ -229,8 +213,31 @@ namespace thirtythree
 
     void CPU::execute()
     {
-        mark();
+        collectMarks();
+        double x1, x2;
         size_t pos = 0;
+
+        auto pop_two = [this](double &x1, double &x2)
+        {
+                x1 = stack_.top();
+                stack_.pop();
+                x2 = stack_.top();
+                stack_.pop();
+        };
+        auto jump_cond = [this, &pos](bool condition)
+        {
+            if (condition)
+            {
+                LOG_DEV("CPU: Jump to mark " << code_[pos + 1]);
+                pos = marks_[code_[pos + 1]];
+            }
+            else
+            {
+                pos += 2;
+                LOG_DEV("CPU: Skipping jump");
+            }
+        };
+
         LOG_DEBUG("CPU: Executing script...");
         while (true)
         {
@@ -257,11 +264,7 @@ namespace thirtythree
                 }
                 case MULT_CMD:
                 {
-                    double x1, x2;
-                    x1 = stack_.top();
-                    stack_.pop();
-                    x2 = stack_.top();
-                    stack_.pop();
+                    pop_two(x1, x2);
                     stack_.push(x2 * x1);
                     pos += 1;
                     LOG_DEV("CPU: Mult of items = " << stack_.top());
@@ -269,11 +272,7 @@ namespace thirtythree
                 }
                 case ADD_CMD:
                 {
-                    double x1, x2;
-                    x1 = stack_.top();
-                    stack_.pop();
-                    x2 = stack_.top();
-                    stack_.pop();
+                    pop_two(x1, x2);
                     stack_.push(x2 + x1);
                     pos += 1;
                     LOG_DEV("CPU: Sum of items = " << stack_.top());
@@ -281,11 +280,7 @@ namespace thirtythree
                 }
                 case DIV_CMD:
                 {
-                    double x1, x2;
-                    x1 = stack_.top();
-                    stack_.pop();
-                    x2 = stack_.top();
-                    stack_.pop();
+                    pop_two(x1, x2);
                     stack_.push(x2 / x1);
                     pos += 1;
                     LOG_DEV("CPU: Div of items = " << stack_.top());
@@ -312,32 +307,38 @@ namespace thirtythree
                 }
                 case JE_CMD:
                 {
-                    JMP_COND(==);
+                    pop_two(x1, x2);
+                    jump_cond(x2 == x2);
                     break;
                 }
                 case JG_CMD:
                 {
-                    JMP_COND(>);
+                    pop_two(x1, x2);
+                    jump_cond(x2 > x1);
                     break;
                 }
                 case JGE_CMD:
                 {
-                    JMP_COND(>=);
+                    pop_two(x1, x2);
+                    jump_cond(x2 >= x1);
                     break;
                 }
                 case JL_CMD:
                 {
-                    JMP_COND(<);
+                    pop_two(x1, x2);
+                    jump_cond(x2 < x1);
                     break;
                 }
                 case JLE_CMD:
                 {
-                    JMP_COND(<=);
+                    pop_two(x1, x2);
+                    jump_cond(x2 <= x1);
                     break;
                 }
                 case JNE_CMD:
                 {
-                    JMP_COND(!=);
+                    pop_two(x1, x2);
+                    jump_cond(x2 != x1);
                     break;
                 }
                 case CALL_CMD:
@@ -358,7 +359,7 @@ namespace thirtythree
         }
     }
 
-    void CPU::mark()
+    void CPU::collectMarks()
     {
         LOG_DEBUG("CPU: Collecting marks...");
         size_t pos = 0;
