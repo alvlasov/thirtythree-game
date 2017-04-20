@@ -23,20 +23,20 @@ namespace thirtythree
     public:
 
         //! Переопределение итератора для массива
-        class iterator
+        class Iterator
         {
         public:
 
             //! Пустой итератор
             //! Присваивает указателю значение NULL
-            iterator():
+            Iterator():
                 p_index(nullptr)
             {
             }
 
             //! Конструктор итератора с передачей параметра
             //! Передает значение указателя
-            iterator(T *p_newindex):
+            Iterator(T *p_newindex):
                 p_index(p_newindex)
             {
             }
@@ -50,7 +50,7 @@ namespace thirtythree
 
             //! Переопределение оператора ++ префикс
             //! @return следующий итератор
-            iterator& operator ++()
+            Iterator& operator ++()
             {
                 ++p_index;
                 return *this;
@@ -58,7 +58,7 @@ namespace thirtythree
 
             //! Переопределение оператора -- префикс
             //! @return следующий итератор
-            iterator& operator --()
+            Iterator& operator --()
             {
                 --p_index;
                 return *this;
@@ -74,7 +74,7 @@ namespace thirtythree
             //! Переопределение операции сравнения двух итераторов
             //! @param that - итератор, с которым сравниваем
             //! @return TRUE/FALSE
-            bool operator == (const iterator& that) const
+            bool operator == (const Iterator& that) const
             {
                 return (p_index == that.p_index);
             }
@@ -82,23 +82,23 @@ namespace thirtythree
             //! Переопределение операции неравенства
             //! @param that - итератор, с которым сравниваем
             //! @return TRUE/FALSE
-            bool operator != (const iterator& that) const
+            bool operator != (const Iterator& that) const
             {
                 return (p_index != that.p_index);
             }
 
             //! Переопределение операции пост-инкремента
             //! @return Возвращает итератор
-            iterator operator ++(int)
+            Iterator operator ++(int)
             {
-                return iterator(p_index++);
+                return Iterator(p_index++);
             }
 
             //! Переопределение операции пост-декремента
             //! @return Возвращает итератор
-            iterator operator --(int)
+            Iterator operator --(int)
             {
-                return iterator(p_index--);
+                return Iterator(p_index--);
             }
 
         private:
@@ -184,16 +184,16 @@ namespace thirtythree
         size_t resize(const size_t new_size);
 
         //! @return Итератор на начало массива
-        iterator begin()
+        Iterator begin()
         {
-            iterator begin_iterator(&data_[0]);
+            Iterator begin_iterator(&data_[0]);
             return begin_iterator;
         }
 
         //! @return Итератор на конец массива
-        iterator end()
+        Iterator end()
         {
-            iterator end_iterator(&data_[size_]);
+            Iterator end_iterator(&data_[size_]);
             return end_iterator;
         }
 
@@ -234,7 +234,7 @@ namespace thirtythree
         public:
 
             template <typename T>
-            friend class Vector<T>::iterator;
+            friend class Vector<T>::Iterator;
 
             reference(Bitset& b, size_t pos) :
                 parent_ (&b),
@@ -289,10 +289,7 @@ namespace thirtythree
             data_ (new unsigned char [size / 8 + 1])
         {
             LOG_DEV(__PRETTY_FUNCTION__);
-            for (size_t i = 0; i < size_; i++)
-            {
-                set(false, i);
-            }
+            initialize();
         }
 
         ~Bitset()
@@ -335,13 +332,13 @@ namespace thirtythree
                 throw std::runtime_error("New size is smaller than current size");
             }
 
-            size_t new_charsize = new_size / 8 + 1;
-            size_t charsize = size_ / 8 + 1;
-            size_t num = new_size - size_;
+            size_t char_array_new_size = new_size / 8 + 1;
+            size_t char_array_size = size_ / 8 + 1;
+            size_t difference = new_size - size_;
 
-            unsigned char *newdata = new unsigned char [new_charsize];
+            unsigned char *newdata = new unsigned char [char_array_new_size];
 
-            for (size_t i = 0; i < charsize; i++)
+            for (size_t i = 0; i < char_array_size; i++)
             {
                 newdata[i] = data_[i];
             }
@@ -350,15 +347,28 @@ namespace thirtythree
             data_ = newdata;
             size_ = new_size;
 
-            for (size_t i = size_ - num; i < size_; i++)
-            {
-                set(false, i);
-            }
+            initialize(size_ - difference, size_);
 
             return size_;
         }
 
     private:
+
+        size_t size_;
+        unsigned char *data_;
+
+        void initialize()
+        {
+            initialize(0, size_);
+        }
+
+        void initialize(size_t first, size_t last)
+        {
+            for (size_t i = first; i < last; i++)
+            {
+                set(false, i);
+            }
+        }
 
         bool get(size_t pos) const
         {
@@ -386,9 +396,6 @@ namespace thirtythree
             }
         }
 
-        size_t size_;
-        unsigned char *data_;
-
     };
 
     template <>
@@ -396,30 +403,30 @@ namespace thirtythree
     {
     public:
 
-        class iterator
+        class Iterator
         {
         public:
 
-            iterator()
+            Iterator()
             {
                 LOG_DEV(__PRETTY_FUNCTION__);
             }
 
-            iterator(Bitset &bitset, size_t pos):
+            Iterator(Bitset &bitset, size_t pos):
                 bitset_ (&bitset),
                 pos_ (pos)
             {
                 LOG_DEV(__PRETTY_FUNCTION__);
             }
 
-            iterator& operator =(const iterator& that)
+            Iterator& operator =(const Iterator& that)
             {
                 bitset_ = that.bitset_;
                 pos_ = that.pos_;
                 return *this;
             }
 
-            iterator& operator =(const Bitset::reference& ref)
+            Iterator& operator =(const Bitset::reference& ref)
             {
                 pos_ = ref.pos_;
                 return *this;
@@ -431,36 +438,36 @@ namespace thirtythree
             }
 
 
-            iterator& operator ++()
+            Iterator& operator ++()
             {
                 pos_++;
                 return *this;
             }
 
-            iterator& operator --()
+            Iterator& operator --()
             {
                 pos_--;
                 return *this;
             }
 
-            bool operator == (const iterator& that) const
+            bool operator == (const Iterator& that) const
             {
                 return (pos_ == that.pos_);
             }
 
-            bool operator != (const iterator& that) const
+            bool operator != (const Iterator& that) const
             {
                 return (pos_ != that.pos_);
             }
 
-            iterator operator ++(int)
+            Iterator operator ++(int)
             {
-                return iterator(*bitset_, pos_++);
+                return Iterator(*bitset_, pos_++);
             }
 
-            iterator operator --(int)
+            Iterator operator --(int)
             {
-                return iterator(*bitset_, pos_--);
+                return Iterator(*bitset_, pos_--);
             }
 
         private:
@@ -490,14 +497,14 @@ namespace thirtythree
         void dump() const;
         size_t resize(const size_t new_size);
 
-        iterator begin()
+        Iterator begin()
         {
-            return iterator(data_, 0);
+            return Iterator(data_, 0);
         }
 
-        iterator end()
+        Iterator end()
         {
-            return iterator(data_, size_);
+            return Iterator(data_, size_);
         }
 
     private:

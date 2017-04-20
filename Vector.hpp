@@ -28,7 +28,7 @@ namespace thirtythree
         reserve_(size_ + RESERVED_),
         data_(new T [reserve_])
     {
-        for (iterator it = begin(); it != end(); ++it )
+        for (Iterator it = begin(); it != end(); ++it )
         {
             *it = 0;
         }

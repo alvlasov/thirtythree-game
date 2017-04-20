@@ -216,7 +216,7 @@ SUITE(Vector)
         {
             a[i] = i;
         }
-        Vector<int>::iterator it;
+        Vector<int>::Iterator it;
         int j = 0;
         for (it = a.begin(); it != a.end(); it++)
         {
@@ -486,7 +486,7 @@ SUITE(Vector_bool)
         {
             a[i] = i % 2;
         }
-        Vector<bool>::iterator it;
+        Vector<bool>::Iterator it;
         int j = 0;
         for (it = a.begin(); it != a.end(); it++)
         {

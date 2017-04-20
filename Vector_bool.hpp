@@ -28,10 +28,6 @@ namespace thirtythree
         reserve_(size_ + RESERVED_),
         data_(reserve_)
     {
-        for (iterator it = begin(); it != end(); it++)
-        {
-            *it = false;
-        }
         LOG_DEV(__PRETTY_FUNCTION__);
     }
 
@@ -44,7 +40,7 @@ namespace thirtythree
         bool *data = new bool [reserve_];
         std::copy(init.begin(), init.end(), data);
         int i = 0;
-        for (iterator it = begin(); it != end(); it++)
+        for (Iterator it = begin(); it != end(); it++)
         {
             *it = data[i++];
         }
@@ -55,7 +51,6 @@ namespace thirtythree
     Vector<bool>::~Vector()
     {
         LOG_DEV(__PRETTY_FUNCTION__);
-
         size_ = 0;
     }
 
@@ -66,7 +61,7 @@ namespace thirtythree
     {
         LOG_DEV(__PRETTY_FUNCTION__);
         int i = 0;
-        for (iterator it = begin(); it != end(); it++)
+        for (Iterator it = begin(); it != end(); it++)
         {
             *it = that[i++];
         }
@@ -123,7 +118,7 @@ namespace thirtythree
         {
                 return false;
         }
-        for ( unsigned int i = 0; i < arr1.size(); i++ )
+        for (unsigned int i = 0; i < arr1.size(); i++ )
         {
             if (arr1[i] != arr2[i])
             {
