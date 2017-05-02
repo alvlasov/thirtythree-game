@@ -130,34 +130,70 @@ namespace thirtythree
     };
 
 
-    template <class T>
+   template <class T>
     class my_shared_ptr
     {
 
     public:
+
+        //! Блок управления
+        struct control_block
+        {
+            //! Указатель на объект
+            T* obj_;
+
+            //! Счетчик ссылок на объект
+            int *cnt_;
+
             //! Конструкторы
-            my_shared_ptr() :
+            control_block() :
                 obj_(nullptr),
                 cnt_(new int(0))
-            { }
+                { }
 
-            explicit my_shared_ptr(T* p) :
+            control_block(T* p) :
                 obj_(p),
                 cnt_(new int(1))
-            { }
+                { }
 
-            //! Деструктор с уменьшением счетчика
-            ~my_shared_ptr()
+            //! Функция удаления
+            void del_control_block()
             {
-                    if (cnt_ != nullptr && *cnt_ == 1)
+                if (cnt_ != nullptr && *cnt_ == 1)
                     {
                             delete obj_;
                             delete cnt_;
+                            obj_ = nullptr;
+                            cnt_ = nullptr;
                     }
                     else
                     {
                         (*cnt_)--;
                     }
+            }
+
+        };
+
+            //! Конструкторы
+            my_shared_ptr() :
+                object_(nullptr),
+                block_(new control_block)
+            { }
+
+            explicit my_shared_ptr(T* p) :
+                object_(p),
+                block_(new control_block(p))
+            { }
+
+            //! Деструктор с уменьшением счетчика
+            ~my_shared_ptr()
+            {
+                block_->del_control_block();
+                if (block_->cnt_ == nullptr )
+                {
+                    delete object_;
+                    object_ = nullptr;
+                }
             }
 
             //! Оператор присваивания с увеличением счетчика
@@ -168,9 +204,9 @@ namespace thirtythree
                     if (this != &that)
                     {
                             reset();
-                            obj_= that.obj_;
-                            cnt_ = that.cnt_;
-                            ++*cnt_;
+                            object_= that.object_;
+                            block_ = that.block_;
+                            ++*(block_->cnt_);
                     }
                     return *this;
             }
@@ -185,11 +221,11 @@ namespace thirtythree
             }
 
             //!Переопределение функции swap()
-            //!@param my_shared_ptr &x
-            void swap(my_shared_ptr &x)
+            //!@param my_shared_ptr &that
+            void swap(my_shared_ptr &that)
             {
-                    std::swap(obj_, x.obj_);
-                    std::swap(cnt_, x.cnt_);
+                    std::swap(object_, that.object_);
+                    std::swap(block_, that.block_);
             }
 
 
@@ -197,42 +233,42 @@ namespace thirtythree
             //! @return Возвращает указатель на объект
             T* operator -> () const
             {
-                if (obj_ == nullptr)
+                if (object_ == nullptr)
                 {
                     throw std::runtime_error("Nullptr access");
                 }
-                return obj_;
+                return object_;
             }
 
             //! Перегруженный оператор *
             //! @return объект, который он хранит
             T& operator * () const
             {
-                return *obj_;
+                return *object_;
             }
 
             //! Функция обнуление указателей
             void reset()
             {
                     this->~my_shared_ptr();
-                    obj_ = nullptr;
-                    cnt_ = nullptr;
+                    object_ = nullptr;
+                    block_ = nullptr;
             }
 
             bool unique()
             {
-                return (*cnt_ == 1);
+                return (*(block_->cnt_) == 1);
             }
 
 
     private:
 
         //! Указатель на объект
-        T* obj_;
+        T* object_;
 
-        //! Счетчик ссылок на объект
-        int *cnt_;
+        //! Блок управления
+        control_block* block_;
+
     };
-
 }
 #endif // SMART_PTR_H_INCLUDED
