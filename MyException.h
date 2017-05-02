@@ -20,13 +20,13 @@ namespace thirtythree
 
         //! Конструктор исключения
         //! @param line -  строка исключения, func - функция, в которой было вызвано исключение, file - файл, msg - сообщение об исключении
-        MyException(int line, const char *func, const char *file,  const char *msg, const MyException *other = nullptr)
+        MyException(int line, const char *func, const char *file,  const char *msg, const MyException *other = nullptr):
+        Data(line,  std::string(func), std::string(file), std::string(msg))
         {
             if (other != nullptr)
             {
-                exc_vect = other->exc_vect;
+                last_exception = new MyException(other->Data.line, other->Data.func, other->Data.file, other->Data.msg);
             }
-            exc_vect.push_back(Data(line,  std::string(func), std::string(file), std::string(msg)));
         }
 
         //! Вывод содержания исключения
@@ -34,10 +34,8 @@ namespace thirtythree
         const std::string what()
         {
             std::stringstream os;
-            for(auto it : exc_vect)
-            {
-                os << "On line: "<< it.line <<" In func: "<< it.func <<" In file: "<< it.file <<" Message: "<< it.msg <<"\n";
-            }
+            os << "On line: "<< line <<" In func: "<< func <<" In file: "<< file <<" Message: "<< msg <<"\n";
+            os << "Last exception on line: "<< last_exception->Data.line <<" In func: "<< last_exception->Data.func <<" In file: "<< last_exception->Data.file <<" Message: "<< last_exception->Data.msg <<"\n";
             return os.str();
         }
 
@@ -53,8 +51,7 @@ namespace thirtythree
                 func(""),
                 file(""),
                 msg("")
-            {
-            }
+            { }
 
             Data(int line_, std::string &&func_, std::string &&file_, std::string &&msg_) :
                 line(line_),
@@ -72,7 +69,7 @@ namespace thirtythree
 
         };
 
-        std::vector<Data> exc_vect;
+        MyException* last_exception;
     };
 }
 #endif // MYEXCEPTION_H_INCLUDED

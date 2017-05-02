@@ -268,7 +268,6 @@ namespace thirtythree
 
         //! Блок управления
         control_block* block_;
-
     };
 }
 #endif // SMART_PTR_H_INCLUDED
