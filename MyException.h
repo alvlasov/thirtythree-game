@@ -18,14 +18,37 @@ namespace thirtythree
 
     public:
 
-        //! Конструктор исключения
+        //! Конструктор с хранением предыдущего исключения
         //! @param line -  строка исключения, func - функция, в которой было вызвано исключение, file - файл, msg - сообщение об исключении
-        MyException(int line, const char *func, const char *file,  const char *msg, const MyException *other = nullptr):
-        Data(line,  std::string(func), std::string(file), std::string(msg))
+        MyException(int line, const char *func, const char *file, const char *msg, MyException *prev_exception) :
+            line_ (line),
+            number_ ((*prev_exception).number_ + 1),
+            func_ (func),
+            file_ (file),
+            msg_ (msg),
+            prev_exception_ (prev_exception)
         {
-            if (other != nullptr)
+        }
+
+        //! Конструктор
+        //! @param line -  строка исключения, func - функция, в которой было вызвано исключение, file - файл, msg - сообщение об исключении
+        MyException(int line, const char *func, const char *file, const char *msg) :
+            line_ (line),
+            number_ (1),
+            func_ (func),
+            file_ (file),
+            msg_ (msg),
+            prev_exception_ (nullptr)
+        {
+        }
+
+        ~MyException()
+        {
+            LOG_INFO("MyException " << number_ << " destroyed");
+
+            if (prev_exception_ != nullptr)
             {
-                last_exception = new MyException(other->Data.line, other->Data.func, other->Data.file, other->Data.msg);
+                delete prev_exception_;
             }
         }
 
@@ -34,42 +57,23 @@ namespace thirtythree
         const std::string what()
         {
             std::stringstream os;
-            os << "On line: "<< line <<" In func: "<< func <<" In file: "<< file <<" Message: "<< msg <<"\n";
-            os << "Last exception on line: "<< last_exception->Data.line <<" In func: "<< last_exception->Data.func <<" In file: "<< last_exception->Data.file <<" Message: "<< last_exception->Data.msg <<"\n";
+            os << "Exception " << number_ << " thrown:\n\tLine: " << line_ << "\n\tFunc: " << func_ << "\n\tFile: " << file_ << "\n\tMessage: " << msg_ << "\n";
+            if (prev_exception_ != nullptr)
+            {
+                os << prev_exception_->what();
+            }
             return os.str();
         }
 
     private:
 
-        //! Содержание исключения: строка, функция, файл, в котором вызвалось исключение, и сообщение об исключении
-        class Data
-        {
-        public:
-            //! Конструкторы
-            Data() :
-                line(0),
-                func(""),
-                file(""),
-                msg("")
-            { }
+        int line_;
+        int number_;
+        std::string func_;
+        std::string file_;
+        std::string msg_;
 
-            Data(int line_, std::string &&func_, std::string &&file_, std::string &&msg_) :
-                line(line_),
-                func(func_),
-                file(file_),
-                msg(msg_)
-            {
-            }
-
-            //! Поля класса
-            int line;
-            std::string func;
-            std::string file;
-            std::string msg;
-
-        };
-
-        MyException* last_exception;
+        MyException *prev_exception_;
     };
 }
 #endif // MYEXCEPTION_H_INCLUDED

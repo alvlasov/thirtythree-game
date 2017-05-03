@@ -636,3 +636,31 @@ SUITE(CPU)
     }
 
 }
+
+TEST(MyException)
+{
+    MESSAGE("MyException");
+    try
+    {
+        try
+        {
+            try
+            {
+                throw new MyException(__LINE__, __FUNCTION__, __FILE__, "Something happened");
+            }
+            catch (MyException *exc)
+            {
+                throw new MyException(__LINE__, __FUNCTION__, __FILE__, "Something else happened", exc);
+            }
+        }
+        catch (MyException *exc)
+        {
+            throw new MyException(__LINE__, __FUNCTION__, __FILE__, "Something more happened", exc);
+        }
+    }
+    catch (MyException *exc)
+    {
+        cout << exc -> what() << endl;
+        exc -> ~MyException();
+    }
+}
