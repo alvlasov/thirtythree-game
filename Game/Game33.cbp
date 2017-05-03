@@ -54,6 +54,7 @@
 			<Add library="opengl32" />
 			<Add directory="SFML/lib" />
 		</Linker>
+		<Unit filename="GameObject.h" />
 		<Unit filename="main.cpp" />
 		<Extensions>
 			<code_completion />
