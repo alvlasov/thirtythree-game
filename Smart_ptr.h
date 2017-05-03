@@ -113,6 +113,14 @@ namespace thirtythree
                 return *obj_;
             }
 
+            //! Функция "перемещения" указателя
+            T* release()
+            {
+                T *result = obj_;
+                obj_ = nullptr;
+                return result;
+            }
+
             //! Оператор присваивания без перемещения, принимает только временные объекты
             //! @param умный указатель that
             //! @return указатель на себя
