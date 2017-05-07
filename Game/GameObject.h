@@ -25,7 +25,7 @@ public:
     void SetTexture(const std::string &texturename, const sf::Vector2f& scale = {1, 1});
     virtual void Draw(sf::RenderTarget &screen);
     virtual void Control() { }
-    virtual void Logic(sf::Vector2u map_size);
+    virtual void Logic(const sf::Vector2u &map_size);
     virtual void Move(float dt);
 
     virtual ~GameObject();

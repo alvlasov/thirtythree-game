@@ -58,7 +58,7 @@ void GameObject::Move(float dt) {
     pos_.y += speed_.y * dt;
 }
 
-void GameObject::Logic(sf::Vector2u map_size) {
+void GameObject::Logic(const sf::Vector2u &map_size) {
 
 //    if (pos_.x < -size_.x ||
 //        pos_.y < -size_.y ||
