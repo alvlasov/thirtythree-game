@@ -1,15 +1,14 @@
 #include "DrawPrimitives.h"
 
-void thirtythree::DrawCircle(sf::Vector2f pos, float radius, sf::Color fillColor, sf::Color outlineColor, sf::RenderTarget* screen)
-{
+void thirtythree::DrawCircle(sf::Vector2f pos, float radius, sf::Color fillColor,
+                             sf::Color outlineColor, sf::RenderTarget* screen) {
     sf::CircleShape circle;
 
     circle.setRadius(radius);
     circle.setFillColor(fillColor);
 
     circle.setOutlineColor(outlineColor);
-    if (outlineColor != sf::Color::Transparent)
-    {
+    if (outlineColor != sf::Color::Transparent) {
         circle.setOutlineThickness(3);
     }
 
