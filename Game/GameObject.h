@@ -10,25 +10,22 @@ extern sf::RenderWindow* Window;
 
 namespace thirtythree {
 
-enum ObjectType {ABSTRACT};
+enum ObjectType {ABSTRACT, PLAYER};
 
 class GameObject {
 public:
-
     GameObject();
 
     GameObject(const sf::Vector2f& pos,
+               float radius,
+               const sf::Color &color = sf::Color::White,
                const sf::Vector2f& speed = {0, 0},
-               const sf::Vector2f& scale = {1, 1},
-               std::string texturename = "",
-               float mass = 0,
-               float friction = 0,
-               float rotation = 0);
+               float friction = 0);
 
-    virtual void Draw(sf::RenderTarget* screen = Window);
-
+    void SetTexture(const std::string &texturename, const sf::Vector2f& scale = {1, 1});
+    virtual void Draw(sf::RenderTarget &screen);
     virtual void Control() { }
-    virtual void Logic();
+    virtual void Logic(sf::Vector2u map_size);
     virtual void Move(float dt);
 
     virtual ~GameObject();
@@ -38,18 +35,20 @@ public:
     virtual ObjectType GetType() { return ABSTRACT; }
 
     void Kill();
-    bool isDead() { return dead_; }
+    bool IsDead() { return dead_; }
+    sf::Vector2f GetPos() { return pos_; }
 
-private:
+protected:
 
     sf::Vector2f pos_;
     sf::Vector2f speed_;
     sf::Vector2f size_;
     sf::Vector2f scale_;
 
-    float mass_;
     float friction_;
-    float rotation_;
+
+    float radius_;
+    sf::Color color_;
 
     sf::Sprite sprite_;
     sf::Texture texture_;
