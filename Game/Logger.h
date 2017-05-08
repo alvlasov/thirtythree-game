@@ -5,12 +5,12 @@
 #include <ctime>
 #include <string>
 
-#define LOG_MESSAGE(reason, str) \
+#define LOG_MESSAGE(reason, str) {\
     time_t rawtime; \
     time(&rawtime); \
     std::string timestr = ctime(&rawtime); \
     timestr.pop_back(); \
-    std::cout << timestr << " | [" << #reason << "] " << str << std::endl;
+    std::cout << timestr << " | [" << #reason << "] " << str << std::endl; }
 
 #if INFO_MESSAGES == true
     #define LOG_INFO(str) LOG_MESSAGE(INFO, str)

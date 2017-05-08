@@ -58,12 +58,18 @@
 		</Linker>
 		<Unit filename="DrawPrimitives.cpp" />
 		<Unit filename="DrawPrimitives.h" />
-		<Unit filename="GameObject.cpp" />
-		<Unit filename="GameObject.h" />
+		<Unit filename="Engine.cpp" />
+		<Unit filename="Engine.h" />
+		<Unit filename="GameLogic.h" />
+		<Unit filename="GameObjects/Food.cpp" />
+		<Unit filename="GameObjects/Food.h" />
+		<Unit filename="GameObjects/GameObject.cpp" />
+		<Unit filename="GameObjects/GameObject.h" />
+		<Unit filename="GameObjects/Player.cpp" />
+		<Unit filename="GameObjects/Player.h" />
 		<Unit filename="GlobalOptions.h" />
 		<Unit filename="Logger.h" />
-		<Unit filename="Player.cpp" />
-		<Unit filename="Player.h" />
+		<Unit filename="ObjectsFactory.h" />
 		<Unit filename="Utility.h" />
 		<Unit filename="main.cpp" />
 		<Extensions>

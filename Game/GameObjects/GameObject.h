@@ -2,15 +2,14 @@
 #define GAMEOBJECT_H_INCLUDED
 
 #include <stdexcept>
-#include "DrawPrimitives.h"
-#include "GlobalOptions.h"
 #include <SFML/Graphics.hpp>
+#include "../DrawPrimitives.h"
+#include "../GlobalOptions.h"
+#include "../Utility.h"
 
 extern sf::RenderWindow* Window;
 
 namespace thirtythree {
-
-enum ObjectType {ABSTRACT, PLAYER};
 
 class GameObject {
 public:
@@ -24,15 +23,15 @@ public:
 
     void SetTexture(const std::string &texturename, const sf::Vector2f& scale = {1, 1});
     virtual void Draw(sf::RenderTarget &screen);
-    virtual void Control() { }
+    virtual void Control() {}
     virtual void Logic(const sf::Vector2u &map_size);
     virtual void Move(float dt);
 
     virtual ~GameObject();
 
-    virtual void Intersect(ObjectType type) { }
+    //virtual void Intersect(sf::String type) { }
 
-    virtual ObjectType GetType() { return ABSTRACT; }
+    virtual std::string GetType() { return "ABSTRACT"; }
 
     void Kill();
     bool IsDead() { return dead_; }

@@ -2,7 +2,6 @@
 #define PLAYER_H_INCLUDED
 
 #include "GameObject.h"
-#include "Utility.h"
 
 namespace thirtythree {
 
@@ -21,7 +20,7 @@ public:
     void Control();
     void Logic(const sf::Vector2u &map_size);
 
-    ObjectType GetType() override { return PLAYER; }
+    std::string GetType() { return "PLAYER"; }
 private:
     float speed_factor_;
 };
