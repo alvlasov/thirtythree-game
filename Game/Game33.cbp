@@ -60,6 +60,7 @@
 		<Unit filename="DrawPrimitives.h" />
 		<Unit filename="Engine.cpp" />
 		<Unit filename="Engine.h" />
+		<Unit filename="GameLogic.cpp" />
 		<Unit filename="GameLogic.h" />
 		<Unit filename="GameObjects/Food.cpp" />
 		<Unit filename="GameObjects/Food.h" />

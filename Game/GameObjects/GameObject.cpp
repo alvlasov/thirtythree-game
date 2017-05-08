@@ -21,11 +21,11 @@ GameObject::GameObject(const sf::Vector2f& pos, float radius,
       friction_  (friction),
       radius_    (radius),
       color_     (color) {
-    LOG_INFO("Object " << GetType() << " created on pos (" << pos_.x << ", " << pos_.y << ")");
+//    LOG_INFO("Object " << GetType() << " created on pos (" << pos_.x << ", " << pos_.y << ")");
 }
 
 GameObject::~GameObject() {
-    LOG_INFO("Object " << GetType() << " destroyed");
+//    LOG_INFO("Object " << GetType() << " destroyed");
 }
 
 void GameObject::SetTexture(const std::string &texturename, const sf::Vector2f& scale) {
