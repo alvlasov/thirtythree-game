@@ -2,6 +2,13 @@
 
 namespace thirtythree {
 
+Player::Player(const sf::Vector2f &pos, float radius, float speed_factor,
+               const sf::Color &color, float friction)
+    : GameObject(pos, radius, color, {0, 0}, friction),
+      speed_factor_ (speed_factor) {
+    LOG_INFO("Object " << GetType() << " created on pos (" << pos_.x << ", " << pos_.y << ")");
+}
+
 Player::~Player() {
     LOG_INFO("Object " << GetType() << " destroyed");
 }
@@ -9,12 +16,10 @@ Player::~Player() {
 void Player::Control() {
 
     sf::Vector2f mouse_pos = Window->mapPixelToCoords(sf::Mouse::getPosition(*Window));
-    float modulus = sqrt(pow(mouse_pos.x - pos_.x, 2) +
-                      pow(mouse_pos.y - pos_.y, 2));
-    if (modulus > radius_) {
-        speed_ = (mouse_pos - pos_) / modulus * speed_factor_;
+    float len = length(mouse_pos - pos_);
+    if (len > radius_) {
+        speed_ = normalize(mouse_pos - pos_) * speed_factor_;
     }
-
 }
 
 void Player::Logic(const sf::Vector2u &map_size) {

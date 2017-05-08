@@ -2,8 +2,7 @@
 #define PLAYER_H_INCLUDED
 
 #include "GameObject.h"
-#include <cmath>
-
+#include "Utility.h"
 
 namespace thirtythree {
 
@@ -15,16 +14,14 @@ public:
            float radius,
            float speed_factor = 100,
            const sf::Color &color = sf::Color::White,
-           float friction = 0.03f)
-        : GameObject(pos, radius, color, {0, 0}, friction),
-          speed_factor_ (speed_factor) {}
+           float friction = 0.03f);
 
     ~Player();
 
     void Control();
     void Logic(const sf::Vector2u &map_size);
 
-    ObjectType GetType() { return PLAYER; }
+    ObjectType GetType() override { return PLAYER; }
 private:
     float speed_factor_;
 };
