@@ -4,7 +4,7 @@
 #include "Stack.h"
 #include "Vector.h"
 #include "Utility.h"
-#include "CPU.h"
+#include "ScriptingUnit.h"
 #include "MyException.h"
 
 #include "UnitTests.h"

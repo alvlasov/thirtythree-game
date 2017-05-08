@@ -3,7 +3,7 @@
 
 #define INFO_MESSAGES true
 #define DEBUG_MESSAGES true
-#define DEV_MESSAGES false
+#define DEV_MESSAGES true
 
 #include "Logger.h"
 

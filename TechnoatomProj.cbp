@@ -40,11 +40,11 @@
 		<Linker>
 			<Add library=".\unittest-cpp\Deliv\Release\libUnitTest++.a" />
 		</Linker>
-		<Unit filename="CPU.cpp" />
-		<Unit filename="CPU.h" />
 		<Unit filename="GlobalOptions.h" />
 		<Unit filename="Logger.h" />
 		<Unit filename="MyException.h" />
+		<Unit filename="ScriptingUnit.cpp" />
+		<Unit filename="ScriptingUnit.h" />
 		<Unit filename="Smart_ptr.h" />
 		<Unit filename="Stack.h" />
 		<Unit filename="Stack.hpp" />
