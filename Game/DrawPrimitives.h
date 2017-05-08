@@ -5,7 +5,9 @@
 
 namespace thirtythree {
 
-void DrawCircle(sf::Vector2f pos, float radius, sf::Color fillColor, sf::Color outlineColor, sf::RenderTarget* screen);
+void DrawCircle(sf::Vector2f pos, float radius,
+                sf::Color fillColor, sf::Color outlineColor,
+                sf::RenderTarget &screen);
 
 }
 #endif // DRAWPRIMITIVES_H_INCLUDED

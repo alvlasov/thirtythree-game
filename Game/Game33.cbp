@@ -38,6 +38,7 @@
 			<Add directory="SFML/include" />
 		</Compiler>
 		<Linker>
+			<Add option="-static-libgcc -static-libstdc++" />
 			<Add library="sfml-audio-s" />
 			<Add library="sfml-graphics-s" />
 			<Add library="sfml-window-s" />
@@ -61,6 +62,9 @@
 		<Unit filename="GameObject.h" />
 		<Unit filename="GlobalOptions.h" />
 		<Unit filename="Logger.h" />
+		<Unit filename="Player.cpp" />
+		<Unit filename="Player.h" />
+		<Unit filename="Utility.h" />
 		<Unit filename="main.cpp" />
 		<Extensions>
 			<code_completion />
