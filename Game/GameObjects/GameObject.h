@@ -3,7 +3,6 @@
 
 #include <stdexcept>
 #include <SFML/Graphics.hpp>
-#include "../DrawPrimitives.h"
 #include "../GlobalOptions.h"
 #include "../Utility.h"
 
@@ -29,19 +28,18 @@ public:
 
     virtual ~GameObject();
 
-    //virtual void Intersect(sf::String type) { }
-
     virtual std::string GetType() { return "ABSTRACT"; }
 
     void Kill();
     bool IsDead() { return dead_; }
     sf::Vector2f GetPos() { return pos_; }
+    sf::Vector2f GetSpeed() { return speed_; }
+    float GetRadius() { return radius_; }
 
 protected:
 
     sf::Vector2f pos_;
     sf::Vector2f speed_;
-    sf::Vector2f size_;
     sf::Vector2f scale_;
 
     float friction_;
@@ -49,8 +47,8 @@ protected:
     float radius_;
     sf::Color color_;
 
-    sf::Sprite sprite_;
     sf::Texture texture_;
+    sf::CircleShape body_;
 
     bool dead_ = false;
 };

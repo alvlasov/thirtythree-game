@@ -23,16 +23,16 @@ void Player::Control() {
 }
 
 void Player::Logic(const sf::Vector2u &map_size) {
-    if (pos_.x < size_.x / 2) {
+    if (pos_.x < radius_) {
         speed_.x = abs(speed_.x);
     }
-    if (pos_.y < size_.y / 2) {
+    if (pos_.y < radius_) {
         speed_.y = abs(speed_.y);
     }
-    if (pos_.x > map_size.x - size_.x / 2) {
+    if (pos_.x > map_size.x - radius_) {
         speed_.x = -abs(speed_.x);
     }
-    if (pos_.y > map_size.y - size_.y / 2) {
+    if (pos_.y > map_size.y - radius_) {
         speed_.y = -abs(speed_.y);
     }
 }

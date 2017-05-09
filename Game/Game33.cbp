@@ -56,8 +56,6 @@
 			<Add library="opengl32" />
 			<Add directory="SFML/lib" />
 		</Linker>
-		<Unit filename="DrawPrimitives.cpp" />
-		<Unit filename="DrawPrimitives.h" />
 		<Unit filename="Engine.cpp" />
 		<Unit filename="Engine.h" />
 		<Unit filename="GameLogic.cpp" />
@@ -71,6 +69,8 @@
 		<Unit filename="GlobalOptions.h" />
 		<Unit filename="Logger.h" />
 		<Unit filename="ObjectsFactory.h" />
+		<Unit filename="Randomizer.cpp" />
+		<Unit filename="Randomizer.h" />
 		<Unit filename="Utility.h" />
 		<Unit filename="main.cpp" />
 		<Extensions>

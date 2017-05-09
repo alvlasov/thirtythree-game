@@ -2,13 +2,12 @@
 #define LOGGER_H_INCLUDED
 
 #include <iostream>
-#include <ctime>
 #include <string>
+#include <chrono>
 
 #define LOG_MESSAGE(reason, str) {\
-    time_t rawtime; \
-    time(&rawtime); \
-    std::string timestr = ctime(&rawtime); \
+    std::time_t time = std::chrono::system_clock::to_time_t(std::chrono::system_clock::now()); \
+    std::string timestr = std::ctime(&time); \
     timestr.pop_back(); \
     std::cout << timestr << " | [" << #reason << "] " << str << std::endl; }
 

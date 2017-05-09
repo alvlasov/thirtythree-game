@@ -3,27 +3,32 @@
 
 namespace thirtythree {
 
-GameLogic::GameLogic(Engine *engine)
-    : associated_engine_ (engine) {
-    unsigned int seed = std::chrono::system_clock::now().time_since_epoch().count();
-    rand_engine_.seed(seed);
+GameLogic::GameLogic(Engine *engine, Randomizer *rand)
+    : engine_ (engine),
+      rand_ (rand),
+      score_ (0) {
     clock_food_create_.restart();
-    LOG_INFO("Game logic unit created.");
+    LOG_INFO("Game logic unit initialized");
 }
 
 GameLogic::~GameLogic(){
-    LOG_INFO("Game logic unit destroyed.");
+    LOG_INFO("Game logic unit destroyed");
 }
 
 
 void GameLogic::DoLogic() {
-    sf::Vector2u map_size = associated_engine_->GetMapSize();
-    if (clock_food_create_.getElapsedTime().asSeconds() > min_food_create_time_) {
-        if (Rand() > 0.995) {
-            associated_engine_->AddObject(new Food ({(int)(map_size.x * Rand()),
-                                                     (int)(map_size.y * Rand())}));
+    sf::Vector2f map_size = engine_->GetMapSize();
+
+    if (clock_food_create_.getElapsedTime().asSeconds() > min_food_create_interval_) {
+        if (rand_->Uniform() > 0.995) {
+            clock_food_create_.restart();
+            int num_obj = rand_->UniformInt(0, 5);
+            for (int i = 0; i < num_obj; i++) {
+                engine_->AddObject(new Food (rand_->UniformRect(map_size), rand_));
+            }
         }
     }
 
 }
+
 }

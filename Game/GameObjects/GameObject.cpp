@@ -5,19 +5,16 @@ namespace thirtythree {
 GameObject::GameObject()
     : pos_      (sf::Vector2f()),
       speed_    (sf::Vector2f()),
-      size_     (sf::Vector2f()),
       scale_    (sf::Vector2f()),
       friction_ (0),
       radius_   (1),
-      color_    (sf::Color::White),
-      sprite_   (sf::Sprite()) {}
+      color_    (sf::Color::White) {}
 
 GameObject::GameObject(const sf::Vector2f& pos, float radius,
                        const sf::Color &color, const sf::Vector2f& speed,
                        float friction)
     : pos_       (pos),
       speed_     (speed),
-      size_      ({radius, radius}),
       friction_  (friction),
       radius_    (radius),
       color_     (color) {
@@ -32,23 +29,21 @@ void GameObject::SetTexture(const std::string &texturename, const sf::Vector2f& 
     scale_ = scale;
     if (!texture_.loadFromFile(texturename)) {
         LOG_ERROR("Failed to load texture: " << texturename);
-        sprite_ = sf::Sprite();
     } else {
         texture_.setSmooth(true);
-        sprite_ = sf::Sprite(texture_);
-        sprite_.setScale(scale_);
-        auto bounds = sprite_.getGlobalBounds();
-        size_ = {bounds.width, bounds.height};
+        auto alpha = color_.a;
+        color_ = sf::Color::White;
+        color_.a = alpha;
+        body_.setTexture(&texture_);
     }
 }
 
 void GameObject::Draw(sf::RenderTarget &screen) {
-    if (sprite_.getTexture()) {
-        sprite_.setPosition(pos_);
-        screen.draw(sprite_);
-    } else {
-        DrawCircle(pos_, radius_, color_, sf::Color::Transparent, screen);
-    }
+    body_.setRadius(radius_);
+    body_.setFillColor(color_);
+    body_.setOrigin(radius_, radius_);
+    body_.setPosition(pos_.x, pos_.y);
+    screen.draw(body_);
 }
 
 void GameObject::Move(float dt) {
@@ -59,10 +54,10 @@ void GameObject::Move(float dt) {
 }
 
 void GameObject::Logic(const sf::Vector2u &map_size) {
-    if (pos_.x <= size_.x / 2 || pos_.x >= map_size.x - size_.x / 2) {
+    if (pos_.x <= radius_ || pos_.x >= map_size.x - radius_) {
         speed_.x *= -1;
     }
-    if (pos_.y <= size_.y / 2 || pos_.y >= map_size.y - size_.y / 2) {
+    if (pos_.y <= radius_ || pos_.y >= map_size.y - radius_) {
         speed_.y *= -1;
     }
 }

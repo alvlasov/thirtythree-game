@@ -11,6 +11,7 @@
 #include "GameObjects\Food.h"
 #include "GlobalOptions.h"
 #include "GameLogic.h"
+#include "Randomizer.h"
 
 extern sf::RenderWindow* Window;
 
@@ -22,17 +23,34 @@ public:
 
     void AddObject(GameObject *object);
     void StartGame();
-    sf::Vector2u GetMapSize() { return map_.getSize(); }
+    int GetObjectsCount() { return objects_.size(); }
+    sf::Vector2f GetMapSize() { return (sf::Vector2f)map_.getSize(); }
+    sf::Vector2f GetWindowSize() { return (sf::Vector2f)window_.getSize(); }
+
 private:
+    static const size_t max_object_number_ = 1000;
 
     void GameLoop();
+    void HandleEvents();
+    void DrawUI();
+    void DrawDebugInfo();
 
     std::vector<std::unique_ptr<GameObject>> objects_;
+
     sf::RenderWindow window_;
     sf::RenderTexture map_;
-    sf::Clock clock_;
     sf::View view_;
+    sf::View default_view_;
+
+
+    float time_;
+    sf::Font font_;
+
+    Randomizer rand_;
     GameLogic logic_;
+    sf::Clock clock_;
+
+    bool draw_debug_info_ = true;
 
 };
 

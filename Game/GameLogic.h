@@ -2,30 +2,30 @@
 #define GAMELOGIC_H_INCLUDED
 
 #include <SFML/Graphics.hpp>
-#include <random>
-#include <chrono>
-#include <cmath>
 
 #include "GlobalOptions.h"
+#include "Randomizer.h"
 
 namespace thirtythree {
 class Engine;
 class GameLogic {
 public:
 
-    GameLogic(Engine *engine);
+    GameLogic(Engine *engine, Randomizer *rand);
     ~GameLogic();
 
     void DoLogic();
+    int GetScore() { return score_; }
 
 private:
 
-    Engine *associated_engine_;
+    Randomizer *rand_;
+    Engine *engine_;
 
-    float Rand() { return rand_engine_() / (float)rand_engine_.max(); }
-    std::default_random_engine rand_engine_;
+    int score_;
+
     sf::Clock clock_food_create_;
-    static const int min_food_create_time_ = 0.5;
+    static const int min_food_create_interval_ = 3;
 };
 
 }
