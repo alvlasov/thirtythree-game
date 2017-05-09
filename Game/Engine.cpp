@@ -61,16 +61,6 @@ void Engine::GameLoop() {
                 obj->Draw(map_);
             }
         }
-
-        auto obj = objects_.begin();
-        while (obj != objects_.end()) {
-            if ((*obj)->IsDead()) {
-                obj = objects_.erase(obj);
-            } else {
-                obj++;
-            }
-        }
-
         map_.display();
 
         window_.clear(sf::Color(203, 203, 203));
@@ -78,6 +68,8 @@ void Engine::GameLoop() {
         window_.draw(sf::Sprite(map_.getTexture()));
         DrawUI();
         window_.display();
+
+        DestroyDeadObjects();
     }
 }
 void Engine::HandleEvents() {
@@ -104,6 +96,17 @@ void Engine::HandleEvents() {
                 break;
             }
 
+        }
+    }
+}
+
+void Engine::DestroyDeadObjects() {
+    auto obj = objects_.begin();
+    while (obj != objects_.end()) {
+        if ((*obj)->IsDead()) {
+            obj = objects_.erase(obj);
+        } else {
+            obj++;
         }
     }
 }

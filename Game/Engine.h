@@ -32,6 +32,7 @@ private:
 
     void GameLoop();
     void HandleEvents();
+    void DestroyDeadObjects();
     void DrawUI();
     void DrawDebugInfo();
 
