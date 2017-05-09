@@ -1,6 +1,7 @@
 #ifndef LOGGER_H_INCLUDED
 #define LOGGER_H_INCLUDED
 
+#include "GlobalOptions.h"
 #include <iostream>
 #include <string>
 #include <chrono>

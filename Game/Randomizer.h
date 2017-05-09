@@ -3,7 +3,7 @@
 
 #include <SFML/Graphics.hpp>
 #include "Utility.h"
-#include "GlobalOptions.h"
+#include "Logger.h"
 #include <random>
 #include <chrono>
 #include <cmath>

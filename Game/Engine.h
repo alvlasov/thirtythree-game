@@ -2,6 +2,7 @@
 #define ENGINE_H_INCLUDED
 
 #include <SFML/Graphics.hpp>
+#include <stdexcept>
 #include <vector>
 #include <memory>
 #include <string>
@@ -9,11 +10,10 @@
 #include "GameObjects\GameObject.h"
 #include "GameObjects\Player.h"
 #include "GameObjects\Food.h"
-#include "GlobalOptions.h"
+#include "Logger.h"
 #include "GameLogic.h"
 #include "Randomizer.h"
-
-extern sf::RenderWindow* Window;
+#include "ObjectsFactory.h"
 
 namespace thirtythree {
 
@@ -23,15 +23,17 @@ public:
 
     void AddObject(GameObject *object);
     void StartGame();
-    int GetObjectsCount() { return objects_.size(); }
+    size_t GetObjectsCount() { return objects_.size(); }
     sf::Vector2f GetMapSize() { return (sf::Vector2f)map_.getSize(); }
     sf::Vector2f GetWindowSize() { return (sf::Vector2f)window_.getSize(); }
+    sf::RenderWindow* GetWindow() { return &window_; }
 
 private:
     static const size_t max_object_number_ = 1000;
 
     void GameLoop();
     void HandleEvents();
+    void HandleObjects();
     void DestroyDeadObjects();
     void DrawUI();
     void DrawDebugInfo();

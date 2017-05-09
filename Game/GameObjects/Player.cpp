@@ -2,10 +2,11 @@
 
 namespace thirtythree {
 
-Player::Player(const sf::Vector2f &pos, float radius, float speed_factor,
-               const sf::Color &color, float friction)
+Player::Player(sf::RenderWindow *window, const sf::Vector2f &pos, float radius,
+               float speed_factor, const sf::Color &color, float friction)
     : GameObject(pos, radius, color, {0, 0}, friction),
-      speed_factor_ (speed_factor) {
+      speed_factor_ (speed_factor),
+      window_ (window) {
     LOG_INFO("Object " << GetType() << " created on pos (" << pos_.x << ", " << pos_.y << ")");
 }
 
@@ -15,7 +16,7 @@ Player::~Player() {
 
 void Player::Control() {
 
-    sf::Vector2f mouse_pos = Window->mapPixelToCoords(sf::Mouse::getPosition(*Window));
+    sf::Vector2f mouse_pos = window_->mapPixelToCoords(sf::Mouse::getPosition(*window_));
     float len = length(mouse_pos - pos_);
     if (len > radius_) {
         speed_ = normalize(mouse_pos - pos_) * speed_factor_;

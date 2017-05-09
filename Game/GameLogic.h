@@ -3,10 +3,13 @@
 
 #include <SFML/Graphics.hpp>
 
-#include "GlobalOptions.h"
+#include "Logger.h"
 #include "Randomizer.h"
+#include "ObjectsFactory.h"
+#include "GameObjects\GameObject.h"
 
 namespace thirtythree {
+
 class Engine;
 class GameLogic {
 public:
@@ -14,13 +17,17 @@ public:
     GameLogic(Engine *engine, Randomizer *rand);
     ~GameLogic();
 
+    void StartGame();
     void DoLogic();
+    void Collide(GameObject &obj1, GameObject &obj2);
+
     int GetScore() { return score_; }
 
 private:
 
     Randomizer *rand_;
     Engine *engine_;
+    ObjectsFactory factory_;
 
     int score_;
 

@@ -68,6 +68,7 @@
 		<Unit filename="GameObjects/Player.h" />
 		<Unit filename="GlobalOptions.h" />
 		<Unit filename="Logger.h" />
+		<Unit filename="ObjectsFactory.cpp" />
 		<Unit filename="ObjectsFactory.h" />
 		<Unit filename="Randomizer.cpp" />
 		<Unit filename="Randomizer.h" />

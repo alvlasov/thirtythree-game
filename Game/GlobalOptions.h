@@ -5,6 +5,4 @@
 #define DEBUG_MESSAGES true
 #define DEV_MESSAGES true
 
-#include "Logger.h"
-
 #endif // GLOBALOPTIONS_H_INCLUDED

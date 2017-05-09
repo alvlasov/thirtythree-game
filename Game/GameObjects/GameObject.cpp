@@ -5,7 +5,6 @@ namespace thirtythree {
 GameObject::GameObject()
     : pos_      (sf::Vector2f()),
       speed_    (sf::Vector2f()),
-      scale_    (sf::Vector2f()),
       friction_ (0),
       radius_   (1),
       color_    (sf::Color::White) {}
@@ -17,16 +16,11 @@ GameObject::GameObject(const sf::Vector2f& pos, float radius,
       speed_     (speed),
       friction_  (friction),
       radius_    (radius),
-      color_     (color) {
-//    LOG_INFO("Object " << GetType() << " created on pos (" << pos_.x << ", " << pos_.y << ")");
-}
+      color_     (color) {}
 
-GameObject::~GameObject() {
-//    LOG_INFO("Object " << GetType() << " destroyed");
-}
+GameObject::~GameObject() {}
 
-void GameObject::SetTexture(const std::string &texturename, const sf::Vector2f& scale) {
-    scale_ = scale;
+void GameObject::SetTexture(const std::string &texturename) {
     if (!texture_.loadFromFile(texturename)) {
         LOG_ERROR("Failed to load texture: " << texturename);
     } else {
