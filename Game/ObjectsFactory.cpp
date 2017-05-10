@@ -22,9 +22,9 @@ ObjectsFactory::~ObjectsFactory() {
 
 GameObject* ObjectsFactory::CreateObject(std::string object_type) {
     if (object_type == "PLAYER") {
-        return new Player (engine_->GetWindow(),
+        return new Player (engine_->GetWindow(), engine_->GetMapSize(),
                            rand_->UniformRect(engine_->GetMapSize()),
-                           25, 200, rand_->ColorOpaque());
+                           30, 200, rand_->ColorOpaque());
     } else if (object_type == "FOOD") {
         return new Food (rand_->UniformRect(engine_->GetMapSize()), rand_);
     }

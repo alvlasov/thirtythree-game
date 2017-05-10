@@ -20,14 +20,14 @@ public:
     Food(const sf::Vector2f &pos, Randomizer *rand, float friction = 0.01f);
 
     ~Food();
-    void Logic(const sf::Vector2u &map_size);
+    void Logic();
 
     std::string GetType() { return "FOOD"; }
 
 private:
 
-    static const int min_radius_ = 5;
-    static const int max_radius_ = 20;
+    static const int min_radius_ = 10;
+    static const int max_radius_ = 25;
     static const int max_pinch_speed_ = 100;
     static const int min_seconds_idle_ = 3;
     static const int min_seconds_alive_ = 60;

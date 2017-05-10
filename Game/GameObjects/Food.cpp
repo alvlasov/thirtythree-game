@@ -20,8 +20,7 @@ Food::Food(const sf::Vector2f &pos, Randomizer *rand, float friction)
     LOG_INFO("Object " << GetType() << " created on pos (" << pos_.x << ", " << pos_.y << ")");
 }
 
-void Food::Logic(const sf::Vector2u &map_size) {
-    GameObject::Logic(map_size);
+void Food::Logic() {
     if (clock_pinch_.getElapsedTime().asSeconds() > min_seconds_idle_) {
         if (rand_->Uniform() > 0.99) {
             speed_ = rand_->Direction() * (float)max_pinch_speed_;

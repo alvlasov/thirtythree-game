@@ -40,6 +40,7 @@ private:
 
     sf::Clock clock_food_create_;
     static const int min_food_create_interval_ = 3;
+
 };
 
 }

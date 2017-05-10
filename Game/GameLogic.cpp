@@ -47,7 +47,20 @@ void GameLogic::DoLogic() {
 }
 
 void GameLogic::Collide(GameObject &obj1, GameObject &obj2) {
-     LOG_DEV("Collide!");
+    auto obj1_type = obj1.GetType();
+    auto obj2_type = obj2.GetType();
+
+    if (obj1_type == "PLAYER" && obj2_type ==  "FOOD") {
+        obj2.Kill();
+        obj1.AddRadius(1);
+        score_++;
+    }
+    if (obj1_type == "FOOD" && obj2_type ==  "PLAYER") {
+        obj1.Kill();
+        obj2.AddRadius(1);
+        score_++;
+    }
 }
+
 
 }

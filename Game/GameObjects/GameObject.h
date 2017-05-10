@@ -29,7 +29,7 @@ public:
     void SetTexture(const std::string &texturename);
     virtual void Draw(sf::RenderTarget &screen);
     virtual void Control() {}
-    virtual void Logic(const sf::Vector2u &map_size);
+    virtual void Logic() {}
     virtual void Move(float dt);
 
     virtual std::string GetType() { return "ABSTRACT"; }
@@ -44,11 +44,13 @@ public:
     void SetPos(sf::Vector2f pos) { pos_ = pos; }
     void SetSpeed(sf::Vector2f speed) { speed_ = speed; }
     void SetRadius(float radius) { radius_ = radius; }
+    void AddRadius(float radius) { radius_ += radius; }
 
 protected:
 
     sf::Vector2f pos_;
     sf::Vector2f speed_;
+    float max_speed_;
     float friction_;
 
     float radius_;

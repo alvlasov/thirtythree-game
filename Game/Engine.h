@@ -21,6 +21,7 @@
 #include "GameLogic.h"
 #include "Randomizer.h"
 #include "ObjectsFactory.h"
+#include "Utility.h"
 
 namespace thirtythree {
 
@@ -59,19 +60,12 @@ private:
     //! Главный игровой цикл
     void GameLoop();
 
-    //! Обработка событий
     void HandleEvents();
-
-    //! Обработка и отрисовка объектов
-    void HandleObjects();
-
-    //! Уничтожение "мертвых" объектов
+    void HandleObject(GameObject &obj);
+    void HandleBorderCollisions(GameObject &obj);
+    bool Collision(GameObject &obj1, GameObject &obj2);
     void DestroyDeadObjects();
-
-    //! Отрисовка внутриигрового интерфейса
     void DrawUI();
-
-    //! Отрисовка отладочной информации
     void DrawDebugInfo();
 
     //! Хранилище игровых объектов
@@ -100,8 +94,6 @@ private:
 
     //! Время прохождения одного игрового цикла
     float time_;
-
-    //! Класс для измерения времени
     sf::Clock clock_;
 
     //! Вывод отладочной информации

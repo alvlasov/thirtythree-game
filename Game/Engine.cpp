@@ -12,7 +12,7 @@ namespace thirtythree{
 Engine::Engine(sf::VideoMode mode, const sf::String name, sf::Vector2i map_size)
     : logic_ (this, &rand_) {
     sf::ContextSettings settings;
-    settings.antialiasingLevel = 4;
+    settings.antialiasingLevel = 2;
     window_.create(mode, name, sf::Style::Default, settings);
     window_.setVerticalSyncEnabled(true);
     default_view_ = window_.getDefaultView();
@@ -50,7 +50,24 @@ void Engine::GameLoop() {
         logic_.DoLogic();
 
         map_.clear(sf::Color::White);
-        HandleObjects();
+
+        for (auto& obj : objects_) {
+            if (!(obj->IsDead())) {
+                HandleObject(*obj);
+                HandleBorderCollisions(*obj);
+            }
+        }
+
+        for (auto obj1 = std::begin(objects_); obj1 != std::end(objects_); obj1++) {
+            for (auto obj2 = obj1 + 1; obj2 != std::end(objects_); obj2++) {
+                if (!((*obj1)->IsDead()) && !((*obj2)->IsDead())) {
+                    if (Collision(**obj1, **obj2)) {
+                        logic_.Collide(**obj1, **obj2);
+                    }
+                }
+            }
+        }
+
         DestroyDeadObjects();
         map_.display();
 
@@ -59,6 +76,7 @@ void Engine::GameLoop() {
         window_.draw(sf::Sprite(map_.getTexture()));
         DrawUI();
         window_.display();
+
     }
 }
 
@@ -90,29 +108,59 @@ void Engine::HandleEvents() {
     }
 }
 
-void Engine::HandleObjects() {
-    for (const auto& obj : objects_) {
-        if (!(obj->IsDead())) {
-            if (obj->GetType() == "PLAYER") {
-                view_.setCenter(obj->GetPos());
-                obj->Control();
-            }
-            obj->Logic(map_.getSize());
-            obj->Move(time_);
-            obj->Draw(map_);
-        }
+void Engine::HandleObject(GameObject &obj) {
+    if (obj.GetType() == "PLAYER") {
+        view_.setCenter(obj.GetPos());
+        obj.Control();
     }
+    obj.Logic();
+    obj.Move(time_);
+    obj.Draw(map_);
+}
+
+void Engine::HandleBorderCollisions(GameObject &obj) {
+
+    auto pos = obj.GetPos();
+    auto radius = obj.GetRadius();
+    auto speed = obj.GetSpeed();
+    auto map_size = GetMapSize();
+
+    if (pos.x < radius) {
+        speed.x = abs(speed.x);
+    } else if (pos.x > map_size.x - radius) {
+        speed.x = -abs(speed.x);
+    }
+    if (pos.y < radius) {
+        speed.y = abs(speed.y);
+    } else if (pos.y > map_size.y - radius) {
+        speed.y = -abs(speed.y);
+    }
+    obj.SetSpeed(speed);
+
+}
+
+bool Engine::Collision(GameObject &obj1, GameObject &obj2) {
+    auto pos1 = obj1.GetPos();
+    auto pos2 = obj2.GetPos();
+    auto radius1 = obj1.GetRadius();
+    auto radius2 = obj2.GetRadius();
+    if (length(pos2 - pos1) <= std::max(radius1, radius2)) {
+        return true;
+    }
+    return false;
 }
 
 void Engine::DestroyDeadObjects() {
-    auto obj = objects_.begin();
-    while (obj != objects_.end()) {
+
+    auto obj = std::begin(objects_);
+    while (obj != std::end(objects_)) {
         if ((*obj)->IsDead()) {
             obj = objects_.erase(obj);
         } else {
             obj++;
         }
     }
+
 }
 
 void Engine::DrawUI() {

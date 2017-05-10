@@ -43,6 +43,8 @@ void GameObject::SetTexture(const std::string &texturename) {
 void GameObject::Draw(sf::RenderTarget &screen) {
     body_.setRadius(radius_);
     body_.setFillColor(color_);
+//    body_.setOutlineColor(color_ + sf::Color(25, 25, 25, 0));
+//    body_.setOutlineThickness(-4);
     body_.setOrigin(radius_, radius_);
     body_.setPosition(pos_.x, pos_.y);
     screen.draw(body_);
@@ -53,15 +55,6 @@ void GameObject::Move(float dt) {
     speed_.y *= 1 - friction_;
     pos_.x += speed_.x * dt;
     pos_.y += speed_.y * dt;
-}
-
-void GameObject::Logic(const sf::Vector2u &map_size) {
-    if (pos_.x <= radius_ || pos_.x >= map_size.x - radius_) {
-        speed_.x *= -1;
-    }
-    if (pos_.y <= radius_ || pos_.y >= map_size.y - radius_) {
-        speed_.y *= -1;
-    }
 }
 
 void GameObject::Kill() {
