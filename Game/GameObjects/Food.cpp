@@ -1,3 +1,10 @@
+/*!
+    @file GameObjects\Food.cpp
+    @brief Игровой объект "Food"
+    @author Власов Александр, Татьяна Мамонтова, Алена Бескровная
+    @date Май 2017
+*/
+
 #include "Food.h"
 
 namespace thirtythree {

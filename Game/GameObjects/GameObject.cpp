@@ -1,3 +1,11 @@
+/*!
+    @file GameObjects\GameObject.cpp
+    @brief Базовый класс игрового объекта
+    @author Власов Александр, Татьяна Мамонтова, Алена Бескровная
+    @date Май 2017
+*/
+
+
 #include "GameObject.h"
 
 namespace thirtythree {

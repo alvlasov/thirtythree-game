@@ -1,3 +1,10 @@
+/*!
+    @file GameObjects\GameObject.h
+    @brief Базовый класс игрового объекта
+    @author Власов Александр, Татьяна Мамонтова, Алена Бескровная
+    @date Май 2017
+*/
+
 #ifndef GAMEOBJECT_H_INCLUDED
 #define GAMEOBJECT_H_INCLUDED
 
@@ -10,6 +17,7 @@ namespace thirtythree {
 
 class GameObject {
 public:
+
     GameObject();
     GameObject(const sf::Vector2f& pos,
                float radius,

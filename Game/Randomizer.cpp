@@ -1,11 +1,17 @@
+/*!
+    @file Randomizer.cpp
+    @brief Класс, предоставляющий методы для генерации случайных величин
+    @author Власов Александр, Татьяна Мамонтова, Алена Бескровная
+    @date Май 2017
+*/
+
 #include "Randomizer.h"
 
 namespace thirtythree {
 
 Randomizer::Randomizer() {
-    unsigned int seed = std::chrono::system_clock::now().time_since_epoch().count();
+    auto seed = std::chrono::system_clock::now().time_since_epoch().count();
     rand_engine_.seed(seed);
-    max_random_number_ = rand_engine_.max();
     LOG_INFO("Randomizer initialized");
 }
 
@@ -19,7 +25,7 @@ float Randomizer::Uniform(float b, float a) {
         a = b;
         b = t;
     }
-    return a + (b - a) * rand_engine_() / (float)max_random_number_;
+    return a + (b - a) * distribution_(rand_engine_);
 }
 
 int Randomizer::UniformInt(int b, int a) {
@@ -28,7 +34,7 @@ int Randomizer::UniformInt(int b, int a) {
         a = b;
         b = t;
     }
-    return a +  rand_engine_() % ((b - a + 1));
+    return round(Uniform(b, a));
 }
 
 sf::Vector2f Randomizer::Direction() {

@@ -1,3 +1,10 @@
+/*!
+    @file GameObjects\Player.cpp
+    @brief Игровой объект "Player"
+    @author Власов Александр, Татьяна Мамонтова, Алена Бескровная
+    @date Май 2017
+*/
+
 #include "Player.h"
 
 namespace thirtythree {

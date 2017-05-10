@@ -1,3 +1,10 @@
+/*!
+    @file ObjectsFactory.cpp
+    @brief Класс "фабрика объектов"
+    @author Власов Александр, Татьяна Мамонтова, Алена Бескровная
+    @date Май 2017
+*/
+
 #include "Engine.h"
 #include "GameLogic.h"
 #include "ObjectsFactory.h"

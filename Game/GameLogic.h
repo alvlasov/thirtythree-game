@@ -1,3 +1,10 @@
+/*!
+    @file GameLogic.h
+    @brief Класс игровой логики
+    @author Власов Александр, Татьяна Мамонтова, Алена Бескровная
+    @date Май 2017
+*/
+
 #ifndef GAMELOGIC_H_INCLUDED
 #define GAMELOGIC_H_INCLUDED
 

@@ -1,3 +1,10 @@
+/*!
+    @file GameObjects\Food.h
+    @brief Игровой объект "Food"
+    @author Власов Александр, Татьяна Мамонтова, Алена Бескровная
+    @date Май 2017
+*/
+
 #ifndef FOOD_H_INCLUDED
 #define FOOD_H_INCLUDED
 

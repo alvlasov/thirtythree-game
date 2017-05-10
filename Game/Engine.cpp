@@ -1,3 +1,10 @@
+/*!
+    @file Engine.cpp
+    @brief Класс игрового движка
+    @author Власов Александр, Татьяна Мамонтова, Алена Бескровная
+    @date Май 2017
+*/
+
 #include "Engine.h"
 
 namespace thirtythree{

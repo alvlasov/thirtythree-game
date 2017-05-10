@@ -1,3 +1,10 @@
+/*!
+    @file Logger.h
+    @brief Реализация функционала логгера
+    @author Власов Александр, Татьяна Мамонтова, Алена Бескровная
+    @date Май 2017
+*/
+
 #ifndef LOGGER_H_INCLUDED
 #define LOGGER_H_INCLUDED
 

@@ -1,3 +1,10 @@
+/*!
+    @file ObjectsFactory.h
+    @brief Класс "фабрика объектов"
+    @author Власов Александр, Татьяна Мамонтова, Алена Бескровная
+    @date Май 2017
+*/
+
 #ifndef OBJECTSFACTORY_H_INCLUDED
 #define OBJECTSFACTORY_H_INCLUDED
 

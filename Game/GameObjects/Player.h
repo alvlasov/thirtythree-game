@@ -1,3 +1,10 @@
+/*!
+    @file GameObjects\Player.h
+    @brief Игровой объект "Player"
+    @author Власов Александр, Татьяна Мамонтова, Алена Бескровная
+    @date Май 2017
+*/
+
 #ifndef PLAYER_H_INCLUDED
 #define PLAYER_H_INCLUDED
 

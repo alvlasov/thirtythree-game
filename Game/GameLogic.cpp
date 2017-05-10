@@ -1,3 +1,10 @@
+/*!
+    @file GameLogic.cpp
+    @brief Класс игровой логики
+    @author Власов Александр, Татьяна Мамонтова, Алена Бескровная
+    @date Май 2017
+*/
+
 #include "Engine.h"
 #include "GameLogic.h"
 
