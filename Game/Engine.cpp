@@ -51,23 +51,25 @@ void Engine::GameLoop() {
 
         map_.clear(sf::Color::White);
 
-        for (auto& obj : objects_) {
-            if (!(obj->IsDead())) {
-                HandleObject(*obj);
-                HandleBorderCollisions(*obj);
-            }
-        }
-
         for (auto obj1 = std::begin(objects_); obj1 != std::end(objects_); obj1++) {
             for (auto obj2 = obj1 + 1; obj2 != std::end(objects_); obj2++) {
                 if (!((*obj1)->IsDead()) && !((*obj2)->IsDead())) {
                     if (Collision(**obj1, **obj2)) {
                         logic_.Collide(**obj1, **obj2);
                     }
+                    if (Interaction(**obj1, **obj2)) {
+                        logic_.Interact(**obj1, **obj2);
+                    }
                 }
             }
         }
 
+        for (auto& obj : objects_) {
+            if (!(obj->IsDead())) {
+                HandleObject(*obj);
+                HandleBorderCollisions(*obj);
+            }
+        }
         DestroyDeadObjects();
         map_.display();
 
@@ -78,6 +80,12 @@ void Engine::GameLoop() {
         window_.display();
 
     }
+}
+
+void Engine::RestartGame() {
+    game_over_ = false;
+    objects_.clear();
+    StartGame();
 }
 
 void Engine::HandleEvents() {
@@ -96,6 +104,8 @@ void Engine::HandleEvents() {
             case sf::Event::KeyPressed: {
                 if (event.key.code == sf::Keyboard::Tab) {
                     draw_debug_info_ = !draw_debug_info_;
+                } else if (event.key.code == sf::Keyboard::R && game_over_) {
+                    RestartGame();
                 }
                 break;
             }
@@ -150,11 +160,26 @@ bool Engine::Collision(GameObject &obj1, GameObject &obj2) {
     return false;
 }
 
+bool Engine::Interaction(GameObject &obj1, GameObject &obj2) {
+    auto pos1 = obj1.GetPos();
+    auto pos2 = obj2.GetPos();
+    auto radius1 = obj1.GetRadius();
+    auto radius2 = obj2.GetRadius();
+    if (length(pos2 - pos1) <= 10 * std::max(radius1, radius2) +
+                                    std::min(radius1, radius2)) {
+        return true;
+    }
+    return false;
+}
+
 void Engine::DestroyDeadObjects() {
 
     auto obj = std::begin(objects_);
     while (obj != std::end(objects_)) {
         if ((*obj)->IsDead()) {
+            if ((*obj)->GetType() == "PLAYER") {
+                game_over_ = true;
+            }
             obj = objects_.erase(obj);
         } else {
             obj++;
@@ -171,6 +196,24 @@ void Engine::DrawUI() {
     text.setPosition(5, 0);
     text.setFillColor(sf::Color::Black);
     window_.draw(text);
+    if (game_over_) {
+        sf::Text text("Game over!", font_, 45);
+        text.setPosition(GetWindowSize() / 2.0f);
+        auto bounds = text.getGlobalBounds();
+        text.setOrigin(bounds.width / 2.0f, bounds.height / 2.0f);
+        text.setFillColor(sf::Color::Black);
+
+        sf::Text hint("Press R to restart", font_, 30);
+        auto hint_pos = GetWindowSize() / 2.0f;
+        hint_pos.y += 50;
+        hint.setPosition(hint_pos);
+        auto hint_bounds = hint.getGlobalBounds();
+        hint.setOrigin(hint_bounds.width / 2.0f, hint_bounds.height / 2.0f);
+        hint.setFillColor(sf::Color::Black);
+
+        window_.draw(text);
+        window_.draw(hint);
+    }
     if (draw_debug_info_) {
         DrawDebugInfo();
     }

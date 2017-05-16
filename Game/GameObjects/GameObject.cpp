@@ -40,6 +40,11 @@ void GameObject::SetTexture(const std::string &texturename) {
     }
 }
 
+void GameObject::Logic() {
+    float max_speed = (float)(200 * sqrt(30 / radius_));
+    speed_ = normalize(speed_) * max_speed;
+}
+
 void GameObject::Draw(sf::RenderTarget &screen) {
     body_.setRadius(radius_);
     body_.setFillColor(color_);

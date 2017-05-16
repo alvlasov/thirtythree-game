@@ -20,18 +20,17 @@ public:
            const sf::Vector2f &map_size,
            const sf::Vector2f &pos,
            float radius,
-           float speed_factor = 100,
            const sf::Color &color = sf::Color::White,
            float friction = 0.03f);
 
     ~Player();
 
+    void Logic() {};
     void Control();
 
     std::string GetType() { return "PLAYER"; }
 private:
 
-    float speed_factor_;
     sf::RenderWindow *window_;
     sf::Vector2f map_size_;
 };

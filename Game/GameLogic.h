@@ -27,6 +27,7 @@ public:
     void StartGame();
     void DoLogic();
     void Collide(GameObject &obj1, GameObject &obj2);
+    void Interact(GameObject &obj1, GameObject &obj2);
 
     int GetScore() { return score_; }
 
@@ -39,7 +40,9 @@ private:
     int score_;
 
     sf::Clock clock_food_create_;
-    static const int min_food_create_interval_ = 3;
+    sf::Clock clock_enemy_create_;
+    static const int min_food_create_interval_ = 1;
+    static const int min_enemy_create_interval_ = 3;
 
 };
 

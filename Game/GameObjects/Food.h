@@ -27,10 +27,10 @@ public:
 private:
 
     static const int min_radius_ = 10;
-    static const int max_radius_ = 25;
+    static const int max_radius_ = 15;
     static const int max_pinch_speed_ = 100;
-    static const int min_seconds_idle_ = 3;
-    static const int min_seconds_alive_ = 60;
+    static const int min_seconds_alive_ = 240;
+    int min_seconds_idle_;
     sf::Clock clock_pinch_;
     sf::Clock clock_life_;
 

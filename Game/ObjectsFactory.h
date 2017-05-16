@@ -12,6 +12,7 @@
 #include "GameObjects\GameObject.h"
 #include "GameObjects\Player.h"
 #include "GameObjects\Food.h"
+#include "GameObjects\Enemy.h"
 #include "Randomizer.h"
 #include "Logger.h"
 

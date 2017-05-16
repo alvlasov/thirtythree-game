@@ -24,10 +24,14 @@ GameObject* ObjectsFactory::CreateObject(std::string object_type) {
     if (object_type == "PLAYER") {
         return new Player (engine_->GetWindow(), engine_->GetMapSize(),
                            rand_->UniformRect(engine_->GetMapSize()),
-                           30, 200, rand_->ColorOpaque());
+                           30, rand_->ColorOpaque());
     } else if (object_type == "FOOD") {
         return new Food (rand_->UniformRect(engine_->GetMapSize()), rand_);
+    } else if (object_type == "ENEMY") {
+        return new Enemy (rand_->UniformRect(engine_->GetMapSize()), rand_);
     }
+
+
 }
 
 

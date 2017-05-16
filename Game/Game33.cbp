@@ -60,6 +60,8 @@
 		<Unit filename="Engine.h" />
 		<Unit filename="GameLogic.cpp" />
 		<Unit filename="GameLogic.h" />
+		<Unit filename="GameObjects/Enemy.cpp" />
+		<Unit filename="GameObjects/Enemy.h" />
 		<Unit filename="GameObjects/Food.cpp" />
 		<Unit filename="GameObjects/Food.h" />
 		<Unit filename="GameObjects/GameObject.cpp" />

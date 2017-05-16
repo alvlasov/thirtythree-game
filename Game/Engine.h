@@ -59,11 +59,13 @@ private:
 
     //! Главный игровой цикл
     void GameLoop();
+    void RestartGame();
 
     void HandleEvents();
     void HandleObject(GameObject &obj);
     void HandleBorderCollisions(GameObject &obj);
     bool Collision(GameObject &obj1, GameObject &obj2);
+    bool Interaction(GameObject &obj1, GameObject &obj2);
     void DestroyDeadObjects();
     void DrawUI();
     void DrawDebugInfo();
@@ -98,6 +100,8 @@ private:
 
     //! Вывод отладочной информации
     bool draw_debug_info_ = true;
+
+    bool game_over_ = false;
 
 };
 
