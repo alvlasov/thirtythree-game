@@ -12,6 +12,7 @@ namespace thirtythree {
 Food::Food(const sf::Vector2f &pos, Randomizer *rand, float friction)
     : GameObject(pos, 1, sf::Color::White, {0, 0}, friction),
       rand_ (rand) {
+    interactable_ = false;
     clock_pinch_.restart();
     clock_life_.restart();
     radius_ = rand_->UniformInt(min_radius_, max_radius_);

@@ -21,6 +21,11 @@ ObjectsFactory::~ObjectsFactory() {
 }
 
 GameObject* ObjectsFactory::CreateObject(std::string object_type) {
+    if (engine_->GetObjectsCount() >= engine_->GetObjectsLimit()) {
+        LOG_INFO("Objects limit exceeded!");
+        return nullptr;
+    }
+
     if (object_type == "PLAYER") {
         return new Player (engine_->GetWindow(), engine_->GetMapSize(),
                            rand_->UniformRect(engine_->GetMapSize()),

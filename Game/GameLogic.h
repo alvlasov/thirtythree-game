@@ -26,12 +26,15 @@ public:
 
     void StartGame();
     void DoLogic();
-    void Collide(GameObject &obj1, GameObject &obj2);
-    void Interact(GameObject &obj1, GameObject &obj2);
+    void CollideBoth(GameObject &obj1, GameObject &obj2);
+    void InteractBoth(GameObject &obj1, GameObject &obj2);
 
     int GetScore() { return score_; }
 
 private:
+
+    bool Interact(GameObject &obj1, GameObject &obj2);
+    bool Collide(GameObject &obj1, GameObject &obj2);
 
     Randomizer *rand_;
     Engine *engine_;

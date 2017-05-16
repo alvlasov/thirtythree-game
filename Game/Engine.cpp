@@ -31,6 +31,7 @@ void Engine::AddObject(GameObject *object) {
     if (GetObjectsCount() < max_object_number_) {
         objects_.emplace_back(object);
     } else {
+        if (object != nullptr) delete object;
         LOG_INFO("Objects limit exceeded!");
     }
 }
@@ -48,19 +49,30 @@ void Engine::GameLoop() {
 
         HandleEvents();
         logic_.DoLogic();
-
         map_.clear(sf::Color::White);
 
         for (auto obj1 = std::begin(objects_); obj1 != std::end(objects_); obj1++) {
+            auto nearest_obj = obj1 + 1;
+            float distance;
+            if ((*obj1)->IsInteractable() && nearest_obj != std::end(objects_)) {
+                distance = length((*obj1)->GetPos() - (*nearest_obj)->GetPos());
+            }
             for (auto obj2 = obj1 + 1; obj2 != std::end(objects_); obj2++) {
-                if (!((*obj1)->IsDead()) && !((*obj2)->IsDead())) {
+                if (!(*obj1)->IsDead() && !(*obj2)->IsDead()) {
                     if (Collision(**obj1, **obj2)) {
-                        logic_.Collide(**obj1, **obj2);
+                        logic_.CollideBoth(**obj1, **obj2);
                     }
-                    if (Interaction(**obj1, **obj2)) {
-                        logic_.Interact(**obj1, **obj2);
+                    if ((*obj1)->IsInteractable() && (*obj2)->IsInteractable()) {
+                        float new_distance = length((*obj1)->GetPos() - (*obj2)->GetPos());
+                        if (new_distance < distance) {
+                            distance = new_distance;
+                            nearest_obj = obj2;
+                        }
                     }
                 }
+            }
+            if ((*obj1)->IsInteractable() && nearest_obj != std::end(objects_)) {
+                logic_.InteractBoth(**obj1, **nearest_obj);
             }
         }
 
@@ -70,10 +82,11 @@ void Engine::GameLoop() {
                 HandleBorderCollisions(*obj);
             }
         }
-        DestroyDeadObjects();
+
+        HandleDeadObjects();
         map_.display();
 
-        window_.clear(sf::Color(203, 203, 203));
+        window_.clear(sf::Color(222, 222, 222));
         window_.setView(view_);
         window_.draw(sf::Sprite(map_.getTexture()));
         DrawUI();
@@ -84,7 +97,7 @@ void Engine::GameLoop() {
 
 void Engine::RestartGame() {
     game_over_ = false;
-    objects_.clear();
+    //objects_.clear();
     StartGame();
 }
 
@@ -137,16 +150,32 @@ void Engine::HandleBorderCollisions(GameObject &obj) {
 
     if (pos.x < radius) {
         speed.x = abs(speed.x);
+        pos.x = radius;
     } else if (pos.x > map_size.x - radius) {
         speed.x = -abs(speed.x);
+        pos.x = map_size.x - radius;
     }
     if (pos.y < radius) {
         speed.y = abs(speed.y);
+        pos.y = radius;
     } else if (pos.y > map_size.y - radius) {
         speed.y = -abs(speed.y);
+        pos.y = map_size.y - radius;
     }
+    obj.SetPos(pos);
     obj.SetSpeed(speed);
 
+//    if (pos.x < 0) {
+//        pos.x += map_size.x;
+//    } else if (pos.x > map_size.x) {
+//        pos.x -= map_size.x;
+//    }
+//    if (pos.y < 0) {
+//        pos.y += map_size.y;
+//    } else if (pos.y > map_size.y) {
+//        pos.y -= map_size.y;
+//    }
+//    obj.SetPos(pos);
 }
 
 bool Engine::Collision(GameObject &obj1, GameObject &obj2) {
@@ -160,26 +189,12 @@ bool Engine::Collision(GameObject &obj1, GameObject &obj2) {
     return false;
 }
 
-bool Engine::Interaction(GameObject &obj1, GameObject &obj2) {
-    auto pos1 = obj1.GetPos();
-    auto pos2 = obj2.GetPos();
-    auto radius1 = obj1.GetRadius();
-    auto radius2 = obj2.GetRadius();
-    if (length(pos2 - pos1) <= 10 * std::max(radius1, radius2) +
-                                    std::min(radius1, radius2)) {
-        return true;
-    }
-    return false;
-}
-
-void Engine::DestroyDeadObjects() {
+void Engine::HandleDeadObjects() {
 
     auto obj = std::begin(objects_);
     while (obj != std::end(objects_)) {
         if ((*obj)->IsDead()) {
-            if ((*obj)->GetType() == "PLAYER") {
-                game_over_ = true;
-            }
+            if ((*obj)->GetType() == "PLAYER") game_over_ = true;
             obj = objects_.erase(obj);
         } else {
             obj++;

@@ -25,15 +25,7 @@ void Player::Control() {
     sf::Vector2f mouse_pos = window_->mapPixelToCoords(sf::Mouse::getPosition(*window_));
     float len = length(mouse_pos - pos_);
     if (len > radius_) {
-        speed_ = normalize(mouse_pos - pos_) * (float)(200 * sqrt(30 / radius_));
-    }
-    if (pos_.x < radius_ && speed_.x < 0 ||
-        pos_.x > map_size_.x - radius_ && speed_.x > 0) {
-        speed_.x = 0;
-    }
-    if (pos_.y < radius_ && speed_.y < 0 ||
-        pos_.y > map_size_.y - radius_ && speed_.y > 0) {
-        speed_.y = 0;
+        speed_ = normalize(mouse_pos - pos_) * GetMaxSpeed();
     }
 }
 

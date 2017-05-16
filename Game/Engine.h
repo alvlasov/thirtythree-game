@@ -42,6 +42,7 @@ public:
 
     //! Возвращает текущее число игровых объектов
     size_t GetObjectsCount() { return objects_.size(); }
+    size_t GetObjectsLimit() { return max_object_number_; }
 
     //! Возвращает размер карты
     sf::Vector2f GetMapSize() { return (sf::Vector2f)map_.getSize(); }
@@ -55,7 +56,7 @@ public:
 private:
 
     //! Максимальное число объектов, обрабатываемых движком
-    static const size_t max_object_number_ = 1000;
+    static const size_t max_object_number_ = 200;
 
     //! Главный игровой цикл
     void GameLoop();
@@ -65,8 +66,7 @@ private:
     void HandleObject(GameObject &obj);
     void HandleBorderCollisions(GameObject &obj);
     bool Collision(GameObject &obj1, GameObject &obj2);
-    bool Interaction(GameObject &obj1, GameObject &obj2);
-    void DestroyDeadObjects();
+    void HandleDeadObjects();
     void DrawUI();
     void DrawDebugInfo();
 

@@ -36,9 +36,11 @@ public:
 
     void Kill();
     bool IsDead() { return dead_; }
+    bool IsInteractable() { return interactable_; }
 
     sf::Vector2f GetPos() { return pos_; }
     sf::Vector2f GetSpeed() { return speed_; }
+    float GetMaxSpeed();
     float GetRadius() { return radius_; }
 
     void SetPos(sf::Vector2f pos) { pos_ = pos; }
@@ -59,6 +61,7 @@ protected:
     sf::CircleShape body_;
 
     bool dead_ = false;
+    bool interactable_ = true;
 };
 }
 
