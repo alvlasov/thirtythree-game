@@ -78,18 +78,15 @@ bool GameLogic::Collide(GameObject &obj1, GameObject &obj2) {
     if ((obj1_type == "PLAYER" || obj1_type == "ENEMY") && obj2_type == "FOOD") {
         obj2.Kill();
         obj1.SetRadius(cbrt(pow(obj1_radius, 3) + pow(obj2_radius, 3)));
-        if (obj1_type == "PLAYER") score_++;
+        if (obj1_type == "PLAYER") score_ = pow(obj1.GetRadius() - 30, 3);
         return true;
     }
 
     if ((obj1_type == "PLAYER" || obj1_type == "ENEMY") && obj2_type == "ENEMY") {
-        if (abs(obj1_radius - obj2_radius) < 4) {
-            return true;
-        }
         if (obj1_radius > obj2_radius) {
             obj2.Kill();
             obj1.SetRadius(cbrt(pow(obj1_radius, 3) + pow(obj2_radius, 3)));
-            if (obj1_type == "PLAYER") score_++;
+            if (obj1_type == "PLAYER") score_ = pow(obj1.GetRadius() - 30, 3);
         } else {
             obj1.Kill();
             obj2.SetRadius(cbrt(pow(obj1_radius, 3) + pow(obj2_radius, 3)));
@@ -114,7 +111,7 @@ bool GameLogic::Interact(GameObject &obj1, GameObject &obj2) {
         auto distance = length(obj2_pos - obj1_pos) - std::max(obj1_radius, obj2_radius);
         auto direction = normalize(obj2_pos - obj1_pos);
         if (distance <= 0) distance = 1;
-        float reaction = rand_->UniformInt(1, 15);
+        float reaction = rand_->UniformInt(1, 10);
         auto speed_factor = direction /(float)sqrt(distance) / reaction;
         if (obj1_radius > obj2_radius) {
             if (obj1_type != "PLAYER") {

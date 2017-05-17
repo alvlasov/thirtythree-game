@@ -206,28 +206,13 @@ void Engine::HandleDeadObjects() {
 void Engine::DrawUI() {
     sf::View prev_view = window_.getView();
     window_.setView(default_view_);
-    std::string score = "Score: " + std::to_string(logic_.GetScore());
-    sf::Text text(score, font_, 25);
-    text.setPosition(5, 0);
-    text.setFillColor(sf::Color::Black);
-    window_.draw(text);
+    DrawText("Score: " + std::to_string(logic_.GetScore()), 25, {5, 0},
+             window_);
+
     if (game_over_) {
-        sf::Text text("Game over!", font_, 45);
-        text.setPosition(GetWindowSize() / 2.0f);
-        auto bounds = text.getGlobalBounds();
-        text.setOrigin(bounds.width / 2.0f, bounds.height / 2.0f);
-        text.setFillColor(sf::Color::Black);
-
-        sf::Text hint("Press R to restart", font_, 30);
-        auto hint_pos = GetWindowSize() / 2.0f;
-        hint_pos.y += 50;
-        hint.setPosition(hint_pos);
-        auto hint_bounds = hint.getGlobalBounds();
-        hint.setOrigin(hint_bounds.width / 2.0f, hint_bounds.height / 2.0f);
-        hint.setFillColor(sf::Color::Black);
-
-        window_.draw(text);
-        window_.draw(hint);
+        DrawTextCentering("Game over!", 45, (sf::Vector2i)GetWindowSize() / 2, window_);
+        DrawTextCentering("Press R to restart", 30, (sf::Vector2i)GetWindowSize() / 2
+                          + sf::Vector2i(0, 50), window_);
     }
     if (draw_debug_info_) {
         DrawDebugInfo();
@@ -237,15 +222,28 @@ void Engine::DrawUI() {
 
 void Engine::DrawDebugInfo() {
     int fps = 1.f / time_;
+    std::string debug_text = "FPS: " + std::to_string(fps) + "\nObj. count: " +
+                             std::to_string(GetObjectsCount());
+    DrawText(debug_text, 20, {0, GetWindowSize().y - 45}, window_);
+}
 
-    std::string debug_text = "FPS: " + std::to_string(fps) +
-                             "\nObj. count: " + std::to_string(GetObjectsCount());
-    sf::Text text(debug_text, font_, 20);
-    text.setOrigin(0, 45);
-    text.setPosition(0, GetWindowSize().y);
-    text.setFillColor(sf::Color::Black);
+void Engine::DrawText(const std::string &name, int size, const sf::Vector2i &pos,
+                      sf::RenderTarget &screen, sf::Color color) {
+    sf::Text text(name, font_, size);
+    text.setPosition(pos.x, pos.y);
+    text.setFillColor(color);
+    screen.draw(text);
+}
 
-    window_.draw(text);
+void Engine::DrawTextCentering(const std::string &name, int size,
+                               const sf::Vector2i &pos,
+                               sf::RenderTarget &screen, sf::Color color) {
+    sf::Text text(name, font_, size);
+    auto bounds = text.getGlobalBounds();
+    text.setOrigin(bounds.width / 2.0f, bounds.height / 2.0f);
+    text.setPosition(pos.x, pos.y);
+    text.setFillColor(color);
+    screen.draw(text);
 }
 
 }

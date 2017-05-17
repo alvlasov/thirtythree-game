@@ -50,7 +50,7 @@ void GameObject::Logic() {
 void GameObject::Draw(sf::RenderTarget &screen) {
     body_.setRadius(radius_);
     body_.setFillColor(color_);
-//    body_.setOutlineColor(color_ + sf::Color(25, 25, 25, 0));
+//    body_.setOutlineColor(color_ - sf::Color(25, 25, 25, 0));
 //    body_.setOutlineThickness(-4);
     body_.setOrigin(radius_, radius_);
     body_.setPosition(pos_.x, pos_.y);

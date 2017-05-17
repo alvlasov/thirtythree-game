@@ -69,6 +69,11 @@ private:
     void HandleDeadObjects();
     void DrawUI();
     void DrawDebugInfo();
+    void DrawText(const std::string &name, int size, const sf::Vector2i &pos,
+                  sf::RenderTarget &screen, sf::Color color = sf::Color::Black);
+
+    void DrawTextCentering(const std::string &name, int size, const sf::Vector2i &pos,
+                  sf::RenderTarget &screen, sf::Color color = sf::Color::Black);
 
     //! Хранилище игровых объектов
     std::vector<std::unique_ptr<GameObject>> objects_;
