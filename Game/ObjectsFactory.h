@@ -26,7 +26,10 @@ public:
     ObjectsFactory(Engine *engine, Randomizer *rand, GameLogic *logic);
     ~ObjectsFactory();
 
-    GameObject* CreateObject(std::string object_type);
+    GameObject* CreatePlayer(float radius);
+    GameObject* CreateFood();
+    GameObject* CreateEnemy();
+    GameObject* CreateEnemy(float radius);
 
 private:
 

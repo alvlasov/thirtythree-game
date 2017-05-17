@@ -33,8 +33,17 @@ public:
 
 private:
 
+    static const int player_initial_radius_ = 30;
+
     bool Interact(GameObject &obj1, GameObject &obj2);
-    bool Collide(GameObject &obj1, GameObject &obj2);
+    bool OnCollide(GameObject &obj1, GameObject &obj2);
+
+    inline float CalcNewRadius(float radius1, float radius2) {
+        return cbrt(pow(radius1, 3) + pow(radius2, 3));
+    }
+    inline void UpdateScore(float player_radius) {
+        score_ = pow(player_radius - player_initial_radius_, 3);
+    }
 
     Randomizer *rand_;
     Engine *engine_;

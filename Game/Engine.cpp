@@ -14,7 +14,7 @@ Engine::Engine(sf::VideoMode mode, const sf::String name, sf::Vector2i map_size)
     sf::ContextSettings settings;
     settings.antialiasingLevel = 2;
     window_.create(mode, name, sf::Style::Default, settings);
-    window_.setVerticalSyncEnabled(true);
+    //window_.setVerticalSyncEnabled(true);
     default_view_ = window_.getDefaultView();
     map_.create(map_size.x, map_size.y);
     map_.setSmooth(true);
@@ -52,27 +52,24 @@ void Engine::GameLoop() {
         map_.clear(sf::Color::White);
 
         for (auto obj1 = std::begin(objects_); obj1 != std::end(objects_); obj1++) {
-            auto nearest_obj = obj1 + 1;
-            float distance;
-            if ((*obj1)->IsInteractable() && nearest_obj != std::end(objects_)) {
-                distance = length((*obj1)->GetPos() - (*nearest_obj)->GetPos());
-            }
+            auto nearest_to_obj1 = obj1;
+            float nearest_distance = std::numeric_limits<float>::max();
             for (auto obj2 = obj1 + 1; obj2 != std::end(objects_); obj2++) {
-                if (!(*obj1)->IsDead() && !(*obj2)->IsDead()) {
-                    if (Collision(**obj1, **obj2)) {
+                if (ObjectsAreAlive(obj1, obj2)) {
+                    float distance = CalculateDistance(obj1, obj2);
+                    if (Collision(obj1, obj2, distance)) {
                         logic_.CollideBoth(**obj1, **obj2);
-                    }
-                    if ((*obj1)->IsInteractable() && (*obj2)->IsInteractable()) {
-                        float new_distance = length((*obj1)->GetPos() - (*obj2)->GetPos());
-                        if (new_distance < distance) {
-                            distance = new_distance;
-                            nearest_obj = obj2;
+                    } else if (ObjectsAreInteractable(obj1, obj2)) {
+                        if (distance < nearest_distance) {
+                            nearest_distance = distance;
+                            nearest_to_obj1 = obj2;
                         }
                     }
+
                 }
             }
-            if ((*obj1)->IsInteractable() && nearest_obj != std::end(objects_)) {
-                logic_.InteractBoth(**obj1, **nearest_obj);
+            if (ObjectsIsInteractable(obj1)) {
+                logic_.InteractBoth(**obj1, **nearest_to_obj1);
             }
         }
 
@@ -132,7 +129,7 @@ void Engine::HandleEvents() {
 }
 
 void Engine::HandleObject(GameObject &obj) {
-    if (obj.GetType() == "PLAYER") {
+    if (obj.GetType() == PLAYER) {
         view_.setCenter(obj.GetPos());
         obj.Control();
     }
@@ -178,23 +175,12 @@ void Engine::HandleBorderCollisions(GameObject &obj) {
 //    obj.SetPos(pos);
 }
 
-bool Engine::Collision(GameObject &obj1, GameObject &obj2) {
-    auto pos1 = obj1.GetPos();
-    auto pos2 = obj2.GetPos();
-    auto radius1 = obj1.GetRadius();
-    auto radius2 = obj2.GetRadius();
-    if (length(pos2 - pos1) <= std::max(radius1, radius2)) {
-        return true;
-    }
-    return false;
-}
-
 void Engine::HandleDeadObjects() {
 
     auto obj = std::begin(objects_);
     while (obj != std::end(objects_)) {
         if ((*obj)->IsDead()) {
-            if ((*obj)->GetType() == "PLAYER") game_over_ = true;
+            if ((*obj)->GetType() == PLAYER) game_over_ = true;
             obj = objects_.erase(obj);
         } else {
             obj++;

@@ -15,6 +15,13 @@
 
 namespace thirtythree {
 
+enum {
+    ABSTRACT = 0,
+    PLAYER,
+    FOOD,
+    ENEMY
+};
+
 class GameObject {
 public:
 
@@ -32,7 +39,7 @@ public:
     virtual void Logic();
     virtual void Move(float dt);
 
-    virtual std::string GetType() { return "ABSTRACT"; }
+    virtual int GetType() { return ABSTRACT; }
 
     void Kill();
     bool IsDead() { return dead_; }

@@ -22,7 +22,7 @@ public:
     ~Food();
     void Logic();
 
-    std::string GetType() { return "FOOD"; }
+    int GetType() { return FOOD; }
 
 private:
 

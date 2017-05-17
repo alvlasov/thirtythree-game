@@ -20,24 +20,22 @@ ObjectsFactory::~ObjectsFactory() {
      LOG_INFO("Objects factory destroyed");
 }
 
-GameObject* ObjectsFactory::CreateObject(std::string object_type) {
-    if (engine_->GetObjectsCount() >= engine_->GetObjectsLimit()) {
-        LOG_INFO("Objects limit exceeded!");
-        return nullptr;
-    }
-
-    if (object_type == "PLAYER") {
-        return new Player (engine_->GetWindow(), engine_->GetMapSize(),
-                           rand_->UniformRect(engine_->GetMapSize()),
-                           30, rand_->ColorOpaque());
-    } else if (object_type == "FOOD") {
-        return new Food (rand_->UniformRect(engine_->GetMapSize()), rand_);
-    } else if (object_type == "ENEMY") {
-        return new Enemy (rand_->UniformRect(engine_->GetMapSize()), rand_);
-    }
-
-
+GameObject* ObjectsFactory::CreatePlayer(float radius) {
+    return new Player (engine_->GetWindow(), engine_->GetMapSize(),
+                       rand_->UniformRect(engine_->GetMapSize()),
+                       radius, rand_->ColorOpaque());
 }
 
+GameObject* ObjectsFactory::CreateFood() {
+    return new Food (rand_->UniformRect(engine_->GetMapSize()), rand_);
+}
+
+GameObject* ObjectsFactory::CreateEnemy() {
+    return new Enemy (rand_->UniformRect(engine_->GetMapSize()), rand_);
+}
+
+GameObject* ObjectsFactory::CreateEnemy(float radius) {
+    return new Enemy (rand_->UniformRect(engine_->GetMapSize()), rand_, radius);
+}
 
 }

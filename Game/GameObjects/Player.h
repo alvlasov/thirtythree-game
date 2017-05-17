@@ -28,7 +28,7 @@ public:
     void Logic() {};
     void Control();
 
-    std::string GetType() { return "PLAYER"; }
+    int GetType() { return PLAYER; }
 private:
 
     sf::RenderWindow *window_;

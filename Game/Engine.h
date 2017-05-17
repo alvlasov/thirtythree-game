@@ -13,6 +13,7 @@
 #include <vector>
 #include <memory>
 #include <string>
+#include <limits>
 
 #include "GameObjects\GameObject.h"
 #include "GameObjects\Player.h"
@@ -27,6 +28,8 @@ namespace thirtythree {
 
 class Engine {
 public:
+
+    typedef std::vector<std::unique_ptr<GameObject>>::iterator obj_iterator;
 
     //! Инициализация движка
     //! @param mode Размер окна
@@ -56,7 +59,7 @@ public:
 private:
 
     //! Максимальное число объектов, обрабатываемых движком
-    static const size_t max_object_number_ = 200;
+    static const size_t max_object_number_ = 1000;
 
     //! Главный игровой цикл
     void GameLoop();
@@ -65,8 +68,29 @@ private:
     void HandleEvents();
     void HandleObject(GameObject &obj);
     void HandleBorderCollisions(GameObject &obj);
-    bool Collision(GameObject &obj1, GameObject &obj2);
     void HandleDeadObjects();
+
+    inline float CalculateDistance(obj_iterator obj1, obj_iterator obj2) {
+        return length((*obj2)->GetPos() - (*obj1)->GetPos());
+    }
+    inline bool ObjectsAreAlive(obj_iterator obj1, obj_iterator obj2) {
+        return !(*obj1)->IsDead() && !(*obj2)->IsDead();
+    }
+    inline bool Collision(obj_iterator obj1, obj_iterator obj2, float distance) {
+        auto radius1 = (*obj1)->GetRadius();
+        auto radius2 = (*obj2)->GetRadius();
+        if (distance <= std::max(radius1, radius2)) {
+            return true;
+        }
+        return false;
+    }
+    inline bool ObjectsAreInteractable(obj_iterator obj1, obj_iterator obj2) {
+        return (*obj1)->IsInteractable() && (*obj2)->IsInteractable();
+    }
+    inline bool ObjectsIsInteractable(obj_iterator obj) {
+        return (*obj)->IsInteractable();
+    }
+
     void DrawUI();
     void DrawDebugInfo();
     void DrawText(const std::string &name, int size, const sf::Vector2i &pos,
