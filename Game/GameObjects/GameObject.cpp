@@ -29,16 +29,26 @@ GameObject::GameObject(const sf::Vector2f& pos, float radius,
 GameObject::~GameObject() {}
 
 void GameObject::SetTexture(const std::string &texturename) {
-    if (!texture_.loadFromFile(texturename)) {
+    texture_ = new sf::Texture;
+    if (!texture_->loadFromFile(texturename)) {
         LOG_ERROR("Failed to load texture: " << texturename);
     } else {
-        texture_.setSmooth(true);
+        texture_->setSmooth(true);
         auto alpha = color_.a;
         color_ = sf::Color::White;
         color_.a = alpha;
-        body_.setTexture(&texture_);
+        body_.setTexture(texture_);
     }
 }
+
+void GameObject::SetTexture(sf::Texture *texture) {
+   // texture_ = &texture;
+    auto alpha = color_.a;
+    color_ = sf::Color::White;
+    color_.a = alpha;
+    body_.setTexture(texture);
+}
+
 float GameObject::GetMaxSpeed() {
     return 200 * sqrt(30 / radius_);
 }

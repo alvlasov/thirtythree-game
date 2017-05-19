@@ -9,7 +9,6 @@
 #define GAMELOGIC_H_INCLUDED
 
 #include <SFML/Graphics.hpp>
-
 #include "Logger.h"
 #include "Randomizer.h"
 #include "ObjectsFactory.h"
@@ -18,16 +17,26 @@
 namespace thirtythree {
 
 class Engine;
+class TextureProvider;
 class GameLogic {
 public:
+
+    enum EventType {COLLISION, INTERACTION};
+
+    struct Event {
+        Event (EventType ntype, GameObject &nobj1, GameObject &nobj2)
+            : type (ntype), obj1 (&nobj1), obj2 (&nobj2) {}
+        EventType type;
+        GameObject *obj1;
+        GameObject *obj2;
+    };
 
     GameLogic(Engine *engine, Randomizer *rand);
     ~GameLogic();
 
     void StartGame();
     void DoLogic();
-    void CollideBoth(GameObject &obj1, GameObject &obj2);
-    void InteractBoth(GameObject &obj1, GameObject &obj2);
+    void HandleEvent(Event &event);
 
     int GetScore() { return score_; }
 
@@ -35,7 +44,7 @@ private:
 
     static const int player_initial_radius_ = 30;
 
-    bool Interact(GameObject &obj1, GameObject &obj2);
+    bool OnInteract(GameObject &obj1, GameObject &obj2);
     bool OnCollide(GameObject &obj1, GameObject &obj2);
 
     inline float CalcNewRadius(float radius1, float radius2) {
@@ -48,6 +57,7 @@ private:
     Randomizer *rand_;
     Engine *engine_;
     ObjectsFactory factory_;
+    TextureProvider *texture_provider_;
 
     int score_;
 

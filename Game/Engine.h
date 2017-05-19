@@ -15,14 +15,17 @@
 #include <string>
 #include <limits>
 
+
 #include "GameObjects\GameObject.h"
 #include "GameObjects\Player.h"
 #include "GameObjects\Food.h"
+#include "Drawer.h"
 #include "Logger.h"
 #include "GameLogic.h"
 #include "Randomizer.h"
 #include "ObjectsFactory.h"
 #include "Utility.h"
+
 
 namespace thirtythree {
 
@@ -48,13 +51,13 @@ public:
     size_t GetObjectsLimit() { return max_object_number_; }
 
     //! Возвращает размер карты
-    sf::Vector2f GetMapSize() { return (sf::Vector2f)map_.getSize(); }
+    sf::Vector2f GetMapSize() { return drawer_.GetMapSize(); }
 
     //! Возвращает размер окна
-    sf::Vector2f GetWindowSize() { return (sf::Vector2f)window_.getSize(); }
+    sf::Vector2f GetWindowSize() { return drawer_.GetWindowSize(); }
 
     //! Возвращает указатель на окно
-    sf::RenderWindow* GetWindow() { return &window_; }
+    sf::RenderWindow* GetWindow() { return drawer_.GetWindow(); }
 
 private:
 
@@ -73,9 +76,11 @@ private:
     inline float CalculateDistance(obj_iterator obj1, obj_iterator obj2) {
         return length((*obj2)->GetPos() - (*obj1)->GetPos());
     }
+
     inline bool ObjectsAreAlive(obj_iterator obj1, obj_iterator obj2) {
         return !(*obj1)->IsDead() && !(*obj2)->IsDead();
     }
+
     inline bool Collision(obj_iterator obj1, obj_iterator obj2, float distance) {
         auto radius1 = (*obj1)->GetRadius();
         auto radius2 = (*obj2)->GetRadius();
@@ -84,38 +89,22 @@ private:
         }
         return false;
     }
+
     inline bool ObjectsAreInteractable(obj_iterator obj1, obj_iterator obj2) {
         return (*obj1)->IsInteractable() && (*obj2)->IsInteractable();
     }
-    inline bool ObjectsIsInteractable(obj_iterator obj) {
+
+    inline bool ObjectIsInteractable(obj_iterator obj) {
         return (*obj)->IsInteractable();
     }
 
     void DrawUI();
     void DrawDebugInfo();
-    void DrawText(const std::string &name, int size, const sf::Vector2i &pos,
-                  sf::RenderTarget &screen, sf::Color color = sf::Color::Black);
-
-    void DrawTextCentering(const std::string &name, int size, const sf::Vector2i &pos,
-                  sf::RenderTarget &screen, sf::Color color = sf::Color::Black);
 
     //! Хранилище игровых объектов
     std::vector<std::unique_ptr<GameObject>> objects_;
 
-    //! Окно, в которое производится отрисовка
-    sf::RenderWindow window_;
-
-    //! Игровая карта
-    sf::RenderTexture map_;
-
-    //! Камера для перемещения по игровой карте
-    sf::View view_;
-
-    //! Камера для вывода на экран интерфейса
-    sf::View default_view_;
-
-    //! Шрифт для отрисовки надписей
-    sf::Font font_;
+    Drawer drawer_;
 
     //! Класс, предоставляющий возможности генерации случайных величин
     Randomizer rand_;

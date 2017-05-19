@@ -17,7 +17,6 @@ public:
 
     Player() : GameObject() {}
     Player(sf::RenderWindow *window,
-           const sf::Vector2f &map_size,
            const sf::Vector2f &pos,
            float radius,
            const sf::Color &color = sf::Color::White,

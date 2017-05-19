@@ -21,7 +21,7 @@ ObjectsFactory::~ObjectsFactory() {
 }
 
 GameObject* ObjectsFactory::CreatePlayer(float radius) {
-    return new Player (engine_->GetWindow(), engine_->GetMapSize(),
+    return new Player (engine_->GetWindow(),
                        rand_->UniformRect(engine_->GetMapSize()),
                        radius, rand_->ColorOpaque());
 }
@@ -37,5 +37,6 @@ GameObject* ObjectsFactory::CreateEnemy() {
 GameObject* ObjectsFactory::CreateEnemy(float radius) {
     return new Enemy (rand_->UniformRect(engine_->GetMapSize()), rand_, radius);
 }
+
 
 }

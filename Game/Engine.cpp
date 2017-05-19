@@ -10,21 +10,9 @@
 namespace thirtythree{
 
 Engine::Engine(sf::VideoMode mode, const sf::String name, sf::Vector2i map_size)
-    : logic_ (this, &rand_) {
-    sf::ContextSettings settings;
-    settings.antialiasingLevel = 2;
-    window_.create(mode, name, sf::Style::Default, settings);
-    //window_.setVerticalSyncEnabled(true);
-    default_view_ = window_.getDefaultView();
-    map_.create(map_size.x, map_size.y);
-    map_.setSmooth(true);
-    view_.reset(sf::FloatRect(0, 0, mode.width, mode.height));
-    if (!font_.loadFromFile("Fonts/default.ttf")) {
-        LOG_ERROR("Failed to load font");
-        throw std::runtime_error("Failed to load font");
-    }
-    LOG_INFO("Engine created: Video mode = " << mode.width << "x" << mode.height <<
-             ", Map size = " << map_size.x << "x" << map_size.y);
+    : logic_ (this, &rand_),
+      drawer_ (mode, name, map_size) {
+    LOG_INFO("Engine created");
 }
 
 void Engine::AddObject(GameObject *object) {
@@ -44,12 +32,11 @@ void Engine::StartGame() {
 
 void Engine::GameLoop() {
     LOG_INFO("Game loop started");
-    while (window_.isOpen()) {
+    while (drawer_.WindowIsOpen()) {
         time_ = clock_.restart().asSeconds();
 
         HandleEvents();
         logic_.DoLogic();
-        map_.clear(sf::Color::White);
 
         for (auto obj1 = std::begin(objects_); obj1 != std::end(objects_); obj1++) {
             auto nearest_to_obj1 = obj1;
@@ -58,7 +45,9 @@ void Engine::GameLoop() {
                 if (ObjectsAreAlive(obj1, obj2)) {
                     float distance = CalculateDistance(obj1, obj2);
                     if (Collision(obj1, obj2, distance)) {
-                        logic_.CollideBoth(**obj1, **obj2);
+                        GameLogic::Event event(GameLogic::EventType::COLLISION, **obj1, **obj2);
+                        logic_.HandleEvent(event);
+
                     } else if (ObjectsAreInteractable(obj1, obj2)) {
                         if (distance < nearest_distance) {
                             nearest_distance = distance;
@@ -68,11 +57,13 @@ void Engine::GameLoop() {
 
                 }
             }
-            if (ObjectsIsInteractable(obj1)) {
-                logic_.InteractBoth(**obj1, **nearest_to_obj1);
+            if (ObjectIsInteractable(obj1)) {
+                GameLogic::Event event(GameLogic::EventType::INTERACTION, **obj1, **nearest_to_obj1);
+                logic_.HandleEvent(event);
             }
         }
 
+        drawer_.ClearMap();
         for (auto& obj : objects_) {
             if (!(obj->IsDead())) {
                 HandleObject(*obj);
@@ -81,13 +72,12 @@ void Engine::GameLoop() {
         }
 
         HandleDeadObjects();
-        map_.display();
+        drawer_.DisplayMap();
 
-        window_.clear(sf::Color(222, 222, 222));
-        window_.setView(view_);
-        window_.draw(sf::Sprite(map_.getTexture()));
+        drawer_.ClearWindow();
+        drawer_.DrawMap();
         DrawUI();
-        window_.display();
+        drawer_.DisplayWindow();
 
     }
 }
@@ -100,15 +90,14 @@ void Engine::RestartGame() {
 
 void Engine::HandleEvents() {
     sf::Event event;
-    while (window_.pollEvent(event)) {
+    while (drawer_.PollEvent(event)) {
         switch (event.type) {
             case sf::Event::Closed: {
-                window_.close();
+                drawer_.CloseWindow();
                 break;
             }
             case sf::Event::Resized: {
-                view_.reset(sf::FloatRect(0, 0, event.size.width, event.size.height));
-                default_view_.reset(sf::FloatRect(0, 0, event.size.width, event.size.height));
+                drawer_.ResizeWindow(event.size.width, event.size.height);
                 break;
             }
             case sf::Event::KeyPressed: {
@@ -120,7 +109,7 @@ void Engine::HandleEvents() {
                 break;
             }
             case sf::Event::MouseWheelMoved: {
-                view_.zoom(1 - (event.mouseWheel.delta * 0.05));
+                drawer_.ZoomWindow(event.mouseWheel.delta);
                 break;
             }
             default: {}
@@ -130,12 +119,12 @@ void Engine::HandleEvents() {
 
 void Engine::HandleObject(GameObject &obj) {
     if (obj.GetType() == PLAYER) {
-        view_.setCenter(obj.GetPos());
+        drawer_.SetViewCenter(obj.GetPos());
         obj.Control();
     }
     obj.Logic();
     obj.Move(time_);
-    obj.Draw(map_);
+    drawer_.DrawObject(obj);
 }
 
 void Engine::HandleBorderCollisions(GameObject &obj) {
@@ -190,46 +179,25 @@ void Engine::HandleDeadObjects() {
 }
 
 void Engine::DrawUI() {
-    sf::View prev_view = window_.getView();
-    window_.setView(default_view_);
-    DrawText("Score: " + std::to_string(logic_.GetScore()), 25, {5, 0},
-             window_);
-
+    drawer_.DrawText(Drawer::Text("Score: " + std::to_string(logic_.GetScore()), 25, {5, 0}));
     if (game_over_) {
-        DrawTextCentering("Game over!", 45, (sf::Vector2i)GetWindowSize() / 2, window_);
-        DrawTextCentering("Press R to restart", 30, (sf::Vector2i)GetWindowSize() / 2
-                          + sf::Vector2i(0, 50), window_);
+        sf::Vector2i pos1 = (sf::Vector2i)GetWindowSize() / 2;
+        sf::Vector2i pos2 = (sf::Vector2i)GetWindowSize() / 2 + sf::Vector2i(0, 50);
+        drawer_.DrawText(Drawer::Text("Game over!", 45, pos1, true));
+        drawer_.DrawText(Drawer::Text("Press R to restart", 30, pos2, true));
     }
     if (draw_debug_info_) {
         DrawDebugInfo();
     }
-    window_.setView(prev_view);
+
 }
 
 void Engine::DrawDebugInfo() {
     int fps = 1.f / time_;
     std::string debug_text = "FPS: " + std::to_string(fps) + "\nObj. count: " +
                              std::to_string(GetObjectsCount());
-    DrawText(debug_text, 20, {0, GetWindowSize().y - 45}, window_);
-}
-
-void Engine::DrawText(const std::string &name, int size, const sf::Vector2i &pos,
-                      sf::RenderTarget &screen, sf::Color color) {
-    sf::Text text(name, font_, size);
-    text.setPosition(pos.x, pos.y);
-    text.setFillColor(color);
-    screen.draw(text);
-}
-
-void Engine::DrawTextCentering(const std::string &name, int size,
-                               const sf::Vector2i &pos,
-                               sf::RenderTarget &screen, sf::Color color) {
-    sf::Text text(name, font_, size);
-    auto bounds = text.getGlobalBounds();
-    text.setOrigin(bounds.width / 2.0f, bounds.height / 2.0f);
-    text.setPosition(pos.x, pos.y);
-    text.setFillColor(color);
-    screen.draw(text);
+    sf::Vector2i pos = {0, GetWindowSize().y - 45};
+    drawer_.DrawText(Drawer::Text(debug_text, 20, pos));
 }
 
 }

@@ -7,6 +7,7 @@
 
 #include "Engine.h"
 #include "GameLogic.h"
+#include "TextureProvider.h"
 
 namespace thirtythree {
 
@@ -17,6 +18,8 @@ GameLogic::GameLogic(Engine *engine, Randomizer *rand)
       score_ (0) {
     clock_food_create_.restart();
     clock_enemy_create_.restart();
+    texture_provider_ = new TextureProvider(rand_);
+    texture_provider_->LoadPlayerTexturesFromDirectory("Textures/Players");
     LOG_INFO("Game logic unit initialized");
 }
 
@@ -33,15 +36,19 @@ void GameLogic::StartGame() {
     }
     int num_enemies = rand_->UniformInt(2 * map_size.x / 2500, 5 * map_size.y / 2500);
     for (int i = 0; i < num_enemies; i++) {
-        engine_->AddObject(factory_.CreateEnemy());
+        GameObject *new_enemy = factory_.CreateEnemy();
+        new_enemy->SetTexture(texture_provider_->GetRandomPlayerTexture());
+        engine_->AddObject(new_enemy);
     }
-    engine_->AddObject(factory_.CreatePlayer(player_initial_radius_));
+    GameObject *new_player = factory_.CreatePlayer(player_initial_radius_);
+    new_player->SetTexture(texture_provider_->GetRandomPlayerTexture());
+    engine_->AddObject(new_player);
 }
 
 void GameLogic::DoLogic() {
     auto map_size = engine_->GetMapSize();
     if (clock_food_create_.getElapsedTime().asSeconds() > min_food_create_interval_) {
-        int num_obj = rand_->UniformInt(1 * map_size.x / 2500, 5 * map_size.y / 2500);
+        int num_obj = rand_->UniformInt(3 * map_size.x / 2500, 7 * map_size.y / 2500);
         for (int i = 0; i < num_obj; i++) {
             engine_->AddObject(factory_.CreateFood());
         }
@@ -51,22 +58,29 @@ void GameLogic::DoLogic() {
     if (clock_enemy_create_.getElapsedTime().asSeconds() > min_enemy_create_interval_) {
         int num_obj = rand_->UniformInt(0 * map_size.x / 2500, 5 * map_size.y / 2500);
         for (int i = 0; i < num_obj; i++) {
-            engine_->AddObject(factory_.CreateEnemy());
+            GameObject *new_enemy = factory_.CreateEnemy();
+            new_enemy->SetTexture(texture_provider_->GetRandomPlayerTexture());
+            engine_->AddObject(new_enemy);
         }
         clock_enemy_create_.restart();
     }
 
 }
 
-void GameLogic::CollideBoth(GameObject &obj1, GameObject &obj2) {
-    if (!OnCollide(obj1, obj2)) {
-        OnCollide(obj2, obj1);
-    }
-}
-
-void GameLogic::InteractBoth(GameObject &obj1, GameObject &obj2) {
-    if (!Interact(obj1, obj2)) {
-        Interact(obj2, obj1);
+void GameLogic::HandleEvent(Event &event) {
+    switch (event.type) {
+        case COLLISION: {
+            if (!OnCollide(*event.obj1, *event.obj2)) {
+                OnCollide(*event.obj2, *event.obj1);
+            }
+            break;
+        }
+        case INTERACTION: {
+            if (!OnInteract(*event.obj1, *event.obj2)) {
+                OnInteract(*event.obj2, *event.obj1);
+            }
+            break;
+        }
     }
 }
 
@@ -99,7 +113,7 @@ bool GameLogic::OnCollide(GameObject &obj1, GameObject &obj2) {
     return false;
 }
 
-bool GameLogic::Interact(GameObject &obj1, GameObject &obj2) {
+bool GameLogic::OnInteract(GameObject &obj1, GameObject &obj2) {
     auto obj1_type = obj1.GetType();
     auto obj2_type = obj2.GetType();
     auto obj1_radius = obj1.GetRadius();

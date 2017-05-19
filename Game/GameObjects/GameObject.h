@@ -34,6 +34,8 @@ public:
     virtual ~GameObject();
 
     void SetTexture(const std::string &texturename);
+    void SetTexture(sf::Texture *texture);
+
     virtual void Draw(sf::RenderTarget &screen);
     virtual void Control() {}
     virtual void Logic();
@@ -64,7 +66,7 @@ protected:
 
     float radius_;
     sf::Color color_;
-    sf::Texture texture_;
+    sf::Texture *texture_;
     sf::CircleShape body_;
 
     bool dead_ = false;
