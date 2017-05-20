@@ -8,10 +8,9 @@
 #include "Engine.h"
 
 namespace thirtythree{
-
-Engine::Engine(sf::VideoMode mode, const sf::String name, sf::Vector2i map_size)
-    : logic_ (this, &rand_),
-      drawer_ (mode, name, map_size) {
+Engine::Engine(Drawer *drawer, GameLogic *logic)
+    : logic_ (logic),
+      drawer_ (drawer) {
     LOG_INFO("Engine created");
 }
 
@@ -25,18 +24,18 @@ void Engine::AddObject(GameObject *object) {
 }
 
 void Engine::StartGame() {
-    logic_.StartGame();
+    logic_->StartGame();
     LOG_INFO("Game initialized");
     GameLoop();
 }
 
 void Engine::GameLoop() {
     LOG_INFO("Game loop started");
-    while (drawer_.WindowIsOpen()) {
+    while (drawer_->WindowIsOpen()) {
         time_ = clock_.restart().asSeconds();
 
         HandleEvents();
-        logic_.DoLogic();
+        logic_->DoLogic();
 
         for (auto obj1 = std::begin(objects_); obj1 != std::end(objects_); obj1++) {
             auto nearest_to_obj1 = obj1;
@@ -46,7 +45,7 @@ void Engine::GameLoop() {
                     float distance = CalculateDistance(obj1, obj2);
                     if (Collision(obj1, obj2, distance)) {
                         GameLogic::Event event(GameLogic::EventType::COLLISION, **obj1, **obj2);
-                        logic_.HandleEvent(event);
+                        logic_->HandleEvent(event);
 
                     } else if (ObjectsAreInteractable(obj1, obj2)) {
                         if (distance < nearest_distance) {
@@ -59,11 +58,11 @@ void Engine::GameLoop() {
             }
             if (ObjectIsInteractable(obj1)) {
                 GameLogic::Event event(GameLogic::EventType::INTERACTION, **obj1, **nearest_to_obj1);
-                logic_.HandleEvent(event);
+                logic_->HandleEvent(event);
             }
         }
 
-        drawer_.ClearMap();
+        drawer_->ClearMap();
         for (auto& obj : objects_) {
             if (!(obj->IsDead())) {
                 HandleObject(*obj);
@@ -72,12 +71,12 @@ void Engine::GameLoop() {
         }
 
         HandleDeadObjects();
-        drawer_.DisplayMap();
+        drawer_->DisplayMap();
 
-        drawer_.ClearWindow();
-        drawer_.DrawMap();
+        drawer_->ClearWindow();
+        drawer_->DrawMap();
         DrawUI();
-        drawer_.DisplayWindow();
+        drawer_->DisplayWindow();
 
     }
 }
@@ -90,14 +89,14 @@ void Engine::RestartGame() {
 
 void Engine::HandleEvents() {
     sf::Event event;
-    while (drawer_.PollEvent(event)) {
+    while (drawer_->PollEvent(event)) {
         switch (event.type) {
             case sf::Event::Closed: {
-                drawer_.CloseWindow();
+                drawer_->CloseWindow();
                 break;
             }
             case sf::Event::Resized: {
-                drawer_.ResizeWindow(event.size.width, event.size.height);
+                drawer_->ResizeWindow(event.size.width, event.size.height);
                 break;
             }
             case sf::Event::KeyPressed: {
@@ -109,7 +108,7 @@ void Engine::HandleEvents() {
                 break;
             }
             case sf::Event::MouseWheelMoved: {
-                drawer_.ZoomWindow(event.mouseWheel.delta);
+                drawer_->ZoomWindow(event.mouseWheel.delta);
                 break;
             }
             default: {}
@@ -119,12 +118,12 @@ void Engine::HandleEvents() {
 
 void Engine::HandleObject(GameObject &obj) {
     if (obj.GetType() == PLAYER) {
-        drawer_.SetViewCenter(obj.GetPos());
+        drawer_->SetViewCenter(obj.GetPos());
         obj.Control();
     }
     obj.Logic();
     obj.Move(time_);
-    drawer_.DrawObject(obj);
+    drawer_->DrawObject(obj);
 }
 
 void Engine::HandleBorderCollisions(GameObject &obj) {
@@ -179,12 +178,12 @@ void Engine::HandleDeadObjects() {
 }
 
 void Engine::DrawUI() {
-    drawer_.DrawText(Drawer::Text("Score: " + std::to_string(logic_.GetScore()), 25, {5, 0}));
+    drawer_->DrawText(Drawer::Text("Score: " + std::to_string(logic_->GetScore()), 25, {5, 0}));
     if (game_over_) {
         sf::Vector2i pos1 = (sf::Vector2i)GetWindowSize() / 2;
         sf::Vector2i pos2 = (sf::Vector2i)GetWindowSize() / 2 + sf::Vector2i(0, 50);
-        drawer_.DrawText(Drawer::Text("Game over!", 45, pos1, true));
-        drawer_.DrawText(Drawer::Text("Press R to restart", 30, pos2, true));
+        drawer_->DrawText(Drawer::Text("Game over!", 45, pos1, true));
+        drawer_->DrawText(Drawer::Text("Press R to restart", 30, pos2, true));
     }
     if (draw_debug_info_) {
         DrawDebugInfo();
@@ -197,7 +196,7 @@ void Engine::DrawDebugInfo() {
     std::string debug_text = "FPS: " + std::to_string(fps) + "\nObj. count: " +
                              std::to_string(GetObjectsCount());
     sf::Vector2i pos = {0, GetWindowSize().y - 45};
-    drawer_.DrawText(Drawer::Text(debug_text, 20, pos));
+    drawer_->DrawText(Drawer::Text(debug_text, 20, pos));
 }
 
 }

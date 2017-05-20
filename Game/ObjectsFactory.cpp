@@ -11,8 +11,8 @@
 
 namespace thirtythree {
 
-ObjectsFactory::ObjectsFactory(Engine *engine, Randomizer *rand, GameLogic *logic)
-    : engine_ (engine), rand_ (rand), logic_ (logic) {
+ObjectsFactory::ObjectsFactory(Randomizer *rand, Engine *engine)
+    : engine_ (engine), rand_ (rand) {
      LOG_INFO("Objects factory initialized");
 }
 

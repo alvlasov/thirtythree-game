@@ -13,11 +13,11 @@ Player::Player(sf::RenderWindow *window, const sf::Vector2f &pos,
                float radius, const sf::Color &color, float friction)
     : GameObject(pos, radius, color, {0, 0}, friction),
       window_ (window) {
-    LOG_INFO("Object " << GetType() << " created on pos (" << pos_.x << ", " << pos_.y << ")");
+    LOG_DEBUG("Object " << GetType() << " created on pos (" << pos_.x << ", " << pos_.y << ")");
 }
 
 Player::~Player() {
-    LOG_INFO("Object " << GetType() << " destroyed");
+    LOG_DEBUG("Object " << GetType() << " destroyed");
 }
 
 void Player::Control() {

@@ -28,25 +28,12 @@ GameObject::GameObject(const sf::Vector2f& pos, float radius,
 
 GameObject::~GameObject() {}
 
-void GameObject::SetTexture(const std::string &texturename) {
-    texture_ = new sf::Texture;
-    if (!texture_->loadFromFile(texturename)) {
-        LOG_ERROR("Failed to load texture: " << texturename);
-    } else {
-        texture_->setSmooth(true);
-        auto alpha = color_.a;
-        color_ = sf::Color::White;
-        color_.a = alpha;
-        body_.setTexture(texture_);
-    }
-}
-
 void GameObject::SetTexture(sf::Texture *texture) {
-   // texture_ = &texture;
+    texture_ = texture;
     auto alpha = color_.a;
     color_ = sf::Color::White;
     color_.a = alpha;
-    body_.setTexture(texture);
+    body_.setTexture(texture_);
 }
 
 float GameObject::GetMaxSpeed() {
@@ -76,7 +63,7 @@ void GameObject::Move(float dt) {
 
 void GameObject::Kill() {
     dead_ = true;
-    LOG_INFO("Object " << GetType() << " died");
+    LOG_DEBUG("Object " << GetType() << " died");
 }
 
 }

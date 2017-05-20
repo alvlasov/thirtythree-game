@@ -14,11 +14,11 @@ Enemy::Enemy(const sf::Vector2f &pos, Randomizer *rand, float radius, float fric
     if (radius <= 0) radius_ = rand_->UniformInt(min_radius_, max_radius_);
     color_ = rand_->ColorOpaque();
 
-    LOG_INFO("Object " << GetType() << " created on pos (" << pos_.x << ", " << pos_.y << ")");
+    LOG_DEBUG("Object " << GetType() << " created on pos (" << pos_.x << ", " << pos_.y << ")");
 }
 
 Enemy::~Enemy() {
-    LOG_INFO("Object " << GetType() << " destroyed");
+    LOG_DEBUG("Object " << GetType() << " destroyed");
 }
 
 }

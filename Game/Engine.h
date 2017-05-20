@@ -23,7 +23,6 @@
 #include "Logger.h"
 #include "GameLogic.h"
 #include "Randomizer.h"
-#include "ObjectsFactory.h"
 #include "Utility.h"
 
 
@@ -35,9 +34,8 @@ public:
     typedef std::vector<std::unique_ptr<GameObject>>::iterator obj_iterator;
 
     //! Инициализация движка
-    //! @param mode Размер окна
-    //! @param name Заголовок окна
-    //! @param map_size Размер игровой карты
+    Engine(Drawer *drawer, GameLogic *logic);
+
     Engine(sf::VideoMode mode, const sf::String name, sf::Vector2i map_size);
 
     //! Добавление игрового объекта в движок
@@ -51,13 +49,13 @@ public:
     size_t GetObjectsLimit() { return max_object_number_; }
 
     //! Возвращает размер карты
-    sf::Vector2f GetMapSize() { return drawer_.GetMapSize(); }
+    sf::Vector2f GetMapSize() { return drawer_->GetMapSize(); }
 
     //! Возвращает размер окна
-    sf::Vector2f GetWindowSize() { return drawer_.GetWindowSize(); }
+    sf::Vector2f GetWindowSize() { return drawer_->GetWindowSize(); }
 
     //! Возвращает указатель на окно
-    sf::RenderWindow* GetWindow() { return drawer_.GetWindow(); }
+    sf::RenderWindow* GetWindow() { return drawer_->GetWindow(); }
 
 private:
 
@@ -104,13 +102,10 @@ private:
     //! Хранилище игровых объектов
     std::vector<std::unique_ptr<GameObject>> objects_;
 
-    Drawer drawer_;
-
-    //! Класс, предоставляющий возможности генерации случайных величин
-    Randomizer rand_;
+    Drawer *drawer_;
 
     //! Класс, реализующий игровую логику
-    GameLogic logic_;
+    GameLogic *logic_;
 
     //! Время прохождения одного игрового цикла
     float time_;

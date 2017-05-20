@@ -60,6 +60,8 @@
 		<Unit filename="Drawer.h" />
 		<Unit filename="Engine.cpp" />
 		<Unit filename="Engine.h" />
+		<Unit filename="GameFactory.cpp" />
+		<Unit filename="GameFactory.h" />
 		<Unit filename="GameLogic.cpp" />
 		<Unit filename="GameLogic.h" />
 		<Unit filename="GameObjects/Enemy.cpp" />

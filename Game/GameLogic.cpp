@@ -11,14 +11,15 @@
 
 namespace thirtythree {
 
-GameLogic::GameLogic(Engine *engine, Randomizer *rand)
+GameLogic::GameLogic(Randomizer *rand, ObjectsFactory *factory,
+                     TextureProvider *texture_provider, Engine *engine)
     : engine_ (engine),
       rand_ (rand),
-      factory_ (engine, rand, this),
+      factory_ (factory),
+      texture_provider_ (texture_provider),
       score_ (0) {
     clock_food_create_.restart();
     clock_enemy_create_.restart();
-    texture_provider_ = new TextureProvider(rand_);
     texture_provider_->LoadPlayerTexturesFromDirectory("Textures/Players");
     LOG_INFO("Game logic unit initialized");
 }
@@ -32,15 +33,15 @@ void GameLogic::StartGame() {
     score_ = 0;
     int num_food = rand_->UniformInt(30 * map_size.x / 2500, 60 * map_size.y / 2500);
     for (int i = 0; i < num_food; i++) {
-        engine_->AddObject(factory_.CreateFood());
+        engine_->AddObject(factory_->CreateFood());
     }
     int num_enemies = rand_->UniformInt(2 * map_size.x / 2500, 5 * map_size.y / 2500);
     for (int i = 0; i < num_enemies; i++) {
-        GameObject *new_enemy = factory_.CreateEnemy();
+        GameObject *new_enemy = factory_->CreateEnemy();
         new_enemy->SetTexture(texture_provider_->GetRandomPlayerTexture());
         engine_->AddObject(new_enemy);
     }
-    GameObject *new_player = factory_.CreatePlayer(player_initial_radius_);
+    GameObject *new_player = factory_->CreatePlayer(player_initial_radius_);
     new_player->SetTexture(texture_provider_->GetRandomPlayerTexture());
     engine_->AddObject(new_player);
 }
@@ -50,7 +51,7 @@ void GameLogic::DoLogic() {
     if (clock_food_create_.getElapsedTime().asSeconds() > min_food_create_interval_) {
         int num_obj = rand_->UniformInt(3 * map_size.x / 2500, 7 * map_size.y / 2500);
         for (int i = 0; i < num_obj; i++) {
-            engine_->AddObject(factory_.CreateFood());
+            engine_->AddObject(factory_->CreateFood());
         }
         clock_food_create_.restart();
     }
@@ -58,7 +59,7 @@ void GameLogic::DoLogic() {
     if (clock_enemy_create_.getElapsedTime().asSeconds() > min_enemy_create_interval_) {
         int num_obj = rand_->UniformInt(0 * map_size.x / 2500, 5 * map_size.y / 2500);
         for (int i = 0; i < num_obj; i++) {
-            GameObject *new_enemy = factory_.CreateEnemy();
+            GameObject *new_enemy = factory_->CreateEnemy();
             new_enemy->SetTexture(texture_provider_->GetRandomPlayerTexture());
             engine_->AddObject(new_enemy);
         }

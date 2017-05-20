@@ -31,7 +31,8 @@ public:
         GameObject *obj2;
     };
 
-    GameLogic(Engine *engine, Randomizer *rand);
+    GameLogic(Randomizer *rand, ObjectsFactory *factory,
+              TextureProvider *texture_provider, Engine *engine = nullptr);
     ~GameLogic();
 
     void StartGame();
@@ -39,6 +40,8 @@ public:
     void HandleEvent(Event &event);
 
     int GetScore() { return score_; }
+
+    void AssociateEngine(Engine *engine) { engine_ = engine; }
 
 private:
 
@@ -56,7 +59,7 @@ private:
 
     Randomizer *rand_;
     Engine *engine_;
-    ObjectsFactory factory_;
+    ObjectsFactory *factory_;
     TextureProvider *texture_provider_;
 
     int score_;
