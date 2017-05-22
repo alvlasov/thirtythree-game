@@ -57,6 +57,10 @@ public:
     void SetRadius(float radius) { radius_ = radius; }
     void AddRadius(float radius) { radius_ += radius; }
     void AddSpeed(sf::Vector2f speed) { speed_ += speed; }
+    int GetId() { return id_; }
+    void SetId(int id) { id_ = id; }
+
+    sf::FloatRect GetBoundary() { return body_.getGlobalBounds();}
 
 protected:
 
@@ -71,6 +75,8 @@ protected:
 
     bool dead_ = false;
     bool interactable_ = true;
+
+    int id_;
 };
 }
 

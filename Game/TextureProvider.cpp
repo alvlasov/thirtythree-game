@@ -3,7 +3,7 @@
 namespace thirtythree {
 
 void TextureProvider::LoadPlayerTexturesFromDirectory(std::string directory) {
-    LOG_INFO("Loading textures");
+    LOG_INFO("Loading textures..");
     auto file_names = GetFileNamesInDirectory(directory);
     for (auto& name : file_names) {
         player_textures_.push_back(sf::Texture());

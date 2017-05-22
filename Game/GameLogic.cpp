@@ -49,7 +49,7 @@ void GameLogic::StartGame() {
 void GameLogic::DoLogic() {
     auto map_size = engine_->GetMapSize();
     if (clock_food_create_.getElapsedTime().asSeconds() > min_food_create_interval_) {
-        int num_obj = rand_->UniformInt(3 * map_size.x / 2500, 7 * map_size.y / 2500);
+        int num_obj = rand_->UniformInt(4 * map_size.x / 2500, 7 * map_size.y / 2500);
         for (int i = 0; i < num_obj; i++) {
             engine_->AddObject(factory_->CreateFood());
         }

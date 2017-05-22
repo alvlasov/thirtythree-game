@@ -8,14 +8,16 @@
 #include "Engine.h"
 
 namespace thirtythree{
-Engine::Engine(Drawer *drawer, GameLogic *logic)
+Engine::Engine(Drawer *drawer, GameLogic *logic, QuadTree *tree)
     : logic_ (logic),
-      drawer_ (drawer) {
+      drawer_ (drawer),
+      tree_ (tree) {
     LOG_INFO("Engine created");
 }
 
 void Engine::AddObject(GameObject *object) {
     if (GetObjectsCount() < max_object_number_) {
+        object->SetId(id_counter++);
         objects_.emplace_back(object);
     } else {
         if (object != nullptr) delete object;
@@ -33,46 +35,50 @@ void Engine::GameLoop() {
     LOG_INFO("Game loop started");
     while (drawer_->WindowIsOpen()) {
         time_ = clock_.restart().asSeconds();
-
         HandleEvents();
-        logic_->DoLogic();
 
-        for (auto obj1 = std::begin(objects_); obj1 != std::end(objects_); obj1++) {
-            auto nearest_to_obj1 = obj1;
-            float nearest_distance = std::numeric_limits<float>::max();
-            for (auto obj2 = obj1 + 1; obj2 != std::end(objects_); obj2++) {
-                if (ObjectsAreAlive(obj1, obj2)) {
-                    float distance = CalculateDistance(obj1, obj2);
-                    if (Collision(obj1, obj2, distance)) {
-                        GameLogic::Event event(GameLogic::EventType::COLLISION, **obj1, **obj2);
-                        logic_->HandleEvent(event);
+        if (!paused_) {
+            logic_->DoLogic();
 
-                    } else if (ObjectsAreInteractable(obj1, obj2)) {
-                        if (distance < nearest_distance) {
-                            nearest_distance = distance;
-                            nearest_to_obj1 = obj2;
+            drawer_->ClearMap();
+            tree_->Prune();
+            for (auto& obj : objects_) {
+                if (!(obj->IsDead())) {
+                    HandleObject(*obj);
+                    HandleBorderCollisions(*obj);
+                    tree_->Insert(obj);
+                    // TODO Не перестраивать дерево
+                }
+            }
+
+            if (draw_quadtree_ == 1) drawer_->VisualizeQuadTree(*tree_);
+
+            for (auto& obj : objects_) {
+                if (!(obj->IsDead()) && GetObjectsCount() >= 2) {
+
+                    float interaction_distance = obj_interaction_distance_;
+                    if (!obj->IsInteractable()) interaction_distance =  obj_interaction_distance_ / 10;
+
+                    std::shared_ptr<GameObject> nearest_obj = tree_->FindNearestNeighbor(obj, interaction_distance, draw_quadtree_ == 2);
+                    if (nearest_obj.use_count()) {
+                        float distance = CalculateDistance(*obj, *nearest_obj);
+                        if (Collision(*obj, *nearest_obj, distance)) {
+                            GameLogic::Event event(GameLogic::EventType::COLLISION, *obj, *nearest_obj);
+                            logic_->HandleEvent(event);
+                        } else {
+                            GameLogic::Event event(GameLogic::EventType::INTERACTION, *obj, *nearest_obj);
+                            logic_->HandleEvent(event);
                         }
-                    }
+
+                        }
 
                 }
             }
-            if (ObjectIsInteractable(obj1)) {
-                GameLogic::Event event(GameLogic::EventType::INTERACTION, **obj1, **nearest_to_obj1);
-                logic_->HandleEvent(event);
-            }
+
+            HandleDeadObjects();
         }
 
-        drawer_->ClearMap();
-        for (auto& obj : objects_) {
-            if (!(obj->IsDead())) {
-                HandleObject(*obj);
-                HandleBorderCollisions(*obj);
-            }
-        }
-
-        HandleDeadObjects();
         drawer_->DisplayMap();
-
         drawer_->ClearWindow();
         drawer_->DrawMap();
         DrawUI();
@@ -100,10 +106,23 @@ void Engine::HandleEvents() {
                 break;
             }
             case sf::Event::KeyPressed: {
-                if (event.key.code == sf::Keyboard::Tab) {
-                    draw_debug_info_ = !draw_debug_info_;
-                } else if (event.key.code == sf::Keyboard::R && game_over_) {
-                    RestartGame();
+                switch (event.key.code) {
+                    case sf::Keyboard::Tab: {
+                        draw_debug_info_ = !draw_debug_info_;
+                        break;
+                    }
+                    case sf::Keyboard::R: {
+                        if (game_over_) RestartGame();
+                        break;
+                    }
+                    case sf::Keyboard::Escape: {
+                        paused_ = !paused_;
+                        break;
+                    }
+                    case sf::Keyboard::Q: {
+                        draw_quadtree_ = (draw_quadtree_ + 1) % 3;
+                        break;
+                    }
                 }
                 break;
             }

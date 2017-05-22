@@ -8,6 +8,7 @@
 #include "Randomizer.h"
 #include "ObjectsFactory.h"
 #include "TextureProvider.h"
+#include "Engine/QuadTree.h"
 
 namespace thirtythree {
 
@@ -28,6 +29,8 @@ private:
     Randomizer *rand_;
     GameLogic *logic_;
     ObjectsFactory *factory_;
+
+    QuadTree *tree_;
 
 };
 
