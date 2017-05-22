@@ -8,7 +8,7 @@
 #ifndef PLAYER_H_INCLUDED
 #define PLAYER_H_INCLUDED
 
-#include "GameObject.h"
+#include "GameObjects/GameObject.h"
 
 namespace thirtythree {
 
@@ -17,7 +17,6 @@ public:
 
     Player() : GameObject() {}
     Player(sf::RenderWindow *window,
-           const sf::Vector2f &map_size,
            const sf::Vector2f &pos,
            float radius,
            const sf::Color &color = sf::Color::White,
@@ -28,7 +27,7 @@ public:
     void Logic() {};
     void Control();
 
-    std::string GetType() { return "PLAYER"; }
+    int GetType() { return PLAYER; }
 private:
 
     sf::RenderWindow *window_;

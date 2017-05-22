@@ -9,8 +9,8 @@
 #define GLOBALOPTIONS_H_INCLUDED
 
 //! Параметры логгирования
-#define INFO_MESSAGES false
-#define DEBUG_MESSAGES true
+#define INFO_MESSAGES true
+#define DEBUG_MESSAGES false
 #define DEV_MESSAGES true
 
 #endif // GLOBALOPTIONS_H_INCLUDED

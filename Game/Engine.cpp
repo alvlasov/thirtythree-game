@@ -8,27 +8,16 @@
 #include "Engine.h"
 
 namespace thirtythree{
-
-Engine::Engine(sf::VideoMode mode, const sf::String name, sf::Vector2i map_size)
-    : logic_ (this, &rand_) {
-    sf::ContextSettings settings;
-    settings.antialiasingLevel = 2;
-    window_.create(mode, name, sf::Style::Default, settings);
-    window_.setVerticalSyncEnabled(true);
-    default_view_ = window_.getDefaultView();
-    map_.create(map_size.x, map_size.y);
-    map_.setSmooth(true);
-    view_.reset(sf::FloatRect(0, 0, mode.width, mode.height));
-    if (!font_.loadFromFile("Fonts/default.ttf")) {
-        LOG_ERROR("Failed to load font");
-        throw std::runtime_error("Failed to load font");
-    }
-    LOG_INFO("Engine created: Video mode = " << mode.width << "x" << mode.height <<
-             ", Map size = " << map_size.x << "x" << map_size.y);
+Engine::Engine(Drawer *drawer, GameLogic *logic, QuadTree *tree)
+    : logic_ (logic),
+      drawer_ (drawer),
+      tree_ (tree) {
+    LOG_INFO("Engine created");
 }
 
 void Engine::AddObject(GameObject *object) {
     if (GetObjectsCount() < max_object_number_) {
+        object->SetId(id_counter++);
         objects_.emplace_back(object);
     } else {
         if (object != nullptr) delete object;
@@ -37,60 +26,63 @@ void Engine::AddObject(GameObject *object) {
 }
 
 void Engine::StartGame() {
-    logic_.StartGame();
+    logic_->StartGame();
     LOG_INFO("Game initialized");
     GameLoop();
 }
 
 void Engine::GameLoop() {
     LOG_INFO("Game loop started");
-    while (window_.isOpen()) {
+    while (drawer_->WindowIsOpen()) {
         time_ = clock_.restart().asSeconds();
-
         HandleEvents();
-        logic_.DoLogic();
-        map_.clear(sf::Color::White);
 
-        for (auto obj1 = std::begin(objects_); obj1 != std::end(objects_); obj1++) {
-            auto nearest_obj = obj1 + 1;
-            float distance;
-            if ((*obj1)->IsInteractable() && nearest_obj != std::end(objects_)) {
-                distance = length((*obj1)->GetPos() - (*nearest_obj)->GetPos());
-            }
-            for (auto obj2 = obj1 + 1; obj2 != std::end(objects_); obj2++) {
-                if (!(*obj1)->IsDead() && !(*obj2)->IsDead()) {
-                    if (Collision(**obj1, **obj2)) {
-                        logic_.CollideBoth(**obj1, **obj2);
-                    }
-                    if ((*obj1)->IsInteractable() && (*obj2)->IsInteractable()) {
-                        float new_distance = length((*obj1)->GetPos() - (*obj2)->GetPos());
-                        if (new_distance < distance) {
-                            distance = new_distance;
-                            nearest_obj = obj2;
-                        }
-                    }
+        if (!paused_) {
+            logic_->DoLogic();
+
+            drawer_->ClearMap();
+            tree_->Prune();
+            for (auto& obj : objects_) {
+                if (!(obj->IsDead())) {
+                    HandleObject(*obj);
+                    HandleBorderCollisions(*obj);
+                    tree_->Insert(obj);
+                    // TODO Не перестраивать дерево
                 }
             }
-            if ((*obj1)->IsInteractable() && nearest_obj != std::end(objects_)) {
-                logic_.InteractBoth(**obj1, **nearest_obj);
+
+            if (draw_quadtree_ == 1) drawer_->VisualizeQuadTree(*tree_);
+
+            for (auto& obj : objects_) {
+                if (!(obj->IsDead()) && GetObjectsCount() >= 2) {
+
+                    float interaction_distance = obj_interaction_distance_ + obj->GetRadius();
+                    if (!obj->IsInteractable()) interaction_distance -= obj_interaction_distance_;
+
+                    std::shared_ptr<GameObject> nearest_obj = tree_->FindNearestNeighbor(obj, interaction_distance, draw_quadtree_ == 2);
+                    if (nearest_obj.use_count()) {
+                        float distance = CalculateDistance(*obj, *nearest_obj);
+                        if (Collision(*obj, *nearest_obj, distance)) {
+                            GameLogic::Event event(GameLogic::EventType::COLLISION, *obj, *nearest_obj);
+                            logic_->HandleEvent(event);
+                        } else {
+                            GameLogic::Event event(GameLogic::EventType::INTERACTION, *obj, *nearest_obj);
+                            logic_->HandleEvent(event);
+                        }
+
+                    }
+
+                }
             }
+
+            HandleDeadObjects();
         }
 
-        for (auto& obj : objects_) {
-            if (!(obj->IsDead())) {
-                HandleObject(*obj);
-                HandleBorderCollisions(*obj);
-            }
-        }
-
-        HandleDeadObjects();
-        map_.display();
-
-        window_.clear(sf::Color(222, 222, 222));
-        window_.setView(view_);
-        window_.draw(sf::Sprite(map_.getTexture()));
+        drawer_->DisplayMap();
+        drawer_->ClearWindow();
+        drawer_->DrawMap();
         DrawUI();
-        window_.display();
+        drawer_->DisplayWindow();
 
     }
 }
@@ -103,27 +95,44 @@ void Engine::RestartGame() {
 
 void Engine::HandleEvents() {
     sf::Event event;
-    while (window_.pollEvent(event)) {
+    while (drawer_->PollEvent(event)) {
         switch (event.type) {
             case sf::Event::Closed: {
-                window_.close();
+                drawer_->CloseWindow();
                 break;
             }
             case sf::Event::Resized: {
-                view_.reset(sf::FloatRect(0, 0, event.size.width, event.size.height));
-                default_view_.reset(sf::FloatRect(0, 0, event.size.width, event.size.height));
+                drawer_->ResizeWindow(event.size.width, event.size.height);
                 break;
             }
             case sf::Event::KeyPressed: {
-                if (event.key.code == sf::Keyboard::Tab) {
-                    draw_debug_info_ = !draw_debug_info_;
-                } else if (event.key.code == sf::Keyboard::R && game_over_) {
-                    RestartGame();
+                switch (event.key.code) {
+                    case sf::Keyboard::Tab: {
+                        draw_debug_info_ = !draw_debug_info_;
+                        break;
+                    }
+                    case sf::Keyboard::R: {
+                        if (game_over_) RestartGame();
+                        break;
+                    }
+                    case sf::Keyboard::Escape: {
+                        paused_ = !paused_;
+                        break;
+                    }
+                    case sf::Keyboard::Q: {
+                        draw_quadtree_ = (draw_quadtree_ + 1) % 3;
+                        break;
+                    }
+                    case sf::Keyboard::W: {
+                        draw_obj_id_ = (draw_obj_id_ + 1) % 3;
+                        break;
+                    }
+                    default: {}
                 }
                 break;
             }
             case sf::Event::MouseWheelMoved: {
-                view_.zoom(1 - (event.mouseWheel.delta * 0.05));
+                drawer_->ZoomWindow(event.mouseWheel.delta);
                 break;
             }
             default: {}
@@ -132,13 +141,20 @@ void Engine::HandleEvents() {
 }
 
 void Engine::HandleObject(GameObject &obj) {
-    if (obj.GetType() == "PLAYER") {
-        view_.setCenter(obj.GetPos());
+    if (obj.GetType() == PLAYER) {
+        drawer_->SetViewCenter(obj.GetPos());
         obj.Control();
     }
     obj.Logic();
     obj.Move(time_);
-    obj.Draw(map_);
+    drawer_->DrawObject(obj);
+    if (draw_debug_info_ && draw_obj_id_) {
+        if (draw_obj_id_ == 2 || obj.IsInteractable()) {
+            std::string info = std::to_string(obj.GetId());
+            Drawer::Text obj_info(info, 40, obj.GetPos(), true, true);
+            drawer_->DrawText(obj_info);
+        }
+    }
 }
 
 void Engine::HandleBorderCollisions(GameObject &obj) {
@@ -178,23 +194,12 @@ void Engine::HandleBorderCollisions(GameObject &obj) {
 //    obj.SetPos(pos);
 }
 
-bool Engine::Collision(GameObject &obj1, GameObject &obj2) {
-    auto pos1 = obj1.GetPos();
-    auto pos2 = obj2.GetPos();
-    auto radius1 = obj1.GetRadius();
-    auto radius2 = obj2.GetRadius();
-    if (length(pos2 - pos1) <= std::max(radius1, radius2)) {
-        return true;
-    }
-    return false;
-}
-
 void Engine::HandleDeadObjects() {
 
     auto obj = std::begin(objects_);
     while (obj != std::end(objects_)) {
         if ((*obj)->IsDead()) {
-            if ((*obj)->GetType() == "PLAYER") game_over_ = true;
+            if ((*obj)->GetType() == PLAYER) game_over_ = true;
             obj = objects_.erase(obj);
         } else {
             obj++;
@@ -204,48 +209,25 @@ void Engine::HandleDeadObjects() {
 }
 
 void Engine::DrawUI() {
-    sf::View prev_view = window_.getView();
-    window_.setView(default_view_);
-    std::string score = "Score: " + std::to_string(logic_.GetScore());
-    sf::Text text(score, font_, 25);
-    text.setPosition(5, 0);
-    text.setFillColor(sf::Color::Black);
-    window_.draw(text);
+    drawer_->DrawText(Drawer::Text("Score: " + std::to_string(logic_->GetScore()), 25, {5, 0}));
     if (game_over_) {
-        sf::Text text("Game over!", font_, 45);
-        text.setPosition(GetWindowSize() / 2.0f);
-        auto bounds = text.getGlobalBounds();
-        text.setOrigin(bounds.width / 2.0f, bounds.height / 2.0f);
-        text.setFillColor(sf::Color::Black);
-
-        sf::Text hint("Press R to restart", font_, 30);
-        auto hint_pos = GetWindowSize() / 2.0f;
-        hint_pos.y += 50;
-        hint.setPosition(hint_pos);
-        auto hint_bounds = hint.getGlobalBounds();
-        hint.setOrigin(hint_bounds.width / 2.0f, hint_bounds.height / 2.0f);
-        hint.setFillColor(sf::Color::Black);
-
-        window_.draw(text);
-        window_.draw(hint);
+        sf::Vector2f pos1 = GetWindowSize() / 2.0f;
+        sf::Vector2f pos2 = GetWindowSize() / 2.0f + sf::Vector2f(0, 50);
+        drawer_->DrawText(Drawer::Text("Game over!", 45, pos1, true));
+        drawer_->DrawText(Drawer::Text("Press R to restart", 30, pos2, true));
     }
     if (draw_debug_info_) {
         DrawDebugInfo();
     }
-    window_.setView(prev_view);
+
 }
 
 void Engine::DrawDebugInfo() {
     int fps = 1.f / time_;
-
-    std::string debug_text = "FPS: " + std::to_string(fps) +
-                             "\nObj. count: " + std::to_string(GetObjectsCount());
-    sf::Text text(debug_text, font_, 20);
-    text.setOrigin(0, 45);
-    text.setPosition(0, GetWindowSize().y);
-    text.setFillColor(sf::Color::Black);
-
-    window_.draw(text);
+    std::string debug_text = "FPS: " + std::to_string(fps) + "\nObj. count: " +
+                             std::to_string(GetObjectsCount());
+    sf::Vector2f pos = {0, GetWindowSize().y - 45};
+    drawer_->DrawText(Drawer::Text(debug_text, 20, pos));
 }
 
 }

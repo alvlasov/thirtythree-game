@@ -9,16 +9,15 @@
 
 namespace thirtythree {
 
-Player::Player(sf::RenderWindow *window, const sf::Vector2f &map_size, const sf::Vector2f &pos,
+Player::Player(sf::RenderWindow *window, const sf::Vector2f &pos,
                float radius, const sf::Color &color, float friction)
     : GameObject(pos, radius, color, {0, 0}, friction),
-      window_ (window),
-      map_size_ (map_size) {
-    LOG_INFO("Object " << GetType() << " created on pos (" << pos_.x << ", " << pos_.y << ")");
+      window_ (window) {
+    LOG_DEBUG("Object " << GetType() << " created on pos (" << pos_.x << ", " << pos_.y << ")");
 }
 
 Player::~Player() {
-    LOG_INFO("Object " << GetType() << " destroyed");
+    LOG_DEBUG("Object " << GetType() << " destroyed");
 }
 
 void Player::Control() {

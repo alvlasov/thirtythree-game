@@ -8,31 +8,31 @@
 #ifndef ENGINE_H_INCLUDED
 #define ENGINE_H_INCLUDED
 
-#include <SFML/Graphics.hpp>
 #include <stdexcept>
 #include <vector>
 #include <memory>
 #include <string>
+#include <limits>
+
+#include <SFML/Graphics.hpp>
 
 #include "GameObjects\GameObject.h"
-#include "GameObjects\Player.h"
-#include "GameObjects\Food.h"
+#include "Drawer.h"
 #include "Logger.h"
 #include "GameLogic.h"
 #include "Randomizer.h"
-#include "ObjectsFactory.h"
 #include "Utility.h"
+#include "Engine/QuadTree.h"
 
 namespace thirtythree {
 
 class Engine {
 public:
 
+    typedef std::vector<std::shared_ptr<GameObject>>::iterator obj_iterator;
+
     //! Инициализация движка
-    //! @param mode Размер окна
-    //! @param name Заголовок окна
-    //! @param map_size Размер игровой карты
-    Engine(sf::VideoMode mode, const sf::String name, sf::Vector2i map_size);
+    Engine(Drawer *drawer, GameLogic *logic, QuadTree *tree);
 
     //! Добавление игрового объекта в движок
     void AddObject(GameObject *object);
@@ -45,18 +45,20 @@ public:
     size_t GetObjectsLimit() { return max_object_number_; }
 
     //! Возвращает размер карты
-    sf::Vector2f GetMapSize() { return (sf::Vector2f)map_.getSize(); }
+    sf::Vector2f GetMapSize() { return drawer_->GetMapSize(); }
 
     //! Возвращает размер окна
-    sf::Vector2f GetWindowSize() { return (sf::Vector2f)window_.getSize(); }
+    sf::Vector2f GetWindowSize() { return drawer_->GetWindowSize(); }
 
     //! Возвращает указатель на окно
-    sf::RenderWindow* GetWindow() { return &window_; }
+    sf::RenderWindow* GetWindow() { return drawer_->GetWindow(); }
 
 private:
 
     //! Максимальное число объектов, обрабатываемых движком
-    static const size_t max_object_number_ = 200;
+    static const int max_object_number_ = 1000;
+    static const int obj_interaction_distance_ = 800;
+    int id_counter = 0;
 
     //! Главный игровой цикл
     void GameLoop();
@@ -65,34 +67,33 @@ private:
     void HandleEvents();
     void HandleObject(GameObject &obj);
     void HandleBorderCollisions(GameObject &obj);
-    bool Collision(GameObject &obj1, GameObject &obj2);
     void HandleDeadObjects();
+
+    inline float CalculateDistance(GameObject &obj1, GameObject &obj2) {
+        return length(obj2.GetPos() - obj1.GetPos());
+    }
+
+    inline bool Collision(GameObject &obj1, GameObject &obj2, float distance) {
+        auto radius1 = obj1.GetRadius();
+        auto radius2 = obj2.GetRadius();
+        if (distance <= std::max(radius1, radius2)) {
+            return true;
+        }
+        return false;
+    }
+
     void DrawUI();
     void DrawDebugInfo();
 
     //! Хранилище игровых объектов
-    std::vector<std::unique_ptr<GameObject>> objects_;
+    std::vector<std::shared_ptr<GameObject>> objects_;
 
-    //! Окно, в которое производится отрисовка
-    sf::RenderWindow window_;
+    QuadTree *tree_;
 
-    //! Игровая карта
-    sf::RenderTexture map_;
-
-    //! Камера для перемещения по игровой карте
-    sf::View view_;
-
-    //! Камера для вывода на экран интерфейса
-    sf::View default_view_;
-
-    //! Шрифт для отрисовки надписей
-    sf::Font font_;
-
-    //! Класс, предоставляющий возможности генерации случайных величин
-    Randomizer rand_;
+    Drawer *drawer_;
 
     //! Класс, реализующий игровую логику
-    GameLogic logic_;
+    GameLogic *logic_;
 
     //! Время прохождения одного игрового цикла
     float time_;
@@ -100,8 +101,13 @@ private:
 
     //! Вывод отладочной информации
     bool draw_debug_info_ = true;
+    int draw_quadtree_ = 0;
+    int draw_obj_id_ = 0;
 
     bool game_over_ = false;
+
+    bool paused_ = false;
+
 
 };
 

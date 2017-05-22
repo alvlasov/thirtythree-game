@@ -23,16 +23,22 @@ class GameLogic;
 class ObjectsFactory {
 public:
 
-    ObjectsFactory(Engine *engine, Randomizer *rand, GameLogic *logic);
+    ObjectsFactory(Randomizer *rand, Engine *engine = nullptr);
     ~ObjectsFactory();
 
-    GameObject* CreateObject(std::string object_type);
+    GameObject* CreatePlayer(float radius);
+    GameObject* CreateFood();
+    GameObject* CreateEnemy();
+    GameObject* CreateEnemy(float radius);
+
+    void AssociateEngine(Engine *engine) { engine_ = engine; }
 
 private:
 
     Engine *engine_;
     Randomizer *rand_;
     GameLogic *logic_;
+
 
 };
 

@@ -7,19 +7,19 @@
 #ifndef ENEMY_H_INCLUDED
 #define ENEMY_H_INCLUDED
 
-#include "GameObject.h"
-#include "../Randomizer.h"
+#include "GameObjects/GameObject.h"
+#include "Randomizer.h"
 
 namespace thirtythree {
 
 class Enemy : public GameObject {
 public:
     Enemy() : GameObject() {}
-    Enemy(const sf::Vector2f &pos, Randomizer *rand, float friction = 0);
+    Enemy(const sf::Vector2f &pos, Randomizer *rand, float radius = 0, float friction = 0);
 
     ~Enemy();
 
-    std::string GetType() { return "ENEMY"; }
+    int GetType() { return ENEMY; }
 
 private:
 

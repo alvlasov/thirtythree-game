@@ -10,10 +10,17 @@
 
 #include <stdexcept>
 #include <SFML/Graphics.hpp>
-#include "../Logger.h"
-#include "../Utility.h"
+#include "Logger.h"
+#include "Utility.h"
 
 namespace thirtythree {
+
+enum {
+    ABSTRACT = 0,
+    PLAYER,
+    FOOD,
+    ENEMY
+};
 
 class GameObject {
 public:
@@ -27,12 +34,14 @@ public:
     virtual ~GameObject();
 
     void SetTexture(const std::string &texturename);
+    void SetTexture(sf::Texture *texture);
+
     virtual void Draw(sf::RenderTarget &screen);
     virtual void Control() {}
     virtual void Logic();
     virtual void Move(float dt);
 
-    virtual std::string GetType() { return "ABSTRACT"; }
+    virtual int GetType() { return ABSTRACT; }
 
     void Kill();
     bool IsDead() { return dead_; }
@@ -48,6 +57,10 @@ public:
     void SetRadius(float radius) { radius_ = radius; }
     void AddRadius(float radius) { radius_ += radius; }
     void AddSpeed(sf::Vector2f speed) { speed_ += speed; }
+    int GetId() { return id_; }
+    void SetId(int id) { id_ = id; }
+
+    sf::FloatRect GetBoundary() { return body_.getGlobalBounds();}
 
 protected:
 
@@ -57,11 +70,13 @@ protected:
 
     float radius_;
     sf::Color color_;
-    sf::Texture texture_;
+    sf::Texture *texture_;
     sf::CircleShape body_;
 
     bool dead_ = false;
     bool interactable_ = true;
+
+    int id_;
 };
 }
 

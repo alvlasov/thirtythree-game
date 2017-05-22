@@ -18,7 +18,8 @@ Food::Food(const sf::Vector2f &pos, Randomizer *rand, float friction)
     radius_ = rand_->UniformInt(min_radius_, max_radius_);
     color_ = rand_->Color();
     min_seconds_idle_ = rand->UniformInt(1, 3);
-    LOG_INFO("Object " << GetType() << " created on pos (" << pos_.x << ", " << pos_.y << ")");
+    body_.setPointCount(10);
+    LOG_DEBUG("Object " << GetType() << " created on pos (" << pos_.x << ", " << pos_.y << ")");
 }
 
 void Food::Logic() {
@@ -37,7 +38,7 @@ void Food::Logic() {
 }
 
 Food::~Food() {
-    LOG_INFO("Object " << GetType() << " destroyed");
+    LOG_DEBUG("Object " << GetType() << " destroyed");
 }
 
 }

@@ -11,7 +11,6 @@
 				<Option object_output="obj/Debug/" />
 				<Option type="1" />
 				<Option compiler="gcc" />
-				<Option use_console_runner="0" />
 				<Option projectLinkerOptionsRelation="2" />
 				<Compiler>
 					<Add option="-g" />
@@ -36,6 +35,7 @@
 			<Add option="-Wall" />
 			<Add option="-DSFML_STATIC" />
 			<Add directory="SFML/include" />
+			<Add directory='&quot;.&quot;' />
 		</Compiler>
 		<Linker>
 			<Add option="-static-libgcc -static-libstdc++" />
@@ -56,8 +56,14 @@
 			<Add library="opengl32" />
 			<Add directory="SFML/lib" />
 		</Linker>
+		<Unit filename="Drawer.cpp" />
+		<Unit filename="Drawer.h" />
 		<Unit filename="Engine.cpp" />
 		<Unit filename="Engine.h" />
+		<Unit filename="Engine/Quadtree.cpp" />
+		<Unit filename="Engine/Quadtree.h" />
+		<Unit filename="GameFactory.cpp" />
+		<Unit filename="GameFactory.h" />
 		<Unit filename="GameLogic.cpp" />
 		<Unit filename="GameLogic.h" />
 		<Unit filename="GameObjects/Enemy.cpp" />
@@ -69,11 +75,15 @@
 		<Unit filename="GameObjects/Player.cpp" />
 		<Unit filename="GameObjects/Player.h" />
 		<Unit filename="GlobalOptions.h" />
+		<Unit filename="Leaderboard.cpp" />
+		<Unit filename="Leaderboard.h" />
 		<Unit filename="Logger.h" />
 		<Unit filename="ObjectsFactory.cpp" />
 		<Unit filename="ObjectsFactory.h" />
 		<Unit filename="Randomizer.cpp" />
 		<Unit filename="Randomizer.h" />
+		<Unit filename="TextureProvider.cpp" />
+		<Unit filename="TextureProvider.h" />
 		<Unit filename="Utility.h" />
 		<Unit filename="main.cpp" />
 		<Extensions>
