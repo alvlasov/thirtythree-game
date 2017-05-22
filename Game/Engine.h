@@ -8,13 +8,13 @@
 #ifndef ENGINE_H_INCLUDED
 #define ENGINE_H_INCLUDED
 
-#include <SFML/Graphics.hpp>
 #include <stdexcept>
 #include <vector>
 #include <memory>
 #include <string>
 #include <limits>
 
+#include <SFML/Graphics.hpp>
 
 #include "GameObjects\GameObject.h"
 #include "Drawer.h"
@@ -23,7 +23,6 @@
 #include "Randomizer.h"
 #include "Utility.h"
 #include "Engine/QuadTree.h"
-
 
 namespace thirtythree {
 
@@ -58,7 +57,7 @@ private:
 
     //! Максимальное число объектов, обрабатываемых движком
     static const int max_object_number_ = 1000;
-    static const int obj_interaction_distance_ = 1300;
+    static const int obj_interaction_distance_ = 800;
     int id_counter = 0;
 
     //! Главный игровой цикл
@@ -103,6 +102,7 @@ private:
     //! Вывод отладочной информации
     bool draw_debug_info_ = true;
     int draw_quadtree_ = 0;
+    int draw_obj_id_ = 0;
 
     bool game_over_ = false;
 

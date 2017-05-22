@@ -10,8 +10,8 @@
 
 #include <stdexcept>
 #include <SFML/Graphics.hpp>
-#include "../Logger.h"
-#include "../Utility.h"
+#include "Logger.h"
+#include "Utility.h"
 
 namespace thirtythree {
 

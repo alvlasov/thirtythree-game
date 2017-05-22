@@ -56,8 +56,8 @@ void Engine::GameLoop() {
             for (auto& obj : objects_) {
                 if (!(obj->IsDead()) && GetObjectsCount() >= 2) {
 
-                    float interaction_distance = obj_interaction_distance_;
-                    if (!obj->IsInteractable()) interaction_distance =  obj_interaction_distance_ / 10;
+                    float interaction_distance = obj_interaction_distance_ + obj->GetRadius();
+                    if (!obj->IsInteractable()) interaction_distance -= obj_interaction_distance_;
 
                     std::shared_ptr<GameObject> nearest_obj = tree_->FindNearestNeighbor(obj, interaction_distance, draw_quadtree_ == 2);
                     if (nearest_obj.use_count()) {
@@ -70,7 +70,7 @@ void Engine::GameLoop() {
                             logic_->HandleEvent(event);
                         }
 
-                        }
+                    }
 
                 }
             }
@@ -123,6 +123,11 @@ void Engine::HandleEvents() {
                         draw_quadtree_ = (draw_quadtree_ + 1) % 3;
                         break;
                     }
+                    case sf::Keyboard::W: {
+                        draw_obj_id_ = (draw_obj_id_ + 1) % 3;
+                        break;
+                    }
+                    default: {}
                 }
                 break;
             }
@@ -143,6 +148,13 @@ void Engine::HandleObject(GameObject &obj) {
     obj.Logic();
     obj.Move(time_);
     drawer_->DrawObject(obj);
+    if (draw_debug_info_ && draw_obj_id_) {
+        if (draw_obj_id_ == 2 || obj.IsInteractable()) {
+            std::string info = std::to_string(obj.GetId());
+            Drawer::Text obj_info(info, 40, obj.GetPos(), true, true);
+            drawer_->DrawText(obj_info);
+        }
+    }
 }
 
 void Engine::HandleBorderCollisions(GameObject &obj) {
@@ -199,8 +211,8 @@ void Engine::HandleDeadObjects() {
 void Engine::DrawUI() {
     drawer_->DrawText(Drawer::Text("Score: " + std::to_string(logic_->GetScore()), 25, {5, 0}));
     if (game_over_) {
-        sf::Vector2i pos1 = (sf::Vector2i)GetWindowSize() / 2;
-        sf::Vector2i pos2 = (sf::Vector2i)GetWindowSize() / 2 + sf::Vector2i(0, 50);
+        sf::Vector2f pos1 = GetWindowSize() / 2.0f;
+        sf::Vector2f pos2 = GetWindowSize() / 2.0f + sf::Vector2f(0, 50);
         drawer_->DrawText(Drawer::Text("Game over!", 45, pos1, true));
         drawer_->DrawText(Drawer::Text("Press R to restart", 30, pos2, true));
     }
@@ -214,7 +226,7 @@ void Engine::DrawDebugInfo() {
     int fps = 1.f / time_;
     std::string debug_text = "FPS: " + std::to_string(fps) + "\nObj. count: " +
                              std::to_string(GetObjectsCount());
-    sf::Vector2i pos = {0, GetWindowSize().y - 45};
+    sf::Vector2f pos = {0, GetWindowSize().y - 45};
     drawer_->DrawText(Drawer::Text(debug_text, 20, pos));
 }
 

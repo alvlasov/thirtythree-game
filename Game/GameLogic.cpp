@@ -57,7 +57,7 @@ void GameLogic::DoLogic() {
     }
 
     if (clock_enemy_create_.getElapsedTime().asSeconds() > min_enemy_create_interval_) {
-        int num_obj = rand_->UniformInt(0 * map_size.x / 2500, 5 * map_size.y / 2500);
+        int num_obj = rand_->UniformInt(4 * map_size.x / 2500, 10 * map_size.y / 2500);
         for (int i = 0; i < num_obj; i++) {
             GameObject *new_enemy = factory_->CreateEnemy();
             new_enemy->SetTexture(texture_provider_->GetRandomPlayerTexture());
@@ -95,7 +95,7 @@ bool GameLogic::OnCollide(GameObject &obj1, GameObject &obj2) {
     if (obj1_is_player_or_enemy && obj2_type == FOOD) {
         obj2.Kill();
         obj1.SetRadius(CalcNewRadius(obj1_radius, obj2_radius));
-        if (obj1_type == PLAYER) UpdateScore(obj1_radius); // side effect
+        if (obj1_type == PLAYER) UpdateScore(obj1_radius);
         return true;
     }
 
@@ -143,6 +143,13 @@ bool GameLogic::OnInteract(GameObject &obj1, GameObject &obj2) {
             }
             obj2.AddSpeed(- obj2_speed * speed_factor);
         }
+        return true;
+    }
+
+    if (obj1_type == ENEMY && obj2_type == FOOD) {
+        auto direction = normalize(obj2_pos - obj1_pos);
+        auto speed_factor = direction / 100.0f;
+        obj1.AddSpeed(- obj1_speed * speed_factor);
         return true;
     }
 
