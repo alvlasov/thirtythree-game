@@ -4,6 +4,8 @@
 #include <SFML/Graphics.hpp>
 #include "GameObjects\GameObject.h"
 #include "Logger.h"
+#include "Engine/QuadTree.h"
+
 
 namespace thirtythree {
 
@@ -62,6 +64,8 @@ public:
 
     void SetViewCenter(sf::Vector2f pos) { view_.setCenter(pos); }
 
+    void VisualizeQuadTree(QuadTree &tree, sf::Color color = sf::Color::Blue);
+
     //! Возвращает размер карты
     sf::Vector2f GetMapSize() { return (sf::Vector2f)map_.getSize(); }
 
@@ -70,7 +74,6 @@ public:
 
     //! Возвращает указатель на окно
     sf::RenderWindow* GetWindow() { return &window_; }
-
 
 private:
 

@@ -5,7 +5,7 @@ namespace thirtythree {
 
 Drawer::Drawer(sf::VideoMode mode, const sf::String name, sf::Vector2i map_size) {
     sf::ContextSettings settings;
-    settings.antialiasingLevel = 8;
+    settings.antialiasingLevel = 16;
     window_.create(mode, name, sf::Style::Default, settings);
     window_.setVerticalSyncEnabled(true);
     default_view_ = window_.getDefaultView();
@@ -47,6 +47,34 @@ void Drawer::DrawText(Text txt) {
     text.setFillColor(txt.color);
     window_.draw(text);
     window_.setView(prev_view);
+}
+
+void Drawer::VisualizeQuadTree(QuadTree &tree, sf::Color color) {
+    if (tree.IsLeaf()) {
+        int line_thickness = 5;
+        sf::FloatRect boundary = tree.GetBoundary();
+        sf::RectangleShape box;
+        box.setSize(sf::Vector2f(boundary.width, boundary.height));
+        box.setPosition(sf::Vector2f(boundary.left, boundary.top));
+        box.setFillColor(sf::Color::Transparent);
+        box.setOutlineColor(color);
+        box.setOutlineThickness(-line_thickness);
+        map_.draw(box);
+        std::string objects_count = std::to_string(tree.GetObjectsCount());
+        sf::Text text(objects_count, font_, 50);
+
+        text.setPosition(sf::Vector2f(boundary.left + line_thickness * 2,
+                                      boundary.top + line_thickness * 2));
+        text.setFillColor(color);
+        map_.draw(text);
+    } else {
+        auto children = tree.GetChildren();
+        for (auto& child : children) {
+            if (child != nullptr) {
+                VisualizeQuadTree(*child);
+            }
+    }
+    }
 }
 
 }
