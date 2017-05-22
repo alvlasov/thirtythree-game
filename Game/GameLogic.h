@@ -67,7 +67,7 @@ private:
     sf::Clock clock_food_create_;
     sf::Clock clock_enemy_create_;
     static const int min_food_create_interval_ = 1;
-    static const int min_enemy_create_interval_ = 3;
+    static const int min_enemy_create_interval_ = 10;
 
 };
 

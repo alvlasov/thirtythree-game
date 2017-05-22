@@ -13,7 +13,6 @@ Enemy::Enemy(const sf::Vector2f &pos, Randomizer *rand, float radius, float fric
       rand_ (rand) {
     if (radius <= 0) radius_ = rand_->UniformInt(min_radius_, max_radius_);
     color_ = rand_->ColorOpaque();
-
     LOG_DEBUG("Object " << GetType() << " created on pos (" << pos_.x << ", " << pos_.y << ")");
 }
 

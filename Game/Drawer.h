@@ -14,24 +14,26 @@ public:
 
     struct Text {
 
-        Text(const std::string &ntext, int nsize, sf::Vector2i npos,
-             sf::Color ncolor = sf::Color::Black, bool norigin_centering =  false)
+        Text(const std::string &ntext, int nsize, sf::Vector2f npos,
+             sf::Color ncolor = sf::Color::Black, bool norigin_centering =  false,
+             bool ndraw_to_map = false)
             : text (ntext),
               size (nsize),
               pos (npos),
               color(ncolor),
-              origin_centering (norigin_centering) {}
+              origin_centering (norigin_centering),
+              draw_to_map (ndraw_to_map) {}
 
-        Text(const std::string &ntext, int nsize, sf::Vector2i npos,
-             bool norigin_centering)
-            : Text(ntext, nsize, npos, sf::Color::Black, norigin_centering) {}
+        Text(const std::string &ntext, int nsize, sf::Vector2f npos,
+             bool norigin_centering, bool ndraw_to_map = false)
+            : Text(ntext, nsize, npos, sf::Color::Black, norigin_centering, ndraw_to_map) {}
 
         std::string text;
         int size;
-        sf::Vector2i pos;
+        sf::Vector2f pos;
         sf::Color color;
         bool origin_centering;
-
+        bool draw_to_map;
     };
 
 

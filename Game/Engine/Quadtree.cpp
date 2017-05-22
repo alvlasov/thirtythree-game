@@ -21,7 +21,7 @@ QuadTree::~QuadTree() {
 }
 
 
-bool QuadTree::Insert(ObjectPtr object) {
+bool QuadTree::Insert(ObjectPtr &object) {
 
     if (!boundary_.intersects(object->GetBoundary())) return false;
 
@@ -32,14 +32,14 @@ bool QuadTree::Insert(ObjectPtr object) {
         } else {
             Subdivide();
         }
+    } else {
+
+        bool added_somewhere = north_west_->Insert(object) ||
+                               north_east_->Insert(object) ||
+                               south_west_->Insert(object) ||
+                               south_east_->Insert(object);
+        if (added_somewhere) return true;
     }
-
-    bool added_somewhere = north_west_->Insert(object) ||
-                           north_east_->Insert(object) ||
-                           south_west_->Insert(object) ||
-                           south_east_->Insert(object);
-
-    if (added_somewhere) return true;
     return false;
 }
 
@@ -83,13 +83,14 @@ void QuadTree::Prune() {
     is_leaf_ = true;
 }
 
-QuadTree::ObjectPtr QuadTree::FindNearestNeighbor(QuadTree::ObjectPtr object, float distance, bool visualise) {
+QuadTree::ObjectPtr QuadTree::FindNearestNeighbor(QuadTree::ObjectPtr &object, float max_distance, bool visualise) {
+    float distance = max_distance;
     ObjectPtr nearest;
     std::stack<QuadTree*> trees;
-    sf::Vector2f pos = object->GetPos();
     trees.push(this);
-    sf::Color tree_color(0, 0, 0, 150);
-    int number_leaves = 0;
+    sf::Vector2f pos = object->GetPos();
+    float object_radius = object->GetRadius();
+    sf::Color tree_color(0, 0, 0, 10);
     while (!trees.empty()) {
         sf::FloatRect search_area(pos.x - distance / 2, pos.y - distance / 2, distance, distance);
         auto tree = trees.top();
@@ -104,15 +105,15 @@ QuadTree::ObjectPtr QuadTree::FindNearestNeighbor(QuadTree::ObjectPtr object, fl
         } else {
             if (tree->GetBoundary().intersects(search_area)) {
                 if (object->GetType() == PLAYER && visualise == true) {
-                    tree_color = tree_color + sf::Color(0, 0, 0, 5);
+                    tree_color = tree_color + sf::Color(0, 0, 0, 30);
                     drawer_->VisualizeQuadTree(*tree, tree_color);
                 }
-                number_leaves++;
-                std::vector<ObjectPtr> leaf_objs = tree->AccessObjects();
+                std::vector<ObjectPtr>& leaf_objs = tree->AccessObjects();
                 for (auto& leaf_obj : leaf_objs) {
-                    if (!leaf_obj->IsDead() && leaf_obj->IsInteractable()) {
+                    if (!leaf_obj->IsDead()) {
                         auto leaf_obj_pos = leaf_obj->GetPos();
-                        float new_distance = length(pos - leaf_obj_pos);
+                        float leaf_obj_radius = leaf_obj->GetRadius();
+                        float new_distance = length(pos - leaf_obj_pos) - (leaf_obj_radius + object_radius);
                         if (new_distance < distance && leaf_obj != object) {
                             nearest = leaf_obj;
                             distance = new_distance;
@@ -122,6 +123,16 @@ QuadTree::ObjectPtr QuadTree::FindNearestNeighbor(QuadTree::ObjectPtr object, fl
             }
             trees.pop();
         }
+    }
+    if (object->GetType() == PLAYER && visualise == true) {
+        if (nearest.use_count()) {
+            Drawer::Text neighbor_info("NN", 40, nearest->GetPos(), true, true);
+            drawer_->DrawText(neighbor_info);
+        }
+        Drawer::Text bound1_text("BOUND1", 40, {pos.x - max_distance / 2, pos.y - max_distance / 2}, true, true);
+        drawer_->DrawText(bound1_text);
+        Drawer::Text bound2_text("BOUND2", 40, {pos.x + max_distance / 2, pos.y + max_distance / 2}, true, true);
+        drawer_->DrawText(bound2_text);
     }
     return nearest;
 }

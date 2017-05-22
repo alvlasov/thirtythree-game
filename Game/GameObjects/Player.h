@@ -8,7 +8,7 @@
 #ifndef PLAYER_H_INCLUDED
 #define PLAYER_H_INCLUDED
 
-#include "GameObject.h"
+#include "GameObjects/GameObject.h"
 
 namespace thirtythree {
 

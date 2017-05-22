@@ -8,8 +8,8 @@
 #ifndef FOOD_H_INCLUDED
 #define FOOD_H_INCLUDED
 
-#include "GameObject.h"
-#include "../Randomizer.h"
+#include "GameObjects/GameObject.h"
+#include "Randomizer.h"
 
 namespace thirtythree {
 

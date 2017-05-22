@@ -1,14 +1,15 @@
 #ifndef QUADTREE_H_INCLUDED
 #define QUADTREE_H_INCLUDED
 
-#include <SFML/Graphics.hpp>
-#include "../Logger.h"
 #include <vector>
 #include <memory>
-#include "../GameObjects/GameObject.h"
 #include <limits>
 #include <stack>
 
+#include <SFML/Graphics.hpp>
+
+#include "Logger.h"
+#include "GameObjects/GameObject.h"
 
 namespace thirtythree {
 
@@ -21,16 +22,19 @@ public:
     QuadTree(sf::FloatRect boundary, Drawer *drawer);
     ~QuadTree();
 
-    bool Insert(ObjectPtr object);
+    bool Insert(ObjectPtr &object);
     void Subdivide();
     void Prune();
     sf::FloatRect GetBoundary() { return boundary_; }
     int GetObjectsCount() { return objects_in_node_.size(); }
     bool IsLeaf() { return is_leaf_; }
-    ObjectPtr FindNearestNeighbor(ObjectPtr object,
+
+    //std::vector<ObjectPtr> FindCollisionCandidates()
+
+    ObjectPtr FindNearestNeighbor(ObjectPtr &object,
                                   float distance = std::numeric_limits<float>::max(),
                                   bool visualise = false);
-    std::vector<ObjectPtr> AccessObjects() { return objects_in_node_; }
+    std::vector<ObjectPtr>& AccessObjects() { return objects_in_node_; }
 
     int GetLeavesNumber();
 
@@ -57,6 +61,6 @@ private:
 
 };
 
-}
+} // namespace thirtythree
 
 #endif // QUADTREE_H_INCLUDED
