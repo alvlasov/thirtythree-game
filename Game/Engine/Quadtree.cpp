@@ -85,11 +85,11 @@ void QuadTree::Prune() {
 
 QuadTree::ObjectPtr QuadTree::FindNearestNeighbor(QuadTree::ObjectPtr &object, float max_distance, bool visualise) {
     float distance = max_distance;
+    auto pos = object->GetPos();
+    float object_radius = object->GetRadius();
     ObjectPtr nearest;
     std::stack<QuadTree*> trees;
     trees.push(this);
-    sf::Vector2f pos = object->GetPos();
-    float object_radius = object->GetRadius();
     sf::Color tree_color(0, 0, 0, 10);
     while (!trees.empty()) {
         sf::FloatRect search_area(pos.x - distance / 2, pos.y - distance / 2, distance, distance);

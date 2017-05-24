@@ -39,7 +39,6 @@ private:
     Randomizer *rand_;
     GameLogic *logic_;
 
-
 };
 
 }

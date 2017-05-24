@@ -16,8 +16,8 @@ Engine::Engine(Drawer *drawer, GameLogic *logic, QuadTree *tree)
 }
 
 void Engine::AddObject(GameObject *object) {
-    if (GetObjectsCount() < max_object_number_) {
-        object->SetId(id_counter++);
+    if (GetObjectsCount() < kMaxObjectsCount) {
+        object->SetId(id_counter_++);
         objects_.emplace_back(object);
     } else {
         if (object != nullptr) delete object;
@@ -37,7 +37,7 @@ void Engine::GameLoop() {
         time_ = clock_.restart().asSeconds();
         HandleEvents();
 
-        if (!paused_) {
+        if (!game_paused_) {
             logic_->DoLogic();
 
             drawer_->ClearMap();
@@ -56,13 +56,13 @@ void Engine::GameLoop() {
             for (auto& obj : objects_) {
                 if (!(obj->IsDead()) && GetObjectsCount() >= 2) {
 
-                    float interaction_distance = obj_interaction_distance_ + obj->GetRadius();
-                    if (!obj->IsInteractable()) interaction_distance -= obj_interaction_distance_;
+                    float interaction_distance = kObjectInteractionDistance + obj->GetRadius();
+                    if (!obj->IsInteractable()) interaction_distance = obj->GetRadius();
 
                     std::shared_ptr<GameObject> nearest_obj = tree_->FindNearestNeighbor(obj, interaction_distance, draw_quadtree_ == 2);
                     if (nearest_obj.use_count()) {
-                        float distance = CalculateDistance(*obj, *nearest_obj);
-                        if (Collision(*obj, *nearest_obj, distance)) {
+
+                        if (Collision(*obj, *nearest_obj)) {
                             GameLogic::Event event(GameLogic::EventType::COLLISION, *obj, *nearest_obj);
                             logic_->HandleEvent(event);
                         } else {
@@ -116,7 +116,7 @@ void Engine::HandleEvents() {
                         break;
                     }
                     case sf::Keyboard::Escape: {
-                        paused_ = !paused_;
+                        game_paused_ = !game_paused_;
                         break;
                     }
                     case sf::Keyboard::Q: {

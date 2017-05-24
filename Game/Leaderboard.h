@@ -16,7 +16,6 @@ public:
 
     void AddEntry(const std::vector &name, int score) {
         entries_.emplace_back(name, score);
-
     }
 
 

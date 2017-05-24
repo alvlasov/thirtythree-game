@@ -45,7 +45,7 @@ public:
 
 private:
 
-    static const int player_initial_radius_ = 30;
+    static const int kPlayerInitialRadius = 30;
 
     bool OnInteract(GameObject &obj1, GameObject &obj2);
     bool OnCollide(GameObject &obj1, GameObject &obj2);
@@ -54,7 +54,7 @@ private:
         return cbrt(pow(radius1, 3) + pow(radius2, 3));
     }
     inline void UpdateScore(float player_radius) {
-        score_ = pow(player_radius - player_initial_radius_, 3);
+        score_ = pow(player_radius - kPlayerInitialRadius, 3);
     }
 
     Randomizer *rand_;
@@ -66,8 +66,12 @@ private:
 
     sf::Clock clock_food_create_;
     sf::Clock clock_enemy_create_;
-    static const int min_food_create_interval_ = 1;
-    static const int min_enemy_create_interval_ = 10;
+    static constexpr int kFoodCreateIntervalSeconds = 1;
+    static constexpr float kFoodMinDensity = 0.4f;
+    static constexpr float kFoodMaxDensity = 2.0f;
+    static constexpr int kEnemyCreateIntervalSeconds = 10;
+    static constexpr float kEnemyMinDensity = 1.5f;
+    static constexpr float kEnemyMaxDensity = 4.0f;
 
 };
 

@@ -41,23 +41,25 @@ void GameLogic::StartGame() {
         new_enemy->SetTexture(texture_provider_->GetRandomPlayerTexture());
         engine_->AddObject(new_enemy);
     }
-    GameObject *new_player = factory_->CreatePlayer(player_initial_radius_);
+    GameObject *new_player = factory_->CreatePlayer(kPlayerInitialRadius);
     new_player->SetTexture(texture_provider_->GetRandomPlayerTexture());
     engine_->AddObject(new_player);
 }
 
 void GameLogic::DoLogic() {
     auto map_size = engine_->GetMapSize();
-    if (clock_food_create_.getElapsedTime().asSeconds() > min_food_create_interval_) {
-        int num_obj = rand_->UniformInt(4 * map_size.x / 2500, 7 * map_size.y / 2500);
+    if (clock_food_create_.getElapsedTime().asSeconds() > kFoodCreateIntervalSeconds) {
+        int num_obj = rand_->UniformInt(kFoodMinDensity * map_size.x / 1000,
+                                        kFoodMaxDensity * map_size.y / 1000);
         for (int i = 0; i < num_obj; i++) {
             engine_->AddObject(factory_->CreateFood());
         }
         clock_food_create_.restart();
     }
 
-    if (clock_enemy_create_.getElapsedTime().asSeconds() > min_enemy_create_interval_) {
-        int num_obj = rand_->UniformInt(4 * map_size.x / 2500, 10 * map_size.y / 2500);
+    if (clock_enemy_create_.getElapsedTime().asSeconds() > kEnemyCreateIntervalSeconds) {
+        int num_obj = rand_->UniformInt(kEnemyMinDensity * map_size.x / 1000,
+                                        kEnemyMaxDensity * map_size.y / 1000);
         for (int i = 0; i < num_obj; i++) {
             GameObject *new_enemy = factory_->CreateEnemy();
             new_enemy->SetTexture(texture_provider_->GetRandomPlayerTexture());

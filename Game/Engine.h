@@ -29,8 +29,6 @@ namespace thirtythree {
 class Engine {
 public:
 
-    typedef std::vector<std::shared_ptr<GameObject>>::iterator obj_iterator;
-
     //! Инициализация движка
     Engine(Drawer *drawer, GameLogic *logic, QuadTree *tree);
 
@@ -42,7 +40,7 @@ public:
 
     //! Возвращает текущее число игровых объектов
     size_t GetObjectsCount() { return objects_.size(); }
-    size_t GetObjectsLimit() { return max_object_number_; }
+    size_t GetObjectsLimit() { return kMaxObjectsCount; }
 
     //! Возвращает размер карты
     sf::Vector2f GetMapSize() { return drawer_->GetMapSize(); }
@@ -56,9 +54,9 @@ public:
 private:
 
     //! Максимальное число объектов, обрабатываемых движком
-    static const int max_object_number_ = 1000;
-    static const int obj_interaction_distance_ = 800;
-    int id_counter = 0;
+    static const int kMaxObjectsCount = 1000;
+    static const int kObjectInteractionDistance = 800;
+    int id_counter_ = 0;
 
     //! Главный игровой цикл
     void GameLoop();
@@ -73,9 +71,10 @@ private:
         return length(obj2.GetPos() - obj1.GetPos());
     }
 
-    inline bool Collision(GameObject &obj1, GameObject &obj2, float distance) {
+    inline bool Collision(GameObject &obj1, GameObject &obj2) {
         auto radius1 = obj1.GetRadius();
         auto radius2 = obj2.GetRadius();
+        float distance = CalculateDistance(obj1, obj2);
         if (distance <= std::max(radius1, radius2)) {
             return true;
         }
@@ -105,8 +104,7 @@ private:
     int draw_obj_id_ = 0;
 
     bool game_over_ = false;
-
-    bool paused_ = false;
+    bool game_paused_ = false;
 
 
 };

@@ -3,7 +3,7 @@
 namespace thirtythree {
 
 GameFactory::GameFactory() {
-    int map_size_x = 5000;
+    int map_size_x = 4000;
     int map_size_y = 4000;
     drawer_             = new Drawer(sf::VideoMode(1024, 600), "Game33", {map_size_x, map_size_y});
     tree_               = new QuadTree(sf::FloatRect({0, 0}, {map_size_x, map_size_y}), drawer_);
