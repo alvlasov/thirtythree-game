@@ -18,6 +18,7 @@ void TextureProvider::LoadPlayerTexturesFromDirectory(std::string directory) {
 
 
 sf::Texture* TextureProvider::GetRandomPlayerTexture() {
+    if (player_textures_.size() == 0) return nullptr;
     int index = rand_->UniformInt(player_textures_.size() - 1);
     return &player_textures_[index];
 }
@@ -29,7 +30,7 @@ std::vector<std::string> TextureProvider::GetFileNamesInDirectory(std::string di
     WIN32_FIND_DATA file_data;
 
     if ((dir = FindFirstFile((directory + "/*").c_str(), &file_data)) == INVALID_HANDLE_VALUE)
-        return out; /* No files found */
+        return out;
 
     do {
         const std::string file_name = file_data.cFileName;

@@ -10,7 +10,26 @@
 
 #include <cmath>
 
+#include <SFML/Graphics.hpp>
+
 namespace thirtythree {
+
+struct Box {
+    Box(sf::Vector2f nmin, sf::Vector2f nmax)
+        :  min (nmin), max (nmax) {}
+
+    bool Intersection(Box &b) {
+        if (max.x < b.min.x || min.x > b.max.x) return false;
+        if (max.y < b.min.y || min.y > b.max.y) return false;
+        return true;
+    }
+
+    sf::Vector2f min;
+    sf::Vector2f max;
+
+};
+
+
 
 //! Шаблон функции, возвращающей длину вектора
 template <typename T>

@@ -1,6 +1,7 @@
 #ifndef INJECTOR_H_INCLUDED
 #define INJECTOR_H_INCLUDED
 
+#include "Utility.h"
 #include "Engine.h"
 #include "Drawer.h"
 #include "Logger.h"

@@ -8,6 +8,8 @@
 #ifndef GAMELOGIC_H_INCLUDED
 #define GAMELOGIC_H_INCLUDED
 
+#include <stdexcept>
+
 #include <SFML/Graphics.hpp>
 #include "Logger.h"
 #include "Randomizer.h"
@@ -62,16 +64,20 @@ private:
     ObjectsFactory *factory_;
     TextureProvider *texture_provider_;
 
+    sf::Vector2f spawn_factor_;
     int score_;
 
     sf::Clock clock_food_create_;
     sf::Clock clock_enemy_create_;
     static constexpr int kFoodCreateIntervalSeconds = 1;
+    static constexpr float kFoodInitialDensityFactor = 3.0f;
     static constexpr float kFoodMinDensity = 0.4f;
     static constexpr float kFoodMaxDensity = 2.0f;
     static constexpr int kEnemyCreateIntervalSeconds = 10;
+    static constexpr float kEnemyInitialDensityFactor = 3.0f;
     static constexpr float kEnemyMinDensity = 1.5f;
     static constexpr float kEnemyMaxDensity = 4.0f;
+
 
 };
 

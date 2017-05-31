@@ -8,7 +8,6 @@
 #ifndef ENGINE_H_INCLUDED
 #define ENGINE_H_INCLUDED
 
-#include <stdexcept>
 #include <vector>
 #include <memory>
 #include <string>
@@ -85,7 +84,7 @@ private:
     void DrawDebugInfo();
 
     //! Хранилище игровых объектов
-    std::vector<std::shared_ptr<GameObject>> objects_;
+    std::vector<std::unique_ptr<GameObject>> objects_;
 
     QuadTree *tree_;
 

@@ -10,6 +10,7 @@
 
 #include "Logger.h"
 #include "GameObjects/GameObject.h"
+#include "Utility.h"
 
 namespace thirtythree {
 
@@ -17,24 +18,20 @@ class Drawer;
 class QuadTree {
 public:
 
-    typedef std::shared_ptr<GameObject> ObjectPtr;
-
-    QuadTree(sf::FloatRect boundary, Drawer *drawer);
+    QuadTree(Box boundary, Drawer *drawer);
     ~QuadTree();
 
-    bool Insert(ObjectPtr &object);
+    bool Insert(GameObject *object);
     void Subdivide();
     void Prune();
-    sf::FloatRect GetBoundary() { return boundary_; }
+    Box GetBoundary() { return boundary_; }
     int GetObjectsCount() { return objects_in_node_.size(); }
     bool IsLeaf() { return is_leaf_; }
 
-    //std::vector<ObjectPtr> FindCollisionCandidates()
-
-    ObjectPtr FindNearestNeighbor(ObjectPtr &object,
-                                  float distance = std::numeric_limits<float>::max(),
-                                  bool visualise = false);
-    std::vector<ObjectPtr>& AccessObjects() { return objects_in_node_; }
+    GameObject* FindNearestNeighbor(GameObject* object,
+                                    float distance = std::numeric_limits<float>::max(),
+                                    bool visualise = false);
+    std::vector<GameObject*>& AccessObjects() { return objects_in_node_; }
 
     int GetLeavesNumber();
 
@@ -46,14 +43,14 @@ public:
 private:
     static const int node_capacity_ = 3;
 
-    sf::FloatRect boundary_;
+    Box boundary_;
 
     QuadTree *north_west_;
     QuadTree *north_east_;
     QuadTree *south_west_;
     QuadTree *south_east_;
 
-    std::vector<ObjectPtr> objects_in_node_;
+    std::vector<GameObject*> objects_in_node_;
 
     bool is_leaf_;
 

@@ -29,6 +29,7 @@ GameObject::GameObject(const sf::Vector2f& pos, float radius,
 GameObject::~GameObject() {}
 
 void GameObject::SetTexture(sf::Texture *texture) {
+    if (texture == nullptr) return;
     texture_ = texture;
     auto alpha = color_.a;
     color_ = sf::Color::White;

@@ -1,11 +1,12 @@
 #ifndef DRAWER_H_INCLUDED
 #define DRAWER_H_INCLUDED
 
+#include <stdexcept>
+
 #include <SFML/Graphics.hpp>
 #include "GameObjects\GameObject.h"
 #include "Logger.h"
 #include "Engine/QuadTree.h"
-
 
 namespace thirtythree {
 
@@ -40,7 +41,7 @@ public:
     Drawer(sf::VideoMode mode, const sf::String name, sf::Vector2i map_size);
     ~Drawer();
 
-    void ClearMap() { map_.clear(map_background_color_); }
+    void ClearMap();
 
     void DrawObject(GameObject &obj) { obj.Draw(map_); }
 
@@ -80,7 +81,7 @@ public:
 private:
 
     sf::Color map_background_color_ = sf::Color::White;
-    sf::Color window_background_color_ = sf::Color(222, 222, 222);
+    sf::Color window_background_color_ = sf::Color::White;
 
     //! Окно, в которое производится отрисовка
     sf::RenderWindow window_;
@@ -96,6 +97,8 @@ private:
 
     //! Шрифт для отрисовки надписей
     sf::Font font_;
+
+    sf::Texture background_;
 
 };
 

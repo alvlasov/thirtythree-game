@@ -22,9 +22,7 @@ public:
 private:
 
     std::vector<std::string> GetFileNamesInDirectory(std::string directory);
-
     std::vector<sf::Texture> player_textures_;
-
     Randomizer *rand_;
 
 };

@@ -29,13 +29,16 @@ GameLogic::~GameLogic(){
 }
 
 void GameLogic::StartGame() {
-    auto map_size = engine_->GetMapSize();
+    if (engine_ == nullptr) throw std::runtime_error("No Engine associated with GameLogic");
+    spawn_factor_ = engine_->GetMapSize() / 1000.0f;
     score_ = 0;
-    int num_food = rand_->UniformInt(30 * map_size.x / 2500, 60 * map_size.y / 2500);
+    int num_food = rand_->UniformInt(kFoodInitialDensityFactor * kFoodMinDensity * spawn_factor_.x,
+                                     kFoodInitialDensityFactor * kFoodMaxDensity * spawn_factor_.y);
     for (int i = 0; i < num_food; i++) {
         engine_->AddObject(factory_->CreateFood());
     }
-    int num_enemies = rand_->UniformInt(2 * map_size.x / 2500, 5 * map_size.y / 2500);
+    int num_enemies = rand_->UniformInt(kEnemyInitialDensityFactor * kEnemyMinDensity * spawn_factor_.x,
+                                        kEnemyInitialDensityFactor * kEnemyMaxDensity * spawn_factor_.y);
     for (int i = 0; i < num_enemies; i++) {
         GameObject *new_enemy = factory_->CreateEnemy();
         new_enemy->SetTexture(texture_provider_->GetRandomPlayerTexture());
@@ -47,10 +50,10 @@ void GameLogic::StartGame() {
 }
 
 void GameLogic::DoLogic() {
-    auto map_size = engine_->GetMapSize();
+    auto map_size_ = engine_->GetMapSize();
     if (clock_food_create_.getElapsedTime().asSeconds() > kFoodCreateIntervalSeconds) {
-        int num_obj = rand_->UniformInt(kFoodMinDensity * map_size.x / 1000,
-                                        kFoodMaxDensity * map_size.y / 1000);
+        int num_obj = rand_->UniformInt(kFoodMinDensity * spawn_factor_.x,
+                                        kFoodMaxDensity * spawn_factor_.y);
         for (int i = 0; i < num_obj; i++) {
             engine_->AddObject(factory_->CreateFood());
         }
@@ -58,8 +61,8 @@ void GameLogic::DoLogic() {
     }
 
     if (clock_enemy_create_.getElapsedTime().asSeconds() > kEnemyCreateIntervalSeconds) {
-        int num_obj = rand_->UniformInt(kEnemyMinDensity * map_size.x / 1000,
-                                        kEnemyMaxDensity * map_size.y / 1000);
+        int num_obj = rand_->UniformInt(kEnemyMinDensity * spawn_factor_.x,
+                                        kEnemyMaxDensity * spawn_factor_.y);
         for (int i = 0; i < num_obj; i++) {
             GameObject *new_enemy = factory_->CreateEnemy();
             new_enemy->SetTexture(texture_provider_->GetRandomPlayerTexture());
@@ -125,7 +128,6 @@ bool GameLogic::OnInteract(GameObject &obj1, GameObject &obj2) {
     auto obj2_pos = obj2.GetPos();
     float obj1_speed = obj1.GetMaxSpeed();
     float obj2_speed = obj2.GetMaxSpeed();
-
     bool obj1_is_player_or_enemy = (obj1_type == PLAYER || obj1_type == ENEMY);
 
     if (obj1_is_player_or_enemy && obj2_type == ENEMY) {

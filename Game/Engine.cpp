@@ -9,9 +9,9 @@
 
 namespace thirtythree{
 Engine::Engine(Drawer *drawer, GameLogic *logic, QuadTree *tree)
-    : logic_ (logic),
+    : tree_ (tree),
       drawer_ (drawer),
-      tree_ (tree) {
+      logic_ (logic) {
     LOG_INFO("Engine created");
 }
 
@@ -46,22 +46,20 @@ void Engine::GameLoop() {
                 if (!(obj->IsDead())) {
                     HandleObject(*obj);
                     HandleBorderCollisions(*obj);
-                    tree_->Insert(obj);
-                    // TODO Не перестраивать дерево
+                    if (tree_->Insert(obj.get()) == false) {
+                            LOG_ERROR("QuadTree building failure, object id = " << obj->GetId());
+                    }
                 }
             }
 
             if (draw_quadtree_ == 1) drawer_->VisualizeQuadTree(*tree_);
 
             for (auto& obj : objects_) {
-                if (!(obj->IsDead()) && GetObjectsCount() >= 2) {
-
-                    float interaction_distance = kObjectInteractionDistance + obj->GetRadius();
-                    if (!obj->IsInteractable()) interaction_distance = obj->GetRadius();
-
-                    std::shared_ptr<GameObject> nearest_obj = tree_->FindNearestNeighbor(obj, interaction_distance, draw_quadtree_ == 2);
-                    if (nearest_obj.use_count()) {
-
+                if (!(obj->IsDead()) && obj->IsInteractable()) {
+                    float obj_radius = obj->GetRadius();
+                    float interaction_distance = kObjectInteractionDistance + obj_radius;
+                    GameObject *nearest_obj = tree_->FindNearestNeighbor(obj.get(), interaction_distance, draw_quadtree_ == 2);
+                    if (nearest_obj != nullptr) {
                         if (Collision(*obj, *nearest_obj)) {
                             GameLogic::Event event(GameLogic::EventType::COLLISION, *obj, *nearest_obj);
                             logic_->HandleEvent(event);
@@ -70,11 +68,10 @@ void Engine::GameLoop() {
                             logic_->HandleEvent(event);
                         }
 
-                    }
 
+                    }
                 }
             }
-
             HandleDeadObjects();
         }
 
@@ -151,7 +148,7 @@ void Engine::HandleObject(GameObject &obj) {
     if (draw_debug_info_ && draw_obj_id_) {
         if (draw_obj_id_ == 2 || obj.IsInteractable()) {
             std::string info = std::to_string(obj.GetId());
-            Drawer::Text obj_info(info, 40, obj.GetPos(), true, true);
+            Drawer::Text obj_info(info, 40, obj.GetPos(), sf::Color::Blue, true, true);
             drawer_->DrawText(obj_info);
         }
     }

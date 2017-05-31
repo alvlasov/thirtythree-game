@@ -60,7 +60,11 @@ public:
     int GetId() { return id_; }
     void SetId(int id) { id_ = id; }
 
-    sf::FloatRect GetBoundary() { return body_.getGlobalBounds();}
+    Box GetBoundary() {
+        auto bounds = body_.getGlobalBounds();
+        return Box({bounds.left, bounds.top},
+                   {bounds.left + bounds.width, bounds.top + bounds.height});
+    }
 
 protected:
 
