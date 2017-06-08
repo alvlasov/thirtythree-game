@@ -1,5 +1,5 @@
-#ifndef INJECTOR_H_INCLUDED
-#define INJECTOR_H_INCLUDED
+#ifndef ENGINEASSEMBLER_H_INCLUDED
+#define ENGINEASSEMBLER_H_INCLUDED
 
 #include "Utility.h"
 #include "Engine.h"
@@ -13,12 +13,11 @@
 
 namespace thirtythree {
 
-class GameFactory {
+class EngineAssembler {
 public:
 
-    GameFactory();
-    ~GameFactory();
-    void StartEngine();
+    ~EngineAssembler();
+    Engine* AssemblyEngine();
 
 private:
 
@@ -26,15 +25,13 @@ private:
 
     Drawer *drawer_;
     TextureProvider *texture_provider_;
-
     Randomizer *rand_;
     GameLogic *logic_;
     ObjectsFactory *factory_;
-
     QuadTree *tree_;
 
 };
 
 }
 
-#endif // INJECTOR_H_INCLUDED
+#endif // ENGINEASSEMBLER_H_INCLUDED

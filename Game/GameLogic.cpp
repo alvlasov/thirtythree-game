@@ -50,7 +50,6 @@ void GameLogic::StartGame() {
 }
 
 void GameLogic::DoLogic() {
-    auto map_size_ = engine_->GetMapSize();
     if (clock_food_create_.getElapsedTime().asSeconds() > kFoodCreateIntervalSeconds) {
         int num_obj = rand_->UniformInt(kFoodMinDensity * spawn_factor_.x,
                                         kFoodMaxDensity * spawn_factor_.y);

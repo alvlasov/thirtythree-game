@@ -1,7 +1,9 @@
-#include "GameFactory.h"
+#include "EngineAssembler.h"
+#include "Engine.h"
 
 int main() {
-    thirtythree::GameFactory factory;
-    factory.StartEngine();
+    thirtythree::EngineAssembler engine_assembler;
+    thirtythree::Engine *engine = engine_assembler.AssemblyEngine();
+    engine->StartGame();
     return 0;
 }

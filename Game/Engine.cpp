@@ -206,12 +206,16 @@ void Engine::HandleDeadObjects() {
 }
 
 void Engine::DrawUI() {
-    drawer_->DrawText(Drawer::Text("Score: " + std::to_string(logic_->GetScore()), 25, {5, 0}));
+
     if (game_over_) {
         sf::Vector2f pos1 = GetWindowSize() / 2.0f;
-        sf::Vector2f pos2 = GetWindowSize() / 2.0f + sf::Vector2f(0, 50);
+        sf::Vector2f pos2 = pos1 + sf::Vector2f(0, 45);
+        sf::Vector2f pos3 = pos2 + sf::Vector2f(0, 24);
         drawer_->DrawText(Drawer::Text("Game over!", 45, pos1, true));
-        drawer_->DrawText(Drawer::Text("Press R to restart", 30, pos2, true));
+        drawer_->DrawText(Drawer::Text("Your score is " + std::to_string(logic_->GetScore()), 24, pos2, true));
+        drawer_->DrawText(Drawer::Text("Press R to restart", 24, pos3, true));
+    } else {
+        drawer_->DrawText(Drawer::Text("Score: " + std::to_string(logic_->GetScore()), 25, {5, 0}));
     }
     if (draw_debug_info_) {
         DrawDebugInfo();

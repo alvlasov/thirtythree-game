@@ -1,8 +1,18 @@
-#include "GameFactory.h"
+#include "EngineAssembler.h"
 
 namespace thirtythree {
-//game assembler
-GameFactory::GameFactory() {
+
+EngineAssembler::~EngineAssembler() {
+    delete drawer_;
+    delete rand_;
+    delete factory_;
+    delete texture_provider_;
+    delete logic_;
+    delete engine_;
+    LOG_INFO("Game destroyed");
+}
+
+Engine* EngineAssembler::AssemblyEngine() {
     int map_size_x = 4000;
     int map_size_y = 4000;
     drawer_             = new Drawer(sf::VideoMode(1024, 600), "Game33", {map_size_x, map_size_y});
@@ -15,21 +25,8 @@ GameFactory::GameFactory() {
     // объекты создаем много раз, unique_ptr
     factory_->AssociateEngine(engine_);
     logic_->AssociateEngine(engine_);
-    LOG_INFO("Game assembled");
-}
-
-GameFactory::~GameFactory() {
-    delete drawer_;
-    delete rand_;
-    delete factory_;
-    delete texture_provider_;
-    delete logic_;
-    delete engine_;
-    LOG_INFO("Game destroyed");
-}
-
-void GameFactory::StartEngine() {
-    engine_->StartGame();
+    LOG_INFO("Engine assembled");
+    return engine_;
 }
 
 

@@ -98,7 +98,7 @@ private:
     sf::Clock clock_;
 
     //! Вывод отладочной информации
-    bool draw_debug_info_ = true;
+    bool draw_debug_info_ = false;
     int draw_quadtree_ = 0;
     int draw_obj_id_ = 0;
 

@@ -30,7 +30,7 @@ private:
     static const int max_radius_ = 15;
     static const int max_pinch_speed_ = 100;
     static const int min_seconds_alive_ = 240;
-    int min_seconds_idle_;
+    float min_seconds_idle_;
     sf::Clock clock_pinch_;
     sf::Clock clock_life_;
 
