@@ -1,7 +1,7 @@
 Game-33
 =======
 
-This project is a part of home assignment on 2017 C++11 programming course by Mail.Ru.
+This project is a part of home assignment on 2017 C++11 programming course by Mail.Ru. 
 
 The game is a simple agar.io clone built with SFML graphics library. The main features are:
 
@@ -10,18 +10,19 @@ The game is a simple agar.io clone built with SFML graphics library. The main fe
 - A simple AI of enemies based on nearest neighbor search.
 - An implementation of [QuadTree](https://en.wikipedia.org/wiki/Quadtree) data structure to allow fast neighbor search.
 
-The project was compiled under Windows with [GCC 6.1.0 MinGW (SEH) 64-bit](https://sourceforge.net/projects/mingw-w64/files/Toolchains%20targetting%20Win32/Personal%20Builds/mingw-builds/6.1.0/) compiler,  [SMFL 2.4.2](https://www.sfml-dev.org/download/sfml/2.4.2/) and [CodeBlocks](http://www.codeblocks.org/) IDE.
+The project was compiled under Windows with [GCC 6.1.0 MinGW (SEH) 64-bit](https://sourceforge.net/projects/mingw-w64/files/Toolchains%20targetting%20Win32/Personal%20Builds/mingw-builds/6.1.0/) compiler,  [SMFL 2.4.2](https://www.sfml-dev.org/download/sfml/2.4.2/) and [CodeBlocks](http://www.codeblocks.org/) IDE. 
+
+Download precompiled Windows binaries [here](bin/Release.zip).
 
 Screenshots:
 
 - Gameplay:
 
-![](Screenshots/gameplay_1.png)
-
-![](Screenshots/gameplay_2.png)
+<p align="center"><img src="Screenshots/gameplay_1.png" width="512"></p>
+<p align="center"><img src="Screenshots/gameplay_2.png" width="512"></p>
 
 - QuadTree visualization:
 
-![](Screenshots/quadtree_full.png)
+<p align="center"><img src="Screenshots/quadtree_full.png" width="512"></p>
+<p align="center"><img src="Screenshots/quadtree_nn.png" width="512"></p>
 
-![](Screenshots/quadtree_nn.png)
