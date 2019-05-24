@@ -1,17 +1,9 @@
-#include "GlobalOptions.h"
+#include "EngineAssembler.h"
+#include "Engine.h"
 
-#include "Smart_ptr.h"
-#include "Stack.h"
-#include "Vector.h"
-#include "Utility.h"
-#include "CPU.h"
-#include "MyException.h"
-
-#include "UnitTests.h"
-
-using namespace thirtythree;
-
-int main()
-{
-    return UnitTest::RunAllTests();
+int main() {
+    thirtythree::EngineAssembler engine_assembler;
+    thirtythree::Engine *engine = engine_assembler.AssemblyEngine();
+    engine->StartGame();
+    return 0;
 }
